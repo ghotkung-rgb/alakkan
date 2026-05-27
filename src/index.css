@@ -1,1 +1,25 @@
 @import "tailwindcss";
+
+@font-face {
+  font-family: 'PSL Kampanath Pro';
+  src: url('/fonts/PSL180pro.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'PSL Khemarat Pro';
+  src: url('/fonts/PSL056pro.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'PSL Chocolate Extra Pro';
+  src: url('/fonts/PSL343pro.otf') format('opentype');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}

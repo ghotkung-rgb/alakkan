@@ -7,12 +7,12 @@ export default function App() {
   const [activeMenu, setActiveMenu] = useState('HOME');
 
   return (
-    <div className="relative w-full h-screen bg-[#1a1a1a] font-sans text-black select-none"
-         style={{ display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
-      
+    <div className="relative w-full min-h-screen bg-[#1a1a1a] font-sans text-black select-none"
+         style={{ display: 'flex', flexDirection: 'column' }}>
+
       <Navbar activeMenu={activeMenu} setActiveMenu={setActiveMenu} />
 
-      <div style={{ flex: 1, overflow: 'hidden' }}>
+      <div style={{ flex: 1 }}>
         {activeMenu === 'HOME' && <Home />}
         {activeMenu === 'AGENTS' && <Agents />}
 

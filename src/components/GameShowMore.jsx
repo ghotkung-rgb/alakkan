@@ -94,7 +94,7 @@ export default function GameShowMore({ games = [], title = '', accentWord = '', 
           display: flex; align-items: baseline; gap: 8px;
         }
 
-        .gsm-title-accent { color: #0ea5e9; }
+        .gsm-title-accent { color: #00d1ff; }
         .gsm-title-rest   { color: #0f172a; }
 
         .gsm-close {
@@ -145,7 +145,7 @@ export default function GameShowMore({ games = [], title = '', accentWord = '', 
         .gsm-card:hover {
           transform: translateY(-5px);
           border-color: #38bdf8;
-          box-shadow: 0 10px 28px rgba(56,189,248,0.3);
+          box-shadow: 0 10px 28px rgba(0,209,255,0.3);
         }
         .gsm-card img {
           position: absolute; inset: 0;
@@ -187,7 +187,7 @@ export default function GameShowMore({ games = [], title = '', accentWord = '', 
           letter-spacing: 0.1em; text-transform: uppercase;
           color: #fff; border: none; cursor: pointer;
           padding: 10px 40px;
-          background: #0ea5e9;
+          background: #00d1ff;
           clip-path: polygon(12px 0%, 100% 0%, calc(100% - 12px) 100%, 0% 100%);
           box-shadow: 0 4px 14px rgba(14,165,233,0.35);
           transition: all 0.2s;
@@ -215,7 +215,8 @@ export default function GameShowMore({ games = [], title = '', accentWord = '', 
 
           {/* Body */}
           <div className="gsm-body">
-            
+            {/* TEST BADGE — ลบบรรทัดนี้ก่อนใช้งานจริง */}
+            <div className="gsm-count">แสดง {visibleGames.length} / {games.length} เกม</div>
 
             <div className="gsm-grid">
               {visibleGames.map((game, i) => (
