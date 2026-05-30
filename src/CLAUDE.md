@@ -1,0 +1,1 @@
+Before building any frontend component or page, read .claude/frontend-skill.md

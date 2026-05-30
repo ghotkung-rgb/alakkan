@@ -1,68 +1,87 @@
 import React from 'react';
 
 export default function Navbar({ activeMenu, setActiveMenu }) {
-  const menuItems = ['HOME', 'บริการเติมเกม',  'ข่าวสาร', 'ติดต่อเรา'];
+  const menuItems = ['HOME', 'บริการเติมเกม', 'ข่าวสาร', 'ติดต่อเรา'];
 
   return (
     <>
       <style>{`
         .navbar-root {
-          position: static;
-          width: 100%; z-index: 50;
+          position: absolute;
+          top: 0; left: 0; right: 0;
+          width: 100%; z-index: 100;
+          /* gradient จาง ล่างทำให้ข้อความอ่านได้บน hero ทุกโทน */
+          background: linear-gradient(to bottom,
+            rgba(4, 12, 30, 0.72) 0%,
+            rgba(4, 12, 30, 0.18) 70%,
+            rgba(4, 12, 30, 0.00) 100%);
+          padding-bottom: 18px;
         }
+
         .nav-btn {
-          position: relative; height: 100%;
-          padding: 0 18px; font-size: 16px; font-weight: 700;
-          letter-spacing: 0.03em;
+          position: relative; height: 62px;
+          padding: 0 17px; font-size: 15px; font-weight: 700;
+          letter-spacing: 0.04em;
           font-family: 'PSL Chocolate Extra Pro', 'Noto Sans Thai', sans-serif;
           border: none; background: none; cursor: pointer;
-          transition: color 0.15s ease;
+          color: rgba(255,255,255,0.78);
+          transition: color 0.18s ease;
           white-space: nowrap;
+          text-shadow: 0 1px 6px rgba(0,0,0,0.45);
         }
         .nav-btn::after {
-          content: ''; position: absolute; bottom: 0; left: 18px; right: 18px;
-          height: 2.5px; background: #00d1ff;
+          content: ''; position: absolute; bottom: 6px; left: 17px; right: 17px;
+          height: 2px; background: #00d1ff;
           transform: scaleX(0); transform-origin: center;
           transition: transform 0.2s ease;
           border-radius: 2px;
+          box-shadow: 0 0 8px rgba(0,209,255,0.7);
         }
-        .nav-btn.active { color: #00d1ff; }
+        .nav-btn.active { color: #fff; }
         .nav-btn.active::after { transform: scaleX(1); }
-        .nav-btn:hover { color: #00b8e0; }
-        .nav-btn:hover::after { transform: scaleX(1); }
+        .nav-btn:hover { color: #fff; }
+        .nav-btn:hover::after { transform: scaleX(0.7); }
 
         .topup-btn {
-          background: linear-gradient(135deg, #00d1ff, #00a3cc);
+          background: linear-gradient(135deg, #00d1ff 0%, #0099bb 100%);
           color: #fff; border: none;
-          padding: 9px 22px; font-size: 15px; font-weight: 700;
+          padding: 8px 22px; font-size: 14px; font-weight: 800;
           font-family: 'PSL Chocolate Extra Pro', 'Noto Sans Thai', sans-serif;
           cursor: pointer; transition: all 0.2s ease;
-          white-space: nowrap;
+          white-space: nowrap; letter-spacing: 0.04em;
           clip-path: polygon(10px 0%, 100% 0%, calc(100% - 10px) 100%, 0% 100%);
-          box-shadow: 0 4px 14px rgba(0,209,255,0.35);
-          letter-spacing: 0.02em;
+          filter: drop-shadow(0 3px 10px rgba(0,209,255,0.5));
+          flex-shrink: 0;
         }
-        .topup-btn:hover { opacity: 0.88; transform: translateY(-1px); }
+        .topup-btn:hover {
+          filter: drop-shadow(0 4px 14px rgba(0,209,255,0.75));
+          transform: translateY(-1px);
+        }
 
-        .nav-logo-brand {
-          font-family: 'PSL Kampanath Pro', sans-serif;
-          font-size: 20px; font-weight: 900;
-          letter-spacing: 0.05em;
+        .nav-logo-text {
+          font-family: 'PSL Kampanath Pro', 'Noto Sans Thai', sans-serif;
+          font-size: 21px; font-weight: 900;
+          letter-spacing: 0.06em; color: #fff;
+          text-shadow: 0 0 18px rgba(0,209,255,0.55), 0 2px 8px rgba(0,0,0,0.5);
+          line-height: 1;
+        }
+        .nav-logo-accent {
+          color: #00d1ff;
+        }
+        .nav-logo-divider {
+          width: 1px; height: 22px;
+          background: rgba(255,255,255,0.25);
+          flex-shrink: 0;
         }
         .nav-logo-sub {
-          font-family: 'PSL Kampanath Pro', sans-serif;
-          font-size: 18px; font-weight: 900;
-          letter-spacing: 0.05em; color: #0f172a;
+          font-family: 'PSL Kampanath Pro', 'Noto Sans Thai', sans-serif;
+          font-size: 13px; font-weight: 700;
+          letter-spacing: 0.14em; color: rgba(255,255,255,0.55);
+          text-transform: uppercase; line-height: 1;
         }
       `}</style>
 
-      <nav
-        className="navbar-root"
-        style={{
-          background: '#fff',
-          borderBottom: '1px solid #e2e8f0',
-        }}
-      >
+      <nav className="navbar-root">
         <div style={{
           maxWidth: 1400, margin: '0 auto',
           padding: '0 32px', height: 62,
@@ -72,16 +91,14 @@ export default function Navbar({ activeMenu, setActiveMenu }) {
 
           {/* LOGO */}
           <div
-            style={{ display: 'flex', alignItems: 'center', gap: 8, cursor: 'pointer', flexShrink: 0 }}
+            style={{ display: 'flex', alignItems: 'center', gap: 10, cursor: 'pointer', flexShrink: 0 }}
             onClick={() => setActiveMenu('HOME')}
           >
-            <div style={{
-              background: '#00d1ff', color: '#fff',
-              padding: '4px 14px', borderRadius: 6,
-            }}>
-              <span className="nav-logo-brand">ALASKAN</span>
-            </div>
-            <span className="nav-logo-sub">SHOP</span>
+            <span className="nav-logo-text">
+              ALA<span className="nav-logo-accent">SK</span>AN
+            </span>
+            <div className="nav-logo-divider" />
+            <span className="nav-logo-sub">TOPUP</span>
           </div>
 
           {/* MENU */}
@@ -90,15 +107,23 @@ export default function Navbar({ activeMenu, setActiveMenu }) {
               <button
                 key={item}
                 className={`nav-btn ${activeMenu === item ? 'active' : ''}`}
-                onClick={() => setActiveMenu(item)}
-                style={{ color: activeMenu === item ? '#00d1ff' : '#475569' }}
+                onClick={() => {
+                  if (item === 'ติดต่อเรา') {
+                    setActiveMenu('HOME');
+                    setTimeout(() => {
+                      document.getElementById('contact-section')?.scrollIntoView({ behavior: 'smooth' });
+                    }, 80);
+                  } else {
+                    setActiveMenu(item);
+                  }
+                }}
               >
                 {item}
               </button>
             ))}
           </div>
 
-          {/* TOP UP BUTTON */}
+          {/* LOGIN BUTTON */}
           <button className="topup-btn" onClick={() => alert('Top Up Clicked')}>
             ลงชื่อเข้าใช้
           </button>

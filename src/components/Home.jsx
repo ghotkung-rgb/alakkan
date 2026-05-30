@@ -1,88 +1,45 @@
 import React, { useState, useEffect, useRef } from 'react';
-import GameShowMore from './GameShowMore';
 // Note: โปรโมชั่น — เพิ่ม/ลดการ์ดได้เลย
 const PROMOS = [
   { id: 1, name: "ROV Promotion",      img: "/images/PRO/rov_promotion_web1_ai.png",      tag: "HOT" }, //tag คือป้ายใหม่อื่นๆ เช่น HOT, SALE, etc. (ถ้าไม่มีให้ใส่ null)
-  { id: 2, name: "FreeFire Promotion", img: "/images/PRO/Alaskan_freefire_banner_web_ai.png", tag: "ใหม่" },
-  { id: 3, name: "FreeFire Promotion", img: "/images/PRO/Alaskan_freefire_banner_web2_ai.png", tag: "ใหม่" },
-  { id: 4, name: "MLBB Promotion",     img: "/images/PRO/mlbb_promotion_web_ai_edit1.png", tag: null },
+  { id: 2, name: "ACE RACER", category: "เกมแข่งรถ", bg: "/images/GAMES BG/ACERACER_bg.png", icon: "/images/GAMES ICON/ACERACER_iconapp.png", tag: "ใหม่" },
+  { id: 3, name: "BIGO LIVE", category: "สตรีมมิ่ง", bg: "/images/GAMES BG/BIGOLIVE_bg.png", icon: "/images/GAMES ICON/BIGOLIVE_iconapp.png", tag: "ใหม่" },
+  { id: 4, name: "IDENTITY V", category: "เกมเอาชีวิตรอด", bg: "/images/GAMES BG/IDENTITYV_bg.png", icon: "/images/GAMES ICON/IDENTITYV_iconapp.png", tag: null },
 ];
 
-// Note: ชื่อเกม , รูปภาพเกม , ล่าสุด
+// Note: ชื่อเกม , bg (ภาพพื้นหลัง) , icon (ไอคอนแอป) , category (หมวดหมู่) , tag
 const GAMES_TOPUP = [
-  { id: 1, name: "ROV",          img: "/images/UID/1.png", isNew: false, tag: null }, // Note: แก้ชื่อเกมและรูปภาพได้เลย isnew คือป้าย NEW tag คือป้ายใหม่อื่นๆ เช่น HOT, SALE, etc. (ถ้าไม่มีให้ใส่ null)
-  { id: 2, name: "PUBG Mobile",  img: "/images/UID/2.png", isNew: false, tag: null },
-  { id: 3, name: "Delta Force",  img: "/images/UID/3.png", isNew: false, tag: null },
-  { id: 4, name: "Call of Duty", img: "/images/UID/4.png", isNew: false, tag: null },
-  { id: 5, name: "Call of Duty", img: "/images/UID/4.png", isNew: false, tag: null },
-  { id: 6, name: "Call of Duty", img: "/images/UID/4.png", isNew: false, tag: null },
-  { id: 7, name: "Call of Duty", img: "/images/UID/4.png", isNew: false, tag: null },
-  { id: 8, name: "Call of Duty", img: "/images/UID/4.png", isNew: false, tag: null },
-  { id: 9, name: "Call of Duty", img: "/images/UID/4.png", isNew: false, tag: null },
-  { id: 10, name: "Call of Duty", img: "/images/UID/4.png", isNew: false, tag: null },
-  { id: 11, name: "Call of Duty", img: "/images/UID/4.png", isNew: false, tag: null },
-    { id: 6, name: "Call of Duty", img: "/images/UID/4.png", isNew: false, tag: null },
-  { id: 7, name: "Call of Duty", img: "/images/UID/4.png", isNew: false, tag: null },
-  { id: 8, name: "Call of Duty", img: "/images/UID/4.png", isNew: false, tag: null },
-  { id: 9, name: "Call of Duty", img: "/images/UID/4.png", isNew: false, tag: null },
-  { id: 10, name: "Call of Duty", img: "/images/UID/4.png", isNew: false, tag: null },
-  { id: 11, name: "Call of Duty", img: "/images/UID/4.png", isNew: false, tag: null },
-    { id: 6, name: "Call of Duty", img: "/images/UID/4.png", isNew: false, tag: null },
-  { id: 7, name: "Call of Duty", img: "/images/UID/4.png", isNew: false, tag: null },
-  { id: 8, name: "Call of Duty", img: "/images/UID/4.png", isNew: false, tag: null },
-  { id: 9, name: "Call of Duty", img: "/images/UID/4.png", isNew: false, tag: null },
-  { id: 10, name: "Call of Duty", img: "/images/UID/4.png", isNew: false, tag: null },
-  { id: 11, name: "Call of Duty", img: "/images/UID/4.png", isNew: false, tag: null },
-    { id: 6, name: "Call of Duty", img: "/images/UID/4.png", isNew: false, tag: null },
-  { id: 7, name: "Call of Duty", img: "/images/UID/4.png", isNew: false, tag: null },
-  { id: 8, name: "Call of Duty", img: "/images/UID/4.png", isNew: false, tag: null },
-  { id: 9, name: "Call of Duty", img: "/images/UID/4.png", isNew: false, tag: null },
-  { id: 10, name: "Call of Duty", img: "/images/UID/4.png", isNew: false, tag: null },
-  { id: 11, name: "Call of Duty", img: "/images/UID/4.png", isNew: false, tag: null },
-    { id: 6, name: "Call of Duty", img: "/images/UID/4.png", isNew: false, tag: null },
-  { id: 7, name: "Call of Duty", img: "/images/UID/4.png", isNew: false, tag: null },
-  { id: 8, name: "Call of Duty", img: "/images/UID/4.png", isNew: false, tag: null },
-  { id: 9, name: "Call of Duty", img: "/images/UID/4.png", isNew: false, tag: null },
-  { id: 10, name: "Call of Duty", img: "/images/UID/4.png", isNew: false, tag: null },
-  { id: 11, name: "Call of Duty", img: "/images/UID/4.png", isNew: false, tag: null },
-    { id: 6, name: "Call of Duty", img: "/images/UID/4.png", isNew: false, tag: null },
-  { id: 7, name: "Call of Duty", img: "/images/UID/4.png", isNew: false, tag: null },
-  { id: 8, name: "Call of Duty", img: "/images/UID/4.png", isNew: false, tag: null },
-  { id: 9, name: "Call of Duty", img: "/images/UID/4.png", isNew: false, tag: null },
-  { id: 10, name: "Call of Duty", img: "/images/UID/4.png", isNew: false, tag: null },
-  { id: 11, name: "Call of Duty", img: "/images/UID/4.png", isNew: false, tag: null },
-    { id: 6, name: "Call of Duty", img: "/images/UID/4.png", isNew: false, tag: null },
-  { id: 7, name: "Call of Duty", img: "/images/UID/4.png", isNew: false, tag: null },
-  { id: 8, name: "Call of Duty", img: "/images/UID/4.png", isNew: false, tag: null },
-  { id: 9, name: "Call of Duty", img: "/images/UID/4.png", isNew: false, tag: null },
-  { id: 10, name: "Call of Duty", img: "/images/UID/4.png", isNew: false, tag: null },
-  { id: 11, name: "Call of Duty", img: "/images/UID/4.png", isNew: false, tag: null },
+  { id: 1,  name: "ROV",               category: "เกม MOBA",           bg: "/images/GAMES BG/ROV_bg.png",             icon: "/images/GAMES ICON/ROV_iconapp.png",             tag: "ขายดี"  },
+  { id: 2,  name: "PUBG Mobile",       category: "เกม Battle Royale",   bg: "/images/GAMES BG/PUBGMOBILE_bg.png",       icon: "/images/GAMES ICON/PUBGMOBILE_iconapp.png",      tag: null   },
+  { id: 3,  name: "Free Fire",         category: "เกม Battle Royale",   bg: "/images/GAMES BG/FREEFIRE_bg.png",         icon: "/images/GAMES ICON/FREEFIRE_iconapp.png",        tag: null   },
+  { id: 4,  name: "Call of Duty",      category: "เกมยิง FPS",          bg: "/images/GAMES BG/CALLOFDUTY_bg.png",       icon: "/images/GAMES ICON/CALLOFDUTY_iconapp.png",      tag: null   },
+  { id: 5,  name: "Delta Force",       category: "เกมยิง FPS",          bg: "/images/GAMES BG/DELTAFORCE_bg.png",       icon: "/images/GAMES ICON/DELTAFORCE_iconapp.png",      tag: "ใหม่" },
+  { id: 6,  name: "Blood Strike",      category: "เกมยิง FPS",          bg: "/images/GAMES BG/BLOODSTRIKE_bg.png",      icon: "/images/GAMES ICON/BLOODSTRIKE_iconapp.png",     tag: "ใหม่" },
+  { id: 7,  name: "Valorant",          category: "เกมยิงกลยุทธ์",       bg: "/images/GAMES BG/VALORANT_bg.png",         icon: "/images/GAMES ICON/VALORANT_iconapp.png",        tag: null   },
+  { id: 8,  name: "Honor of Kings",    category: "เกม MOBA",            bg: "/images/GAMES BG/HONOROFKINGS_bg.png",     icon: "/images/GAMES ICON/HONOROFKINGS_iconapp.png",    tag: null   },
+  { id: 9,  name: "Honkai: Star Rail", category: "เกม RPG",             bg: "/images/GAMES BG/STARRAIL_bg.png",         icon: "/images/GAMES ICON/STARRAIL_iconapp.png",        tag: null   },
+  { id: 10, name: "Arena Breakout",    category: "เกมยิงกลยุทธ์",       bg: "/images/GAMES BG/ARENABREAKOUT_bg.png",    icon: "/images/GAMES ICON/ARENABREAKOUT_iconapp.png",   tag: null   },
+  { id: 11, name: "ACE RACER",         category: "เกมแข่งรถ",           bg: "/images/GAMES BG/ACERACER_bg.png",         icon: "/images/GAMES ICON/ACERACER_iconapp.png",        tag: null   },
+  { id: 12, name: "Aether Gazer",      category: "เกม RPG",             bg: "/images/GAMES BG/AETHERGAZER_bg.png",      icon: "/images/GAMES ICON/AETHERGAZER_iconapp.png",     tag: null   },
+  { id: 13, name: "AFK Journey",       category: "เกม RPG",             bg: "/images/GAMES BG/AFKJOURNEY_bg.png",       icon: "/images/GAMES ICON/AFKJOURNEY_iconapp.png",      tag: null   },
+  { id: 14, name: "Ballistic Hero",    category: "เกมยิง FPS",          bg: "/images/GAMES BG/BALLISTICHERO_bg.png",    icon: "/images/GAMES ICON/BALLISTICHERO_iconapp.png",   tag: "ใหม่" },
+  { id: 15, name: "BIGO LIVE",         category: "สตรีมมิ่ง",           bg: "/images/GAMES BG/BIGOLIVE_bg.png",         icon: "/images/GAMES ICON/BIGOLIVE_iconapp.png",        tag: null   },
+  { id: 16, name: "Bleach",            category: "เกม RPG",             bg: "/images/GAMES BG/BLEACH_bg.png",           icon: "/images/GAMES ICON/BLEACH_iconapp.png",          tag: null   },
+  { id: 17, name: "Dunk City Dynasty", category: "เกมกีฬา",             bg: "/images/GAMES BG/DUNKCITY_bg.png",         icon: "/images/GAMES ICON/DUNKCITY_iconapp.png",        tag: null   },
+  { id: 18, name: "Heartopia",         category: "เกมจำลอง",            bg: "/images/GAMES BG/HEARTOPIA_bg.png",        icon: "/images/GAMES ICON/HEARTOPIA_iconapp.png",       tag: null   },
+  { id: 19, name: "Identity V",        category: "เกมเอาชีวิตรอด",      bg: "/images/GAMES BG/IDENTITYV_bg.png",        icon: "/images/GAMES ICON/IDENTITYV_iconapp.png",       tag: null   },
+  { id: 20, name: "LoL: Wild Rift",    category: "เกม MOBA",            bg: "/images/GAMES BG/LOLWILDRIFT_bg.png",      icon: "/images/GAMES ICON/LOLWILDRIFT_iconapp.png",     tag: null   },
+  { id: 21, name: "League of Legends", category: "เกม MOBA",            bg: "/images/GAMES BG/LOL_bg.png",              icon: "/images/GAMES ICON/LOL_iconapp.png",             tag: null   },
+  { id: 22, name: "Magic Chess",       category: "เกมกลยุทธ์",          bg: "/images/GAMES BG/MAGICCHESS_bg.png",       icon: "/images/GAMES ICON/MAGICCHESS_iconapp.png",      tag: null   },
+  { id: 23, name: "Where Winds Meet",  category: "เกม RPG",             bg: "/images/GAMES BG/WHEREWINDMEET_bg.png",    icon: "/images/GAMES ICON/WHEREWINDMEET_iconapp.png",   tag: "ใหม่" },
 ];
 
-// Note: ชื่อเกม , รูปภาพเกม , ล่าสุด
+// Note: ชื่อเกม , bg (ภาพพื้นหลัง) , icon (ไอคอนแอป) , category , tag
 const GAMES_MailPass = [
-  { id: 1, name: "FC MOBILE",          img: "/images/MAIL/M1.png", isNew: false, tag: null }, // Note: แก้ชื่อเกมและรูปภาพได้เลย isnew คือป้าย NEW tag คือป้ายใหม่อื่นๆ เช่น HOT, SALE, etc. (ถ้าไม่มีให้ใส่ null)
-  { id: 2, name: "Magic Chess Go Go",  img: "/images/MAIL/M2.png", isNew: false, tag: null },
-  { id: 3, name: "Where Winds Meet",   img: "/images/MAIL/M3.png", isNew: false, tag: null },
-  { id: 4, name: "Call of Duty Mobile",img: "/images/MAIL/M4.png", isNew: false, tag: null },
-    { id: 6, name: "Call of Duty", img: "/images/UID/4.png", isNew: false, tag: null },
-  { id: 7, name: "Call of Duty", img: "/images/UID/4.png", isNew: false, tag: null },
-  { id: 8, name: "Call of Duty", img: "/images/UID/4.png", isNew: false, tag: null },
-  { id: 9, name: "Call of Duty", img: "/images/UID/4.png", isNew: false, tag: null },
-  { id: 10, name: "Call of Duty", img: "/images/UID/4.png", isNew: false, tag: null },
-  { id: 11, name: "Call of Duty", img: "/images/UID/4.png", isNew: false, tag: null },
-    { id: 6, name: "Call of Duty", img: "/images/UID/4.png", isNew: false, tag: null },
-  { id: 7, name: "Call of Duty", img: "/images/UID/4.png", isNew: false, tag: null },
-  { id: 8, name: "Call of Duty", img: "/images/UID/4.png", isNew: false, tag: null },
-  { id: 9, name: "Call of Duty", img: "/images/UID/4.png", isNew: false, tag: null },
-  { id: 10, name: "Call of Duty", img: "/images/UID/4.png", isNew: false, tag: null },
-  { id: 11, name: "Call of Duty", img: "/images/UID/4.png", isNew: false, tag: null },
-    { id: 6, name: "Call of Duty", img: "/images/UID/4.png", isNew: false, tag: null },
-  { id: 7, name: "Call of Duty", img: "/images/UID/4.png", isNew: false, tag: null },
-  { id: 8, name: "Call of Duty", img: "/images/UID/4.png", isNew: false, tag: null },
-  { id: 9, name: "Call of Duty", img: "/images/UID/4.png", isNew: false, tag: null },
-  { id: 10, name: "Call of Duty", img: "/images/UID/4.png", isNew: false, tag: null },
-  { id: 11, name: "Call of Duty", img: "/images/UID/4.png", isNew: false, tag: null },
+  { id: 1, name: "eFootball",    category: "เกมฟุตบอล", bg: "/images/GAMES BG/EFOOTBALL_bg.png",  icon: "/images/GAMES ICON/EFOOTBALL_iconapp.png",  tag: null },
+  { id: 2, name: "FC Mobile",    category: "เกมฟุตบอล", bg: "/images/GAMES BG/FCMOBILE_bg.png",   icon: "/images/GAMES ICON/FCMOBILE_iconapp.png",   tag: null },
+  { id: 3, name: "Heartopia",    category: "เกมจำลอง",  bg: "/images/GAMES BG/HEARTOPIA_bg.png",  icon: "/images/GAMES ICON/HEARTOPIA_iconapp.png",  tag: null },
+  { id: 4, name: "Call of Duty", category: "เกมยิง FPS", bg: "/images/GAMES BG/CALLOFDUTY_bg.png", icon: "/images/GAMES ICON/CALLOFDUTY_iconapp.png", tag: null },
 ];
 
 // Note: Popular Package — เพิ่ม/ลด/แก้ข้อความได้เลย
@@ -92,11 +49,11 @@ const POPULAR_PACKAGES = [
   { id: 3, img: "/images/ALASKAN_WEB_ASSET/PROMOTION%20WEB/Alaskan_freefire_banner_web2_ai.png" },
 ];
 
-const HERO_MASCOT_IMG = "/images/ALASKAN_WEB_ASSET/BACKGROUND/home/Mascot1.png";
+const HERO_MASCOT_IMG = "/images/ALASKAN_WEB_ASSET/BACKGROUND/home/alaskan_mascot1.png";
 
 const PAGE_SIZE = 15;
 
-function GameGrid({ games, expanded, onCollapse }) {
+function GameGrid({ games, expanded, onCollapse, onTopup }) {
   const ref = useRef(null);
   const [seen, setSeen] = useState(false);
   const [visibleCount, setVisibleCount] = useState(PAGE_SIZE);
@@ -114,24 +71,65 @@ function GameGrid({ games, expanded, onCollapse }) {
     if (!expanded) setVisibleCount(PAGE_SIZE);
   }, [expanded]);
 
+  // ── ค่าปรับได้ ──────────────────────────────────────
+  const iconMarginLeft = 9;   // ไอคอน ซ้าย/ขวา
+  const iconMarginTop  = 18;  // ไอคอน ขึ้น/ลง
+  const nameTop        = -9;  // ชื่อเกม ขึ้น/ลง
+  const nameLeft       = -8;  // ชื่อเกม ซ้าย/ขวา
+  const nameFontSize   = 10;  // ชื่อเกม ขนาดฟอนต์
+  const catFontSize    = 10;  // หมวดหมู่ ขนาดฟอนต์
+  const catTop         = -7;   // หมวดหมู่ ขึ้น/ลง
+  const catLeft        = -8.5;   // หมวดหมู่ ซ้าย/ขวา
+  const btnFontSize    = 8;   // ปุ่มเติมเกม ขนาดฟอนต์
+  const btnPad         = '8px 11px'; // ปุ่มเติมเกม padding
+  const barPadLeft     = 60;  // bottom bar padding-left
+  // ────────────────────────────────────────────────────
+
+  const renderCard = (game, i, animStyle) => (
+    <div className="game-card" key={`${game.id}-${i}`} style={{ ...animStyle, cursor:'pointer' }}
+      onClick={() => onTopup && onTopup(game.name)}>
+      <img src={game.bg} alt={game.name}
+        style={{ position:'absolute', inset:0, width:'100%', height:'100%', objectFit:'cover', objectPosition:'center top' }}
+        onError={e => { e.target.style.display = 'none'; }} />
+      {game.tag && (
+        <div className={`promo-tag${game.tag === 'ใหม่' ? ' new' : ''}`} style={{ zIndex: 11 }}>
+          {game.tag}
+        </div>
+      )}
+      <div style={{
+        position:'absolute', bottom:0, left:0, right:0,
+        background:'linear-gradient(to top, rgba(0,0,0,0.92) 0%, rgba(0,0,0,0.55) 60%, transparent 100%)',
+        padding:`36px 14px 12px ${barPadLeft}px`,
+        display:'flex', flexDirection:'row', alignItems:'center', gap:10,
+      }}>
+        <div style={{ flex:1, minWidth:0 }}>
+          <div style={{ display:'flex', alignItems:'center', gap:7 }}>
+            <img src={game.icon} alt=""
+              style={{ width:36, height:37, borderRadius:8, objectFit:'cover', flexShrink:0, border:'1.5px solid rgba(255,255,255,0.18)', marginLeft:iconMarginLeft, marginTop:iconMarginTop }}
+              onError={e => { e.target.style.display = 'none'; }} />
+            <span style={{ color:'#fff', fontWeight:700, fontSize:nameFontSize, lineHeight:1.2, whiteSpace:'nowrap', position:'relative', top:nameTop, left:nameLeft }}>{game.name}</span>
+          </div>
+          {game.category && <div style={{ color:'#ffffff', fontSize:catFontSize, position:'relative', top:catTop, left:catLeft }}>{game.category}</div>}
+        </div>
+        <button style={{
+          background:'#00d1ff', color:'#ffffff', border:'none', borderRadius:20,
+          padding:btnPad, fontSize:btnFontSize, fontWeight:700, cursor:'pointer', flexShrink:0,
+          lineHeight:1,
+        }} onClick={() => onTopup && onTopup(game.name)}>เติมเกม</button>
+      </div>
+    </div>
+  );
+
   if (!expanded) {
     const preview = games.slice(0, 5);
     return (
       <div ref={ref}>
-        <div className="games-grid">
-          {preview.map((game, i) => (
-            <div className="game-card" key={`${game.id}-${i}`} style={{
-              opacity: seen ? 1 : 0,
-              transform: seen ? 'translateY(0)' : 'translateY(40px)',
-              transition: `opacity 0.5s ${i * 0.1}s ease, transform 0.5s ${i * 0.1}s ease`,
-            }}>
-              <img src={game.img} alt={game.name}
-                style={{ position:'absolute', inset:0, width:'100%', height:'100%', objectFit:'cover', objectPosition:'center top' }}
-                onError={e => { e.target.style.display = 'none'; }} />
-              {game.isNew && <div className="new-badge">NEW</div>}
-              {game.tag && <div className="tag-badge">⚡ {game.tag}</div>}
-            </div>
-          ))}
+        <div className="games-grid" style={{ padding: '80px', margin: '-80px' }}>
+          {preview.map((game, i) => renderCard(game, i, {
+            opacity: seen ? 1 : 0,
+            transform: seen ? 'translateY(0)' : 'translateY(40px)',
+            transition: `opacity 0.5s ${i * 0.1}s ease, transform 0.5s ${i * 0.1}s ease`,
+          }))}
         </div>
       </div>
     );
@@ -142,22 +140,10 @@ function GameGrid({ games, expanded, onCollapse }) {
 
   return (
     <div ref={ref}>
-      {/* TEST BADGE — ลบ div นี้ก่อนใช้งานจริง */}
-      <div style={{ fontSize: 11, color: '#94a3b8', marginBottom: 10, fontFamily: 'monospace' }}>
-        แสดง {visibleGames.length} / {games.length} เกม
-      </div>
-      <div className="games-grid-expanded">
-        {visibleGames.map((game, i) => (
-          <div className="game-card" key={`${game.id}-${i}`} style={{
-            animation: `gameCardIn 0.4s ${(i % PAGE_SIZE) * 0.03}s ease both`,
-          }}>
-            <img src={game.img} alt={game.name}
-              style={{ position:'absolute', inset:0, width:'100%', height:'100%', objectFit:'cover', objectPosition:'center top' }}
-              onError={e => { e.target.style.display = 'none'; }} />
-            {game.isNew && <div className="new-badge">NEW</div>}
-            {game.tag && <div className="tag-badge">⚡ {game.tag}</div>}
-          </div>
-        ))}
+      <div className="games-grid-expanded" style={{ padding: '80px', margin: '-80px' }}>
+        {visibleGames.map((game, i) => renderCard(game, i, {
+          animation: `gameCardIn 0.4s ${(i % PAGE_SIZE) * 0.03}s ease both`,
+        }))}
       </div>
       <div style={{ display:'flex', justifyContent:'center', gap:12, marginTop:20 }}>
         {hasMore && (
@@ -194,481 +180,197 @@ function PromoGrid({ promos }) {
 
   return (
     <div ref={ref} style={{ position: 'relative' }}>
-      <button onClick={() => scroll('prev')} style={{
-        position: 'absolute', left: -52, top: '50%', transform: 'translateY(-50%)',
-        zIndex: 10, width: 40, height: 40,
-        background: 'linear-gradient(135deg, #00d1ff)',
-        border: 'none', borderRadius: '50%',
-        cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center',
-        color: '#fff', fontSize: 20, fontWeight: 900,
-        boxShadow: '0 4px 16px rgba(0,209,255,0.4)',
-        transition: 'all 0.2s',
-      }}>‹</button>
-
-      <div ref={scrollRef} className="promo-grid" style={{ overflow: 'hidden' }}>
+      <div style={{ overflow: 'hidden', margin: '0' }}>
+      <div ref={scrollRef} className="promo-grid" style={{ overflow: 'hidden', padding: '60px', margin: '-60px' }}>
         {promos.map((p, i) => (
           <div className={`promo-card${i === 0 ? ' featured' : ''}`} key={p.id} style={{
             opacity: seen ? 1 : 0,
             transform: seen ? 'translateY(0)' : 'translateY(40px)',
             transition: `opacity 0.5s ${i * 0.12}s ease, transform 0.5s ${i * 0.12}s ease`,
           }}>
-            <img src={p.img} alt={p.name}
-              style={{ position:'absolute', inset:0, width:'100%', height:'100%', objectFit:'cover' }}
-              onError={e => { e.target.style.display = 'none'; }} />
-            <div className="game-overlay" />
-            {p.tag && <div className={`promo-tag ${p.tag === 'ใหม่' ? 'new' : ''}`}>{p.tag}</div>}
-            <div className="game-name">{p.name}</div>
+            {p.bg ? (
+              <>
+                <img src={p.bg} alt={p.name}
+                  style={{ position:'absolute', inset:0, width:'100%', height:'100%', objectFit:'cover' }}
+                  onError={e => { e.target.style.display = 'none'; }} />
+                {p.tag && <div className={`promo-tag ${p.tag === 'ใหม่' ? 'new' : ''}`}>{p.tag}</div>}
+                <div style={{
+                  position:'absolute', bottom:0, left:0, right:0,
+                  background:'linear-gradient(to top, rgba(0,0,0,0.92) 0%, rgba(0,0,0,0.55) 60%, transparent 100%)',
+                  padding:'36px 14px 12px 49px',
+                  display:'flex', flexDirection:'row', alignItems:'center', gap:10,
+                }}>
+                  <div style={{ flex:1, minWidth:0 }}>
+                    <div style={{ display:'flex', alignItems:'center', gap:7 }}>
+                      <img src={p.icon} alt=""
+                        style={{ width:36, height:37, borderRadius:8, objectFit:'cover', flexShrink:0, border:'1.5px solid rgba(255,255,255,0.18)',marginLeft: 10, marginTop: 29 }}
+                        onError={e => { e.target.style.display = 'none'; }} />
+                      <span style={{ color:'#fff', fontWeight:700, fontSize:13, lineHeight:1.2, whiteSpace:'nowrap' }}>{p.name}</span>
+                    </div>
+                    {p.category && <div style={{ color:'#ffffff', fontSize:11, marginTop:2 }}>{p.category}</div>}
+                  </div>
+                  <button style={{
+                    background:'#00d1ff', color:'#ffffff', border:'none', borderRadius:20,
+                    padding:'5px 11px', fontSize:10, fontWeight:700, cursor:'pointer', flexShrink:0,
+                    lineHeight:1,
+                  }}>เติมเกม</button>
+                </div>
+              </>
+            ) : (
+              <>
+                <img src={p.img} alt={p.name}
+                  style={{ position:'absolute', inset:0, width:'100%', height:'100%', objectFit:'cover' }}
+                  onError={e => { e.target.style.display = 'none'; }} />
+                <div className="game-overlay" />
+                {p.tag && <div className={`promo-tag ${p.tag === 'ใหม่' ? 'new' : ''}`}>{p.tag}</div>}
+                <div className="game-name">{p.name}</div>
+              </>
+            )}
           </div>
         ))}
       </div>
-
-      <button onClick={() => scroll('next')} style={{
-        position: 'absolute', right: -52, top: '50%', transform: 'translateY(-50%)',
-        zIndex: 10, width: 40, height: 40,
-        background: 'linear-gradient(135deg, #00d1ff, #00a3cc)',
-        border: 'none', borderRadius: '50%',
-        cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center',
-        color: '#fff', fontSize: 20, fontWeight: 900,
-        boxShadow: '0 4px 16px rgba(0,209,255,0.4)',
-        transition: 'all 0.2s',
-      }}>›</button>
+      </div>
     </div>
   );
 }
 
-export default function Home() {
+const MODAL_CONTENT = {
+  privacy: {
+    title: 'นโยบายความเป็นส่วนตัว',
+    body: [
+      { h: 'การเก็บรวบรวมข้อมูล', p: 'ALASKAN SHOP เก็บรวบรวมข้อมูลที่จำเป็นสำหรับการให้บริการเท่านั้น เช่น UID เกม, ช่องทางการติดต่อ และประวัติการสั่งซื้อ เพื่อประมวลผลคำสั่งและปรับปรุงบริการ' },
+      { h: 'การใช้ข้อมูล', p: 'ข้อมูลของท่านถูกใช้เพื่อดำเนินการเติมเกม ติดต่อกลับกรณีมีปัญหา และปรับปรุงประสบการณ์การใช้บริการ เราไม่เปิดเผยข้อมูลส่วนตัวให้แก่บุคคลที่สามโดยไม่ได้รับอนุญาต' },
+      { h: 'ความปลอดภัย', p: 'เราใช้มาตรการรักษาความปลอดภัยที่เหมาะสมเพื่อป้องกันการเข้าถึงข้อมูลโดยไม่ได้รับอนุญาต และปฏิบัติตามมาตรฐานการคุ้มครองข้อมูลส่วนบุคคล (PDPA)' },
+      { h: 'การติดต่อ', p: 'หากมีข้อสงสัยเกี่ยวกับนโยบายนี้ กรุณาติดต่อเราผ่านช่องทาง Facebook: ALASKAN.ONLINE.SHOP' },
+    ],
+  },
+  terms: {
+    title: 'เงื่อนไขการให้บริการ',
+    body: [
+      { h: 'การใช้บริการ', p: 'บริการเติมเกมของ ALASKAN SHOP มีไว้สำหรับผู้ใช้ที่มีอายุ 13 ปีขึ้นไป การใช้บริการถือว่าท่านยอมรับเงื่อนไขทั้งหมดนี้แล้ว' },
+      { h: 'ความถูกต้องของ UID', p: 'ลูกค้าต้องตรวจสอบ UID หรือข้อมูลที่ใช้เติมให้ถูกต้องก่อนยืนยันคำสั่ง เราไม่รับผิดชอบต่อความเสียหายที่เกิดจากการกรอก UID ผิดพลาด' },
+      { h: 'การคืนเงิน', p: 'หากเกิดข้อผิดพลาดจากระบบของเรา จะดำเนินการคืนเงินหรือเติมใหม่ให้ภายใน 24 ชั่วโมง กรุณาแจ้งปัญหาพร้อมหลักฐานผ่านช่องทางติดต่อ' },
+      { h: 'ข้อห้าม', p: 'ห้ามใช้บริการเพื่อวัตถุประสงค์ที่ผิดกฎหมาย หรือพยายามเข้าถึงระบบโดยไม่ได้รับอนุญาต การกระทำดังกล่าวอาจถูกระงับการใช้บริการทันที' },
+    ],
+  },
+};
+
+function HeroSlider() {
+  const slides = [
+    { type: 'brand',  thumb: HERO_MASCOT_IMG },
+    { type: 'promo', bg: '/images/PRO/rov_promotion_web1_ai.png',            thumb: '/images/PRO/rov_promotion_web1_ai.png' },
+    { type: 'promo', bg: '/images/PRO/mlbb_promotion_web_ai_edit1.png',       thumb: '/images/PRO/mlbb_promotion_web_ai_edit1.png' },
+    { type: 'promo', bg: '/images/PRO/Alaskan_freefire_banner_web_ai.png',    thumb: '/images/PRO/Alaskan_freefire_banner_web_ai.png' },
+    { type: 'promo', bg: '/images/PRO/Alaskan_freefire_banner_web2_ai.png',   thumb: '/images/PRO/Alaskan_freefire_banner_web2_ai.png' },
+  ];
+
+  const [cur, setCur] = useState(0);
+  const [animKey, setAnimKey] = useState(0);
+  const [dir, setDir] = useState('down');
+
+  const goTo = (idx) => {
+    if (idx === cur) return;
+    setDir(idx > cur ? 'down' : 'up');
+    setCur(idx);
+    setAnimKey(k => k + 1);
+  };
+  const goPrev = () => setCur(c => { const n = (c - 1 + slides.length) % slides.length; setDir('up'); setAnimKey(k => k + 1); return n; });
+  const goNext = () => setCur(c => { const n = (c + 1) % slides.length; setDir('down'); setAnimKey(k => k + 1); return n; });
+
+
+  const slide = slides[cur];
+
+  return (
+    <div className="hero-slider">
+      {slides.map((s, i) => (
+        <div key={i} className={`hs-bg${i === cur ? ' active' : ''}`}
+          style={s.type === 'brand' ? {
+            backgroundColor: 'transparent',
+          } : {
+            backgroundImage: s.bg ? `url("${s.bg}")` : 'none',
+            backgroundSize: 'cover',
+            backgroundPosition: 'center center',
+            backgroundColor: 'transparent',
+          }} />
+      ))}
+
+      {slide.type === 'brand' && <div className="hs-overlay" style={{ background: 'none' }} />}
+
+      <div key={animKey} className={`hs-content hs-anim-${dir}`}>
+        {slide.type === 'brand' && (
+          <div className="hero-inner" style={{ height: '100%', paddingTop: 0 }}>
+            <img src="/images/effect/TOPBLUE.png" alt="" style={{
+              position:'absolute', top:0, right:0,
+              width:'28%', pointerEvents:'none', zIndex:1,
+              animation:'slideFromTopRight 1.0s 0.1s ease both',
+            }} onError={e => { e.target.style.display='none'; }} />
+            <img src="/images/effect/DOWNBLUE.png" alt="" style={{
+              position:'absolute', bottom:180, left:0,
+              width:'28%', pointerEvents:'none', zIndex:1,
+              animation:'slideFromBottomLeft 1.0s 0.3s ease both',
+            }} onError={e => { e.target.style.display='none'; }} />
+            <div className="hero-text-wrap">
+              <span className="hero-text-alaskan">ALASKAN</span>
+              <span className="hero-text-sub">
+                <span>TOPUP</span>
+                <span className="hero-text-gap" />
+                <span>GAME ONLINE</span>
+              </span>
+            </div>
+            <img className="hero-mascot" src={HERO_MASCOT_IMG} alt="mascot"
+              onError={e => { e.target.style.display = 'none'; }} />
+          </div>
+        )}
+      </div>
+
+      <div className="hs-thumbs">
+        <button className="hs-nav-btn" onClick={goPrev}>&#9664;</button>
+        <div className="hs-thumb-list">
+          {slides.map((s, i) => (
+            <div key={i} className={`hs-thumb${i === cur ? ' active' : ''}`} onClick={() => goTo(i)}>
+              {s.thumb && <img src={s.thumb} alt="" onError={e => { e.target.style.display = 'none'; }} />}
+            </div>
+          ))}
+        </div>
+        <button className="hs-nav-btn" onClick={goNext}>&#9654;</button>
+      </div>
+    </div>
+  );
+}
+
+export default function Home({ onTopup }) {
   const [visible, setVisible] = useState(false);
   const [uidExpanded, setUidExpanded] = useState(false);
   const [mailExpanded, setMailExpanded] = useState(false);
+  const [modal, setModal] = useState(null);
   useEffect(() => { setVisible(true); }, []);
 
   return (
     <>
-      <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+Thai:wght@400;600;700;900&family=Barlow+Condensed:ital,wght@0,900;1,900&display=swap');
-
-        * { box-sizing: border-box; }
-
-        @keyframes fadeIn { from { opacity:0; transform:translateY(12px); } to { opacity:1; transform:translateY(0); } }
-        @keyframes fadeInUp { from { opacity:0; transform:translateY(30px); } to { opacity:1; transform:translateY(0); } }
-        .reveal { opacity: 0; transform: translateY(40px); transition: opacity 0.6s ease, transform 0.6s ease; }
-        .reveal.visible { opacity: 1; transform: translateY(0); }
-        @keyframes newPulse { 0%,100% { opacity:1; } 50% { opacity:0.7; } }
-        @keyframes mascotFloat { 0%,100% { transform:translateY(0); } 50% { transform:translateY(-12px); } }
-        @keyframes heroFadeIn { from { opacity:0; transform:translateY(20px); } to { opacity:1; transform:translateY(0); } }
-        @keyframes slideFromTopRight { from { opacity:0; transform:translate(60px, -60px); } to { opacity:1; transform:translate(0, 0); } }
-        @keyframes slideFromBottomLeft { from { opacity:0; transform:translate(-60px, 60px); } to { opacity:1; transform:translate(0, 0); } }
-
-        .home-wrap {
-          position:relative;
-          width:100%; height:100%; overflow-y:auto;
-          background:#f0f4f8;
-          font-family:'Noto Sans Thai', sans-serif;
-          color:#1e293b;
-          scrollbar-width:thin;
-          scrollbar-color:#00d1ff #e2e8f0;
-        }
-        .home-wrap::-webkit-scrollbar { width:6px; }
-        .home-wrap::-webkit-scrollbar-track { background:#e2e8f0; }
-        .home-wrap::-webkit-scrollbar-thumb { background:#00d1ff; border-radius:3px; }
-
-        /* ─── HERO ─── */
-        .hero-bg {
-          position:relative; width:100%;
-          background:linear-gradient(180deg,#e8f4ff 0%,#f0f8ff 50%,#f0f4f8 100%);
-          overflow:hidden;
-        }
-        .hero-bg::before {
-          content:''; position:absolute;
-          top:5%; left:50%; transform:translateX(-50%);
-          width:600px; height:600px;
-          background:radial-gradient(circle,rgba(0,209,255,0.15) 0%,transparent 70%);
-          pointer-events:none; z-index:0;
-        }
-        .hero-title-wrap {
-          position:relative; z-index:1;
-          display:flex; flex-direction:column; align-items:center;
-          padding-top:48px; pointer-events:none; user-select:none;
-        }
-        .hero-mascot {
-          position:relative; z-index:2;
-          display:block; margin:0 auto;
-          width:auto; max-height:420px;
-          object-fit:contain; object-position:bottom;
-          animation:mascotFloat 4s ease-in-out infinite, heroFadeIn 0.8s 0.15s ease both;
-          filter:drop-shadow(0 16px 32px rgba(0,209,255,0.18));
-        }
-
-        /* ─── DIVIDER ─── */
-        .divider { height:1px; margin:4px 32px; background:#e2e8f0; }
-
-        /* ─── SECTION ─── */
-        .section { padding:16px 32px; }
-        .section-inner { max-width: 1400px; margin: 0 auto; width: 100%; }
-        .section-title {
-          font-size:32px; font-weight:900; letter-spacing:0.08em;
-          text-transform:uppercase; margin-bottom:16px;
-          display:flex; align-items:center; gap:10px; color:#0f172a;
-          font-family:'PSL Kampanath Pro', 'Barlow Condensed', sans-serif;
-        }
-        .section-title::before { display:none; }
-        .section-title-row {
-          display:flex; align-items:center; justify-content:space-between;
-          margin-bottom:16px;
-        }
-        .see-more-btn {
-          font-size:12px; font-weight:800; color:#fff;
-          border:none;
-          padding:7px 24px;
-          background: linear-gradient(90deg, #00d1ff, #00a3cc);
-          cursor:pointer;
-          letter-spacing:0.1em;
-          font-family:'Barlow Condensed', sans-serif;
-          text-transform:uppercase;
-          clip-path: polygon(10px 0%, 100% 0%, calc(100% - 10px) 100%, 0% 100%);
-          transition:all 0.2s;
-          box-shadow: 0 4px 14px rgba(0,198,247,0.4);
-        }
-        .see-more-btn:hover { opacity:0.85; transform:translateY(-1px); }
-
-        /* ─── PROMO GRID ─── */
-        .promo-grid {
-          display:flex; flex-direction:row; gap:8px;
-          justify-content:center;
-        }
-        .promo-card {
-          position:relative; overflow:hidden;
-          cursor:pointer; background:#dbeafe;
-          border:2px solid #e2e8f0;
-          box-sizing: border-box;
-          width: 224px; height: 262px;
-          flex-shrink: 0;
-          transition:all 0.25s ease;
-          box-shadow:0 2px 8px rgba(0,0,0,0.06);
-          clip-path: polygon(
-            16px 0%, 100% 0%,
-            100% calc(100% - 16px),
-            calc(100% - 16px) 100%,
-            0% 100%, 0% 16px
-          );
-        }
-        .promo-card.featured {
-          width: 456px;
-        }
-        .promo-card:hover {
-          border-color:#00d1ff;
-          box-shadow:0 8px 24px rgba(0,209,255,0.2);
-          transform:translateY(-3px);
-        }
-        .promo-card img { position:absolute; inset:0; width:100%; height:100%; object-fit:cover; display:block; transition:transform 0.35s ease; }
-        .promo-card:hover img { transform:scale(1.04); }
-        .promo-card .game-overlay {
-          position:absolute; inset:0;
-          background:linear-gradient(180deg,transparent 35%,rgba(10,22,60,0.88) 100%);
-        }
-        .promo-card .game-name {
-          position:absolute; bottom:0; left:0; right:0;
-          padding:8px 10px 10px; font-size:12px; font-weight:700;
-          text-align:center; line-height:1.4; color:#fff;
-        }
-        .promo-tag {
-          position:absolute; top:8px; right:8px;
-          background:#f2d000; color:#1a1a1a;
-          font-size:10px; font-weight:900;
-          padding:3px 8px; border-radius:4px; letter-spacing:0.08em;
-        }
-        .promo-tag.new { background:#ef4444; color:#fff; }
-
-        @keyframes gameCardIn {
-          from { opacity:0; transform:translateY(24px); }
-          to   { opacity:1; transform:translateY(0); }
-        }
-
-        /* ─── GAMES GRID ─── */
-        .games-grid { display:flex; flex-direction:row; gap:8px; justify-content:center; }
-        .games-grid-expanded {
-          display: grid;
-          grid-template-columns: repeat(5, 224px);
-          gap: 8px;
-          justify-content: center;
-        }
-
-        .collapse-btn {
-          font-size:12px; font-weight:800; color:#fff;
-          border: none;
-          padding:7px 24px;
-          background: #475569;
-          cursor:pointer;
-          letter-spacing:0.1em;
-          font-family:'Barlow Condensed', sans-serif;
-          text-transform:uppercase;
-          clip-path: polygon(10px 0%, 100% 0%, calc(100% - 10px) 100%, 0% 100%);
-          transition:all 0.2s;
-        }
-        .collapse-btn:hover { background:#334155; color:#fff; }
-        .game-card {
-          position:relative; overflow:hidden;
-          cursor:pointer; width:224px; height:262px;
-          box-sizing:border-box;
-          border:2px solid #e2e8f0;
-          transition:all 0.25s ease;
-          background:#dbeafe;
-          box-shadow:0 2px 8px rgba(0,0,0,0.06);
-          clip-path: polygon(
-            16px 0%, 100% 0%,
-            100% calc(100% - 16px),
-            calc(100% - 16px) 100%,
-            0% 100%, 0% 16px
-          );
-        }
-        .game-card:hover {
-          transform:translateY(-5px);
-          border-color:#00d1ff;
-          box-shadow:0 10px 28px rgba(0,209,255,0.25);
-        }
-        .game-card img { position:absolute; inset:0; width:100%; height:100%; object-fit:cover; object-position:center top; display:block; transition:transform 0.35s ease; }
-        .game-card:hover img { transform:scale(1.05); }
-        .game-overlay {
-          position:absolute; inset:0;
-          background:linear-gradient(180deg,transparent 40%,rgba(10,22,60,0.92) 100%);
-        }
-        .game-name {
-          position:absolute; bottom:0; left:0; right:0;
-          padding:10px 10px 12px; font-size:11px; font-weight:700;
-          text-align:center; line-height:1.4; color:#fff;
-        }
-        .new-badge {
-          position:absolute; top:8px; left:8px;
-          background:#ef4444; color:white; font-size:10px;
-          font-weight:900; padding:3px 8px; border-radius:4px;
-          letter-spacing:0.1em; animation:newPulse 2s ease infinite;
-        }
-        .tag-badge {
-          position:absolute; bottom:40px; left:8px;
-          background:rgba(0,0,0,0.6);
-          border:1px solid rgba(255,255,255,0.2);
-          font-size:10px; padding:2px 8px; border-radius:100px;
-          color:rgba(255,255,255,0.8);
-        }
-
-        /* ─── POPULAR PACKAGE ─── */
-        .popular-section { padding: 16px 32px 8px; max-width: 1400px; margin: 0 auto; width: 100%; }
-        .popular-title {
-          font-size: 32px; font-weight: 900;
-          font-family: 'PSL Kampanath Pro', 'Barlow Condensed', sans-serif;
-          letter-spacing: 4px; text-align: center;
-          margin-bottom: 24px;
-          display: flex; align-items: center; justify-content: center; gap: 10px;
-        }
-        .popular-banner {
-          width: 100%; margin-bottom: 12px;
-          cursor: pointer;
-          clip-path: polygon(
-            16px 0%, 100% 0%,
-            100% calc(100% - 16px),
-            calc(100% - 16px) 100%,
-            0% 100%, 0% 16px
-          );
-          transition: transform 0.25s, box-shadow 0.25s;
-          box-shadow: 0 4px 20px rgba(0,0,0,0.15);
-        }
-        .popular-banner:hover {
-          transform: translateY(-3px);
-          box-shadow: 0 12px 32px rgba(0,0,0,0.2);
-        }
-        .popular-banner-inner { width: 1200px; max-width: 100%; height: 300px; overflow: hidden; margin: 0 auto; }
-        .popular-banner img {
-          width: 100%; height: 300px;
-          object-fit: cover; object-position: center top; display: block;
-        }
-
-        /* ─── QUALITY SECTION ─── */
-        .quality-section {
-          background: linear-gradient(180deg, #00d1ff 0%, #00d1ff 100%);
-          padding: 48px 32px 56px; text-align: center;
-        }
-        .quality-title {
-          font-size: 26px; font-weight: 900; color: #fff;
-          font-family: 'PSL Kampanath Pro', 'Noto Sans Thai', sans-serif;
-          margin-bottom: 32px; letter-spacing: 0.04em;
-        }
-        .quality-grid {
-          display: grid; grid-template-columns: repeat(3, 1fr);
-          gap: 20px; max-width: 760px; margin: 0 auto;
-        }
-        .quality-card {
-          background: #fff; padding: 28px 20px 24px;
-          box-shadow: 0 4px 20px rgba(0,0,0,0.1);
-          text-align: center; position: relative; overflow: hidden;
-          clip-path: polygon(
-            20px 0%, 100% 0%,
-            100% calc(100% - 20px),
-            calc(100% - 20px) 100%,
-            0% 100%, 0% 20px
-          );
-        }
-        .quality-icon {
-          width: 60px; height: 60px; border-radius: 50%;
-          display: flex; align-items: center; justify-content: center;
-          font-size: 24px; color: #00d1ff; margin: 0 auto 16px; font-weight: 900;
-        }
-        .quality-card-title {
-          font-size: 14px; font-weight: 700; color: #00d1ff;
-          margin-bottom: 12px; line-height: 1.5;
-          font-family: 'Noto Sans Thai', sans-serif;
-        }
-        .quality-card-desc {
-          font-size: 12px; color: #475569; line-height: 1.8;
-          font-family: 'Noto Sans Thai', sans-serif;
-        }
-
-        /* ─── ADMIN POPUP ─── */
-        @keyframes popupBounce {
-          0%,100% { transform: translateY(0); }
-          50%      { transform: translateY(-6px); }
-        }
-        @keyframes popupPulse {
-          0%,100% { box-shadow: 0 8px 32px rgba(24,119,242,0.55), 0 0 0 0 rgba(24,119,242,0.5); }
-          50%      { box-shadow: 0 8px 32px rgba(24,119,242,0.55), 0 0 0 10px rgba(24,119,242,0); }
-        }
-        .admin-popup {
-          position: fixed; bottom: 32px; right: 32px; z-index: 9999;
-          display: flex; align-items: center; gap: 14px;
-          background: linear-gradient(135deg, #1877f2, #1251a8);
-          color: #fff; padding: 16px 32px 16px 20px;
-          cursor: pointer; border: none;
-          clip-path: polygon(16px 0%, 100% 0%, calc(100% - 16px) 100%, 0% 100%);
-          box-shadow: 0 8px 32px rgba(24,119,242,0.55), 0 2px 8px rgba(0,0,0,0.15);
-          animation: popupBounce 3s ease-in-out infinite, popupPulse 2s ease-in-out infinite;
-          transition: opacity 0.2s, transform 0.2s;
-          font-family: 'PSL Khemarat Pro', 'Noto Sans Thai', sans-serif;
-        }
-        .admin-popup:hover { opacity: 0.92; transform: translateY(-3px); }
-        .admin-popup-icon {
-          width: 32px; height: 32px; flex-shrink: 0;
-          object-fit: contain; filter: brightness(0) invert(1);
-        }
-        .admin-popup-text {
-          font-size: 18px; font-weight: 900;
-          letter-spacing: 0.04em; white-space: nowrap;
-          text-shadow: 0 1px 4px rgba(0,0,0,0.2);
-          font-family: 'PSL Khemarat Pro', 'Noto Sans Thai', sans-serif;
-        }
-
-        /* ─── FOOTER ─── */
-        .footer-section {
-          background: #fff; padding: 36px 40px;
-          display: flex; gap: 40px; align-items: flex-start;
-          border-top: 1px solid #e2e8f0;
-        }
-        .footer-left { flex: 1; }
-        .footer-logo { display: flex; align-items: center; gap: 12px; margin-bottom: 14px; }
-        .footer-logo-icon {
-          width: 44px; height: 44px; border-radius: 50%;
-          background: linear-gradient(135deg, #00d1ff, #00a3cc);
-          display: flex; align-items: center; justify-content: center;
-          color: #fff; font-size: 20px;
-        }
-        .footer-logo-name {
-          font-family: 'Barlow Condensed', sans-serif;
-          font-size: 22px; font-weight: 900; color: #00d1ff; letter-spacing: 1px;
-        }
-        .footer-logo-sub {
-          font-size: 10px; color: #94a3b8; letter-spacing: 1px;
-          font-family: 'Barlow Condensed', sans-serif;
-        }
-        .footer-desc {
-          font-size: 12px; color: #64748b; line-height: 1.9;
-          font-family: 'Noto Sans Thai', sans-serif; margin-bottom: 20px;
-        }
-        .footer-contact { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
-        .footer-contact-label {
-          font-size: 12px; color: #475569; font-weight: 600;
-          font-family: 'Noto Sans Thai', sans-serif; cursor: pointer;
-        }
-        .footer-contact-label:hover { color: #00d1ff; }
-        .footer-icons { display: flex; gap: 8px; }
-        .footer-icon-wrap {
-          display: inline-flex; align-items: center; justify-content: center;
-          width: 48px; height: 48px;
-          background: #00d1ff;
-          clip-path: polygon(
-            12px 0%, 100% 0%,
-            100% calc(100% - 12px),
-            calc(100% - 12px) 100%,
-            0% 100%, 0% 12px
-          );
-          cursor: pointer; transition: transform 0.2s, opacity 0.2s; text-decoration: none;
-        }
-        .footer-icon-inner {
-          display: inline-flex; align-items: center; justify-content: center;
-          width: 42px; height: 42px; background: #00d1ff;
-          clip-path: polygon(
-            10px 0%, 100% 0%,
-            100% calc(100% - 10px),
-            calc(100% - 10px) 100%,
-            0% 100%, 0% 10px
-          );
-          padding: 7px;
-        }
-        .footer-icon-inner img { width: 100%; height: 100%; object-fit: contain; filter: brightness(0) invert(1); }
-        .footer-icon-wrap:hover { transform: translateY(-3px); opacity: 0.85; }
-        .footer-right { width: 220px; flex-shrink: 0; }
-        .footer-fanpage-title { font-size: 16px; margin-bottom: 10px; font-family: 'Barlow Condensed', sans-serif; letter-spacing: 1px; }
-        .footer-fanpage-card { border-radius: 10px; overflow: hidden; border: 1px solid #e2e8f0; box-shadow: 0 2px 12px rgba(0,0,0,0.08); }
-        .footer-fanpage-img {
-          position: relative; width: 100%; height: 120px;
-          background: linear-gradient(135deg, #e8f4ff, #bfdbfe);
-          display: flex; align-items: center; justify-content: center;
-        }
-      `}</style>
-
       <div className="home-wrap">
 
         {/* BG มุมขวาบนสุด */}
-        <img src="/images/BG/TOPBLUE.png" alt="" style={{
-          position:'absolute', top:0, right:0,
-          width:'25%', pointerEvents:'none', userSelect:'none', zIndex:0,
-          animation: 'slideFromTopRight 1.2s 0.2s ease both',
-        }} onError={e => e.target.style.display='none'} />
+        <img src="/images/BG/TOPBLUE.png" alt=""
+          className="absolute top-0 right-0 w-1/4 pointer-events-none select-none z-0"
+          style={{ animation: 'slideFromTopRight 1.2s 0.2s ease both' }}
+          onError={e => e.target.style.display='none'} />
 
         {/* BG มุมล่างซ้ายสุด */}
-        <img src="/images/BG/DOWNBLUE.png" alt="" style={{
-          position:'absolute', bottom:0, left:0,
-          width:'25%', pointerEvents:'none', userSelect:'none', zIndex:0,
-          animation: 'slideFromBottomLeft 1.2s 0.4s ease both',
-        }} onError={e => e.target.style.display='none'} />
+        <img src="/images/BG/DOWNBLUE.png" alt=""
+          className="absolute bottom-0 left-0 w-1/4 pointer-events-none select-none z-0"
+          style={{ animation: 'slideFromBottomLeft 1.2s 0.4s ease both' }}
+          onError={e => e.target.style.display='none'} />
 
         {/* ─── HERO + PROMOTION — พื้นหลังเดียวกัน ─── */}
         <div className="hero-bg">
         
-          {/* Title */} 
-          <div className="hero-title-wrap">
-            <img
-              src="/images/ALASKAN_WEB_ASSET/PNG/alaskan_logo-asset1.png"
-              alt="ALASKAN TOPUP GAME ONLINE"
-              style={{
-                maxWidth: 'clamp(260px, 40vw, 520px)',
-                width: '100%', height: 'auto',
-                filter: 'drop-shadow(0 0 32px rgba(0,209,255,0.25))',
-                animation: 'heroFadeIn 0.8s 0.1s ease both',
-              }}
-              onError={e => { e.target.style.display = 'none'; }}
-            />
-          </div>
-
-          {/* Mascot */}
-          <img
-            className="hero-mascot"
-            src={HERO_MASCOT_IMG}
-            alt="mascot"
-            onError={e => { e.target.style.display = 'none'; }}
-          />
+          {/* Hero Slider */}
+          <HeroSlider />
 
           {/* PROMOTION อยู่ใน bg เดียวกัน */}
-          <div className="section" style={{ paddingBottom: 28, position:'relative', zIndex:1 }}>
+          <div className="section relative z-1 pb-7" style={{ marginTop: 36 }}>
             <div className="section-inner">
-              <div className="section-title" style={{ justifyContent: 'center' }}>PROMOTION</div>
+              <div className="section-title justify-center">PROMOTION</div>
               <PromoGrid promos={PROMOS} />
             </div>
           </div>
@@ -681,14 +383,14 @@ export default function Home() {
         <div className="section">
           <div className="section-inner">
             <div className="section-title-row">
-              <div className="section-title" style={{ margin: 0 }}>
+              <div className="section-title mb-0">
                 <span style={{ color: '#00d1ff' }}>UID</span> TOP-UP
               </div>
               {!uidExpanded && (
                 <button className="see-more-btn" onClick={() => setUidExpanded(true)}>ดูเกมอื่นๆ</button>
               )}
             </div>
-            <GameGrid games={GAMES_TOPUP} expanded={uidExpanded} onCollapse={() => setUidExpanded(false)} />
+            <GameGrid games={GAMES_TOPUP} expanded={uidExpanded} onCollapse={() => setUidExpanded(false)} onTopup={onTopup} />
           </div>
         </div>
 
@@ -698,7 +400,7 @@ export default function Home() {
         <div className="section">
           <div className="section-inner">
             <div className="section-title-row">
-              <div className="section-title" style={{ margin: 0 }}>
+              <div className="section-title mb-0">
                 <span style={{ color: '#00d1ff' }}>MAIL/PASS</span> TOP-UP
               </div>
               {!mailExpanded && (
@@ -771,7 +473,7 @@ export default function Home() {
         </div>
 
         {/* ─── FOOTER ─── */}
-        <div className="footer-section">
+        <div id="contact-section" className="footer-section">
           <div className="footer-left">
             <div className="footer-logo">
               <div className="footer-logo-icon">
@@ -794,20 +496,18 @@ export default function Home() {
               <span className="footer-contact-label">ติดต่อเรา</span>
               <div className="footer-icons">
                 {[
-                  { src: "/images/ALASKAN_WEB_ASSET/SOCIAL%20ICON/PNG/CHATWEB1.png",   alt: "Chat" },
-                  { src: "/images/ALASKAN_WEB_ASSET/SOCIAL%20ICON/PNG/FACEBOOK1.png",  alt: "Facebook" },
-                  { src: "/images/ALASKAN_WEB_ASSET/SOCIAL%20ICON/PNG/INSTAGRAM1.png", alt: "Instagram" },
-                  { src: "/images/ALASKAN_WEB_ASSET/SOCIAL%20ICON/PNG/LINE1.png",      alt: "Line" },
+                  { src: "/images/ALASKAN_WEB_ASSET/SOCIAL%20ICON/PNG/CHATWEB1.png",   alt: "Chat",      href: "https://www.messenger.com/t/677062779057497/?messaging_source=source%3Apages%3Amessage_shortlink&source_id=1441792&recurring_notification=0" },
+                  { src: "/images/ALASKAN_WEB_ASSET/SOCIAL%20ICON/PNG/FACEBOOK1.png",  alt: "Facebook",  href: "https://www.facebook.com/ALASKAN.ONLINE.SHOP" },
+                  { src: "/images/ALASKAN_WEB_ASSET/SOCIAL%20ICON/PNG/INSTAGRAM1.png", alt: "Instagram", href: "#" },
+                  { src: "/images/ALASKAN_WEB_ASSET/SOCIAL%20ICON/PNG/LINE1.png",      alt: "Line",      href: "#" },
                 ].map((ic) => (
-                  <a href="#" className="footer-icon-wrap" key={ic.alt}>
+                  <a href={ic.href} target="_blank" rel="noopener noreferrer" className="footer-icon-wrap" key={ic.alt}>
                     <div className="footer-icon-inner">
                       <img src={ic.src} alt={ic.alt} />
                     </div>
                   </a>
                 ))}
               </div>
-              <span className="footer-contact-label" style={{ marginLeft: 24 }}>นโยบายความเป็นส่วนตัว</span>
-              <span className="footer-contact-label" style={{ marginLeft: 24 }}>เงื่อนไขการให้บริการ</span>
             </div>
           </div>
           <div className="footer-right">
@@ -815,31 +515,31 @@ export default function Home() {
               <span style={{ color: '#1877f2', fontWeight: 900 }}>FACEBOOK</span>
               <span style={{ fontWeight: 900 }}> FANPAGE</span>
             </div>
-            <div className="footer-fanpage-card">
-              <div className="footer-fanpage-img">
-                <img src="/images/ALASKAN_WEB_ASSET/BACKGROUND/home/Alaskan_page_cover_1_ai_edit.png" alt="fanpage"
-                  style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover' }}
-                  onError={e => { e.target.style.display = 'none'; }}
-                />
+            <a href="https://www.facebook.com/ALASKAN.ONLINE.SHOP" target="_blank" rel="noopener noreferrer" style={{ display:'block', textDecoration:'none' }}>
+              <div className="footer-fanpage-card">
+                <div className="footer-fanpage-img">
+                  <img src="/images/ALASKAN_WEB_ASSET/BACKGROUND/home/Alaskan_page_cover_1_ai_edit.png" alt="fanpage"
+                    style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover' }}
+                    onError={e => { e.target.style.display = 'none'; }}
+                  />
+                </div>
               </div>
-            </div>
+            </a>
           </div>
         </div>
 
 
         {/* ─── COPYRIGHT ─── */}
-        <div style={{
-          background: '#fff',
-          textAlign: 'center', padding: '14px 32px',
-          fontSize: 13,
-          fontFamily: "'PSL Chocolate Extra Pro', 'Noto Sans Thai', sans-serif",
-          letterSpacing: '0.04em',
-        }}>
-          © 2026 AlasKan Shop. All rights reserved.
+        <div className="copyright-bar">
+          <span>© 2026 AlasKan Shop. All rights reserved.</span>
+          <div style={{ display:'flex', gap:20, marginLeft:32 }}>
+            <button onClick={() => setModal('privacy')} style={{ background:'none', border:'none', cursor:'pointer', fontSize:13, color:'#64748b', fontFamily:'inherit', letterSpacing:'0.04em' }}>นโยบายความเป็นส่วนตัว</button>
+            <button onClick={() => setModal('terms')} style={{ background:'none', border:'none', cursor:'pointer', fontSize:13, color:'#64748b', fontFamily:'inherit', letterSpacing:'0.04em' }}>เงื่อนไขการให้บริการ</button>
+          </div>
         </div>
 
         {/* ─── ADMIN POPUP ─── */}
-        <button className="admin-popup" onClick={() => window.open('https://www.facebook.com/ALASKAN.ONLINE.SHOP', '_blank', 'noopener,noreferrer')}>
+        <button className="admin-popup" style={{ display: 'none' }} onClick={() => window.open('https://www.facebook.com/ALASKAN.ONLINE.SHOP', '_blank', 'noopener,noreferrer')}>
           <img className="admin-popup-icon" src="/images/ALASKAN_WEB_ASSET/SOCIAL%20ICON/PNG/FACEBOOK1.png" alt="Facebook" />
           <span className="admin-popup-text">ติดต่อแอดมินตลอด 24 ชั่วโมง!</span>
         </button>

@@ -3,23 +3,534 @@
 @font-face {
   font-family: 'PSL Kampanath Pro';
   src: url('/fonts/PSL180pro.ttf') format('truetype');
-  font-weight: normal;
-  font-style: normal;
-  font-display: swap;
+  font-weight: normal; font-style: normal; font-display: swap;
 }
-
 @font-face {
   font-family: 'PSL Khemarat Pro';
   src: url('/fonts/PSL056pro.ttf') format('truetype');
-  font-weight: normal;
-  font-style: normal;
-  font-display: swap;
+  font-weight: normal; font-style: normal; font-display: swap;
 }
-
 @font-face {
   font-family: 'PSL Chocolate Extra Pro';
   src: url('/fonts/PSL343pro.otf') format('opentype');
-  font-weight: normal;
-  font-style: normal;
-  font-display: swap;
+  font-weight: normal; font-style: normal; font-display: swap;
+}
+@font-face {
+  font-family: 'Good Times Rg';
+  src: url('/fonts/Good Times Rg.otf') format('opentype');
+  font-weight: normal; font-style: normal; font-display: swap;
+}
+@font-face {
+  font-family: 'Ethnocentric';
+  src: url('/fonts/Ethnocentric-Regular.otf') format('opentype');
+  font-weight: normal; font-style: normal; font-display: swap;
+}
+
+/* ─── Animations ─── */
+@keyframes fadeIn         { from { opacity:0; transform:translateY(12px); }  to { opacity:1; transform:translateY(0); } }
+@keyframes newPulse       { 0%,100% { opacity:1; } 50% { opacity:0.7; } }
+@keyframes mascotFloat    { 0%,100% { transform:translateY(0); }  50% { transform:translateY(-12px); } }
+@keyframes heroFadeIn     { from { opacity:0; transform:translateY(20px); } to { opacity:1; transform:translateY(0); } }
+@keyframes slideFromTopRight    { from { opacity:0; transform:translate(60px,-60px);  } to { opacity:1; transform:translate(0,0); } }
+@keyframes slideFromBottomLeft  { from { opacity:0; transform:translate(-60px,60px); } to { opacity:1; transform:translate(0,0); } }
+@keyframes popupBounce    { 0%,100% { transform:translateY(0); } 50% { transform:translateY(-6px); } }
+@keyframes popupPulse {
+  0%,100% { box-shadow:0 8px 32px rgba(24,119,242,0.55),0 0 0 0   rgba(24,119,242,0.5); }
+  50%     { box-shadow:0 8px 32px rgba(24,119,242,0.55),0 0 0 10px rgba(24,119,242,0); }
+}
+@keyframes gameCardIn { from { opacity:0; transform:translateY(24px); } to { opacity:1; transform:translateY(0); } }
+
+@layer components {
+
+  /* ─── Page wrapper ─── */
+  .home-wrap {
+    position:relative; width:100%; height:100%; overflow-y:auto;
+    background:#f0f4f8;
+    font-family:'Noto Sans Thai', sans-serif;
+    color:#1e293b;
+    scrollbar-width:thin;
+    scrollbar-color:#00d1ff #e2e8f0;
+  }
+  .home-wrap::-webkit-scrollbar       { width:6px; }
+  .home-wrap::-webkit-scrollbar-track { background:#e2e8f0; }
+  .home-wrap::-webkit-scrollbar-thumb { background:#00d1ff; border-radius:3px; }
+
+  .reveal { opacity:0; transform:translateY(40px); transition:opacity 0.6s ease,transform 0.6s ease; }
+  .reveal.visible { opacity:1; transform:translateY(0); }
+
+  /* ─── Hero ─── */
+  .hero-bg {
+    position:relative; width:100%;
+    background:linear-gradient(180deg,#e8f4ff 0%,#f0f8ff 50%,#f0f4f8 100%);
+    overflow:hidden;
+  }
+  .hero-bg::before {
+    content:''; position:absolute;
+    top:0; left:0;
+    width:800px; height:600px;
+    background:radial-gradient(ellipse at 20% 40%, rgba(0,209,255,0.18) 0%, transparent 65%);
+    pointer-events:none; z-index:0;
+  }
+  .hero-bg::after {
+    content:''; position:absolute;
+    bottom:10%; right:8%;
+    width:400px; height:400px;
+    background:radial-gradient(circle, rgba(0,209,255,0.10) 0%, transparent 70%);
+    pointer-events:none; z-index:0;
+  }
+  .hero-inner {
+    position:relative; width:100%;
+    display:flex; justify-content:center; align-items:center;
+    padding:24px 0 0; overflow:hidden;
+  }
+  .hero-text-wrap {
+    position:absolute; inset:0;
+    display:flex; flex-direction:column;
+    justify-content:center; align-items:center;
+    text-align:center;
+    pointer-events:none; user-select:none;
+    animation:heroFadeIn 0.7s 0.05s ease both;
+    line-height:1; z-index:0;
+  }
+  .hero-text-alaskan {
+    display:block;
+    font-family:'Good Times Rg', sans-serif;
+    font-size:clamp(64px, 10vw, 140px);
+    font-weight:700; color:#00d1ff;
+    letter-spacing:0.04em; text-transform:uppercase;
+    filter:drop-shadow(0 0 32px rgba(0,209,255,0.35));
+  }
+  .hero-text-sub {
+    display:flex; align-items:center; justify-content:center;
+    font-family:'Good Times Rg', sans-serif;
+    font-size:clamp(18px, 2.8vw, 38px);
+    font-weight:900; color:#1e293b;
+    letter-spacing:0.18em; text-transform:uppercase;
+    margin-top:4px; gap:0;
+  }
+  .hero-text-gap { display:inline-block; width:clamp(60px, 8vw, 160px); }
+  .hero-mascot {
+    position:relative; z-index:2; pointer-events:none;
+    display:block; flex-shrink:0;
+    height:clamp(300px, 32vw, 460px);
+    width:auto; object-fit:contain;
+    animation:mascotFloat 4s ease-in-out infinite, heroFadeIn 0.8s 0.15s ease both;
+    filter:drop-shadow(0 16px 40px rgba(0,209,255,0.22));
+  }
+
+  /* ─── Hero Slider ─── */
+  .hero-slider {
+    position:relative; width:100%;
+    height:clamp(420px, 58vw, 790px); overflow:hidden; 
+  }
+  .hs-bg {
+    position:absolute; inset:0;
+    background-size:contain; background-position:center top; background-repeat:no-repeat;
+    opacity:0; transition:opacity 0.7s ease;
+  }
+  .hs-bg.active { opacity:1; }
+  .hs-overlay {
+    position:absolute; inset:0; z-index:1;
+    background:linear-gradient(90deg, rgba(0,0,0,0.78) 0%, rgba(0,0,0,0.45) 55%, transparent 85%);
+  }
+  .hs-content {
+    position:absolute; inset:0; z-index:2;
+    display:flex; align-items:center;
+  }
+  @keyframes hsDown { from { opacity:0; transform:translateY(28px); } to { opacity:1; transform:translateY(0); } }
+  @keyframes hsUp   { from { opacity:0; transform:translateY(-28px); } to { opacity:1; transform:translateY(0); } }
+  .hs-anim-down { animation:hsDown 0.45s ease both; }
+  .hs-anim-up   { animation:hsUp 0.45s ease both; }
+  .hs-game-content { padding:0 72px; max-width:520px; }
+  .hs-game-tag {
+    display:inline-block; background:#ef4444; color:#fff;
+    font-size:11px; font-weight:900; padding:3px 10px;
+    border-radius:4px; letter-spacing:0.08em; margin-bottom:14px;
+  }
+  .hs-game-name {
+    font-family:'Ethnocentric','Good Times Rg',sans-serif;
+    font-size:clamp(28px,4vw,52px); font-weight:900;
+    color:#fff; letter-spacing:0.04em; text-transform:uppercase;
+    margin:0 0 8px; line-height:1.1;
+    text-shadow:0 2px 24px rgba(0,0,0,0.6);
+  }
+  .hs-game-cat {
+    font-size:14px; color:rgba(255,255,255,0.72);
+    font-family:'Noto Sans Thai',sans-serif; margin:0 0 28px;
+  }
+  .hs-topup-btn {
+    background:#00d1ff; color:#fff; border:none;
+    padding:13px 36px; font-size:15px; font-weight:700;
+    border-radius:8px; cursor:pointer;
+    font-family:'Noto Sans Thai',sans-serif;
+    transition:background 0.2s, transform 0.2s;
+    box-shadow:0 4px 20px rgba(0,209,255,0.5);
+  }
+  .hs-topup-btn:hover { background:#00b8e0; transform:translateY(-2px); }
+  .hs-thumbs {
+    position:absolute; left:32px; bottom:24px;
+    z-index:10;
+    display:flex; flex-direction:row; align-items:center; gap:8px;
+  }
+  .hs-nav-btn {
+    width:48px; height:48px; background:rgba(0,0,0,0.45);
+    border:1px solid rgba(255,255,255,0.25); color:#fff;
+    font-size:22px; border-radius:10px; cursor:pointer;
+    display:flex; align-items:center; justify-content:center;
+    transition:background 0.2s, opacity 0.3s ease; line-height:1; padding:0;
+    opacity: 0;
+  }
+  .hero-slider:hover .hs-nav-btn { opacity: 1; }
+  .hs-nav-btn:hover { background:rgba(0,209,255,0.55); }
+  .hs-thumb-list { display:flex; flex-direction:row; gap:8px; }
+  .hs-thumb {
+    width:58px; height:58px; border-radius:10px; overflow:hidden;
+    cursor:pointer; border:2px solid rgba(255,255,255,0.18);
+    transition:border-color 0.25s, transform 0.25s; background:rgba(0,0,0,0.3);
+  }
+  .hs-thumb.active { border-color:#00d1ff; transform:scale(1.08); }
+  .hs-thumb img { width:100%; height:100%; object-fit:cover; }
+
+  /* ─── Divider ─── */
+  .divider {
+    height: 1px; margin: 4px 32px;
+    background: linear-gradient(90deg, transparent 0%, #00d1ff 25%, #00d1ff 75%, transparent 100%);
+    opacity: 0.3;
+  }
+
+  /* ─── Section ─── */
+  .section { padding:16px 32px; }
+  .section-inner { max-width:1400px; margin:0 auto; width:100%; }
+  .section-title {
+    font-size:26px; font-weight:900; letter-spacing:0.08em;
+    text-transform:uppercase; margin-bottom:16px;
+    display:flex; align-items:center; gap:10px; color:#0f172a;
+    font-family:'Ethnocentric', 'Good Times Rg', sans-serif;
+  }
+  .section-title::before {
+    content: '';
+    display: block;
+    width: 5px;
+    height: 22px;
+    background: linear-gradient(180deg, #00d1ff, #0099bb);
+    border-radius: 3px;
+    flex-shrink: 0;
+  }
+
+  .section-title-row {
+    display:flex; align-items:center; justify-content:space-between;
+    margin-bottom:16px;
+  }
+
+  /* ─── Buttons ─── */
+  .see-more-btn {
+    font-size:15px; font-weight:900; color:#fff;
+    border:none; padding:10px 36px;
+    background:#00d1ff; cursor:pointer; letter-spacing:0.12em;
+    font-family:'Barlow Condensed', 'PSL Chocolate Extra Pro', sans-serif;
+    text-transform:uppercase;
+    clip-path:polygon(20px 0%,100% 0%,100% calc(100% - 20px),calc(100% - 20px) 100%,0% 100%,0% 20px);
+    transition:all 0.2s;
+    box-shadow:0 4px 18px rgba(0,209,255,0.45);
+  }
+  .see-more-btn:hover { background:#00b8e0; transform:translateY(-1px); }
+  .collapse-btn {
+    font-size:15px; font-weight:900; color:#fff;
+    border:none; padding:10px 36px;
+    background:#475569; cursor:pointer; letter-spacing:0.12em;
+    font-family:'Barlow Condensed', 'PSL Chocolate Extra Pro', sans-serif;
+    text-transform:uppercase;
+    clip-path:polygon(20px 0%,100% 0%,100% calc(100% - 20px),calc(100% - 20px) 100%,0% 100%,0% 20px);
+    transition:all 0.2s;
+  }
+  .collapse-btn:hover { background:#334155; }
+
+  /* ─── Promo carousel nav ─── */
+  .promo-nav-btn {
+    position:absolute; top:50%; transform:translateY(-50%);
+    z-index:10; width:40px; height:40px;
+    background:linear-gradient(135deg, #00d1ff, #00a3cc);
+    border:none; border-radius:50%;
+    cursor:pointer; display:flex; align-items:center; justify-content:center;
+    color:#fff; font-size:20px; font-weight:900;
+    box-shadow:0 4px 16px rgba(0,209,255,0.4);
+    transition:all 0.2s;
+  }
+  .promo-nav-btn:hover { opacity:0.85; transform:translateY(-50%) scale(1.1); }
+  .promo-nav-btn-prev { left:-52px; }
+  .promo-nav-btn-next { right:-52px; }
+
+  /* ─── Promo grid ─── */
+  .promo-grid {
+    display:flex; flex-direction:row; gap:8px;
+    justify-content:center;
+  }
+  .promo-card {
+    position:relative; overflow:hidden;
+    cursor:pointer; background:#dbeafe;
+    border:2px solid #e2e8f0; box-sizing:border-box;
+    width:224px; height:262px; flex-shrink:0;
+    transition:all 0.25s ease;
+    clip-path:polygon(16px 0%,100% 0%,100% calc(100% - 16px),calc(100% - 16px) 100%,0% 100%,0% 16px);
+  }
+  .promo-card.featured { width:456px; }
+  .promo-card::after {
+    content:''; position:absolute; inset:0;
+    opacity:0; pointer-events:none; z-index:10;
+    transition:opacity 0.35s ease;
+    box-shadow:
+      inset 0 0 18px rgba(0,0,0,0.65),
+      inset 0 0 50px rgba(0,0,0,0.40),
+      inset 0 0 90px rgba(0,0,0,0.20);
+  }
+  .promo-card:hover {
+    border-color:#00d1ff; transform:translateY(-3px);
+    filter:
+      drop-shadow(0 0 6px rgba(0,209,255,0.8))
+      drop-shadow(0 0 20px rgba(0,209,255,0.5))
+      drop-shadow(0 0 50px rgba(0,209,255,0.25));
+  }
+  .promo-card:hover::after { opacity:1; }
+  .promo-card img {
+    position:absolute; inset:0; width:100%; height:100%;
+    object-fit:cover; display:block; transition:transform 0.35s ease;
+  }
+  .promo-card:hover img { transform:scale(1.14); }
+  .promo-card .game-overlay {
+    position:absolute; inset:0;
+    background:linear-gradient(180deg,transparent 35%,rgba(10,22,60,0.88) 100%);
+  }
+  .promo-card .game-name {
+    position:absolute; bottom:0; left:0; right:0;
+    padding:8px 10px 10px; font-size:12px; font-weight:700;
+    text-align:center; line-height:1.4; color:#fff;
+  }
+  .promo-tag {
+    position:absolute; top:8px; right:8px;
+    background:#f2d000; color:#1a1a1a;
+    font-size:10px; font-weight:900;
+    padding:3px 8px; border-radius:4px; letter-spacing:0.08em;
+  }
+  .promo-tag.new { background:#ef4444; color:#fff; }
+
+  /* ─── Games grid ─── */
+  .games-grid { display:flex; flex-direction:row; gap:8px; justify-content:center; }
+  .games-grid-expanded {
+    display:grid;
+    grid-template-columns:repeat(5, 224px);
+    gap:8px; justify-content:center;
+  }
+  .game-card::before {
+    content:''; position:absolute; top:0; left:0; right:0; height:2px; z-index:11;
+    background:linear-gradient(90deg, transparent 0%, #00d1ff 50%, transparent 100%);
+    opacity:0; transition:opacity 0.35s ease;
+  }
+  .game-card:hover::before { opacity:1; }
+  .game-card {
+    position:relative; overflow:hidden;
+    cursor:pointer; width:224px; height:262px;
+    box-sizing:border-box; border:2px solid #e2e8f0;
+    transition:all 0.25s ease; background:#dbeafe;
+    clip-path:polygon(16px 0%,100% 0%,100% calc(100% - 16px),calc(100% - 16px) 100%,0% 100%,0% 16px);
+  }
+  .game-card::after {
+    content:''; position:absolute; inset:0;
+    opacity:0; pointer-events:none; z-index:10;
+    transition:opacity 0.35s ease;
+    box-shadow:
+      inset 0 0 16px rgba(0,0,0,0.55),
+      inset 0 0 40px rgba(0,0,0,0.30);
+  }
+  .game-card:hover {
+    transform:translateY(-6px); border-color:#00d1ff;
+    filter:
+      drop-shadow(0 0 6px rgba(0,209,255,0.65))
+      drop-shadow(0 0 20px rgba(0,209,255,0.35))
+      drop-shadow(0 14px 36px rgba(0,0,0,0.28));
+  }
+  .game-card:hover::after { opacity:1; }
+  .game-card img {
+    position:absolute; inset:0; width:100%; height:100%;
+    object-fit:cover; object-position:center top;
+    display:block; transition:transform 0.35s ease;
+  }
+  .game-card:hover img { transform:scale(1.16); }
+
+  .game-overlay {
+    position:absolute; inset:0;
+    background:linear-gradient(180deg,transparent 40%,rgba(10,22,60,0.92) 100%);
+  }
+  .game-name {
+    position:absolute; bottom:0; left:0; right:0;
+    padding:10px 10px 12px; font-size:11px; font-weight:700;
+    text-align:center; line-height:1.4; color:#fff;
+  }
+  .new-badge {
+    position:absolute; top:8px; left:8px;
+    background:#ef4444; color:#fff; font-size:10px;
+    font-weight:900; padding:3px 8px; border-radius:4px;
+    letter-spacing:0.1em; animation:newPulse 2s ease infinite;
+  }
+  .tag-badge {
+    position:absolute; bottom:40px; left:8px;
+    background:rgba(0,0,0,0.6);
+    border:1px solid rgba(255,255,255,0.2);
+    font-size:10px; padding:2px 8px; border-radius:100px;
+    color:rgba(255,255,255,0.8);
+  }
+
+  /* ─── Popular Package ─── */
+  .popular-section { padding:16px 32px 8px; max-width:1400px; margin:0 auto; width:100%; }
+  .popular-title {
+    font-size:26px; font-weight:900;
+    font-family:'Ethnocentric', 'Good Times Rg', sans-serif;
+    letter-spacing:4px; text-align:center; margin-bottom:24px;
+    display:flex; align-items:center; justify-content:center; gap:10px;
+  }
+  .popular-banner {
+    width:100%; margin-bottom:12px; cursor:pointer;
+    clip-path:polygon(16px 0%,100% 0%,100% calc(100% - 16px),calc(100% - 16px) 100%,0% 100%,0% 16px);
+    transition:transform 0.25s, box-shadow 0.25s;
+    box-shadow:0 4px 20px rgba(0,0,0,0.15);
+  }
+  .popular-banner:hover { transform:translateY(-3px); box-shadow:0 12px 32px rgba(0,0,0,0.2); }
+  .popular-banner-inner { width:1200px; max-width:100%; height:300px; overflow:hidden; margin:0 auto; }
+  .popular-banner img { width:100%; height:300px; object-fit:cover; object-position:center top; display:block; }
+
+  /* ─── Quality Section ─── */
+  .quality-section {
+    background:linear-gradient(180deg,#00d1ff 0%,#ffffff 100%);
+    padding:48px 32px 56px; text-align:center;
+  }
+  .quality-title {
+    font-size:26px; font-weight:900; color:#0f172a;
+    font-family:'PSL Kampanath Pro', 'Noto Sans Thai', sans-serif;
+    margin-bottom:32px; letter-spacing:0.04em;
+  }
+  .quality-grid {
+    display:grid; grid-template-columns:repeat(3,1fr);
+    gap:20px; max-width:760px; margin:0 auto;
+  }
+  .quality-card {
+    background:#fff; padding:28px 20px 24px;
+    border-radius:16px;
+    box-shadow:0 4px 20px rgba(0,0,0,0.1);
+    text-align:center; position:relative; overflow:hidden;
+    transition:transform 0.25s, box-shadow 0.25s;
+  }
+  .quality-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, transparent, #00d1ff, transparent);
+  }
+  .quality-card:hover { transform:translateY(-4px); box-shadow:0 10px 30px rgba(0,209,255,0.2); }
+  .quality-icon {
+    width:60px; height:60px; border-radius:50%;
+    display:flex; align-items:center; justify-content:center;
+    font-size:24px; color:#00d1ff; margin:0 auto 16px; font-weight:900;
+  }
+  .quality-card-title {
+    font-size:14px; font-weight:700; color:#00d1ff;
+    margin-bottom:12px; line-height:1.5;
+    font-family:'Noto Sans Thai', sans-serif;
+  }
+  .quality-card-desc {
+    font-size:12px; color:#475569; line-height:1.8;
+    font-family:'Noto Sans Thai', sans-serif;
+  }
+
+  /* ─── Admin Popup ─── */
+  .admin-popup {
+    position:fixed; bottom:32px; right:32px; z-index:9999;
+    display:flex; align-items:center; gap:14px;
+    background:linear-gradient(135deg,#1877f2,#1251a8);
+    color:#fff; padding:16px 32px 16px 20px;
+    cursor:pointer; border:none;
+    clip-path:polygon(16px 0%,100% 0%,calc(100% - 16px) 100%,0% 100%);
+    box-shadow:0 8px 32px rgba(24,119,242,0.55),0 2px 8px rgba(0,0,0,0.15);
+    animation:popupBounce 3s ease-in-out infinite, popupPulse 2s ease-in-out infinite;
+    transition:opacity 0.2s, transform 0.2s;
+    font-family:'PSL Khemarat Pro', 'Noto Sans Thai', sans-serif;
+  }
+  .admin-popup:hover { opacity:0.92; transform:translateY(-3px); }
+  .admin-popup-icon { width:32px; height:32px; flex-shrink:0; object-fit:contain; filter:brightness(0) invert(1); }
+  .admin-popup-text {
+    font-size:18px; font-weight:900;
+    letter-spacing:0.04em; white-space:nowrap;
+    text-shadow:0 1px 4px rgba(0,0,0,0.2);
+    font-family:'PSL Khemarat Pro', 'Noto Sans Thai', sans-serif;
+  }
+
+  /* ─── Footer ─── */
+  .footer-section {
+    background:#fff; padding:36px 40px;
+    display:flex; gap:40px; align-items:flex-start;
+    border-top:1px solid #e2e8f0;
+  }
+  .footer-left { flex:1; }
+  .footer-logo { display:flex; align-items:center; gap:12px; margin-bottom:14px; }
+  .footer-logo-icon {
+    width:44px; height:44px; border-radius:50%;
+    background:linear-gradient(135deg,#00d1ff,#00a3cc);
+    display:flex; align-items:center; justify-content:center;
+    color:#fff; font-size:20px;
+  }
+  .footer-logo-name {
+    font-family:'Ethnocentric', sans-serif;
+    font-size:22px; font-weight:900; color:#00d1ff; letter-spacing:1px;
+  }
+  .footer-logo-sub {
+    font-size:10px; color:#94a3b8; letter-spacing:1px;
+    font-family:'Ethnocentric', sans-serif;
+  }
+  .footer-desc {
+    font-size:12px; color:#64748b; line-height:1.9;
+    font-family:'Noto Sans Thai', sans-serif; margin-bottom:20px;
+  }
+  .footer-contact { display:flex; align-items:center; gap:10px; flex-wrap:wrap; }
+  .footer-contact-label {
+    font-size:12px; color:#475569; font-weight:600;
+    font-family:'Noto Sans Thai', sans-serif; cursor:pointer;
+    transition:color 0.2s;
+  }
+  .footer-contact-label:hover { color:#00d1ff; }
+  .footer-icons { display:flex; gap:8px; }
+  .footer-icon-wrap {
+    display:inline-flex; align-items:center; justify-content:center;
+    width:48px; height:48px; background:#00d1ff;
+    clip-path:polygon(12px 0%,100% 0%,100% calc(100% - 12px),calc(100% - 12px) 100%,0% 100%,0% 12px);
+    cursor:pointer; transition:transform 0.2s, opacity 0.2s; text-decoration:none;
+  }
+  .footer-icon-wrap:hover { transform:translateY(-3px); opacity:0.85; }
+  .footer-icon-inner {
+    display:inline-flex; align-items:center; justify-content:center;
+    width:42px; height:42px; background:#00d1ff; padding:7px;
+    clip-path:polygon(10px 0%,100% 0%,100% calc(100% - 10px),calc(100% - 10px) 100%,0% 100%,0% 10px);
+  }
+  .footer-icon-inner img { width:100%; height:100%; object-fit:contain; filter:brightness(0) invert(1); }
+  .footer-right { width:220px; flex-shrink:0; }
+  .footer-fanpage-title {
+    font-size:16px; margin-bottom:10px;
+    font-family:'Barlow Condensed', sans-serif; letter-spacing:1px;
+  }
+  .footer-fanpage-card {
+    border-radius:10px; overflow:hidden;
+    border:1px solid #e2e8f0; box-shadow:0 2px 12px rgba(0,0,0,0.08);
+  }
+  .footer-fanpage-img {
+    position:relative; width:100%; height:120px;
+    background:linear-gradient(135deg,#e8f4ff,#bfdbfe);
+    display:flex; align-items:center; justify-content:center;
+  }
+
+  /* ─── Copyright bar ─── */
+  .copyright-bar {
+    background:#fff; padding:14px 32px;
+    font-size:13px; letter-spacing:0.04em;
+    font-family:'PSL Chocolate Extra Pro', 'Noto Sans Thai', sans-serif;
+    border-top:1px solid #f1f5f9;
+    display:flex; justify-content:center; align-items:center;
+  }
 }
