@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { createOrder } from '../services/topupService';
-import { FiAlertTriangle, FiLock, FiBook, FiEye, FiEyeOff, FiCheck, FiCreditCard } from 'react-icons/fi';
+import { FiAlertTriangle, FiLock, FiBook, FiEye, FiEyeOff, FiCheck, FiChevronDown, FiChevronUp } from 'react-icons/fi';
+import { PAYMENT_METHODS } from '../config/constants';
 
 // step: 1 = เลือกแพ็กเกจ, 2 = กรอก Email/PW, 3 = ยืนยัน, 'success' = สำเร็จ
 function buildDefaultInfo(game) {
@@ -43,6 +44,9 @@ export default function MailPassPage({ game, onBack, step, onStep }) {
   const [loading, setLoading]           = useState(false);
   const [orderId, setOrderId]           = useState(null);
   const [done, setDone]                 = useState(false);
+  const [showHowto, setShowHowto]             = useState(false);
+  const [selectedPayment, setSelectedPayment] = useState(null);
+  const [showAllPayment, setShowAllPayment]   = useState(false);
 
   useEffect(() => { window.scrollTo({ top: 0, behavior: 'instant' }); }, []);
 
@@ -74,6 +78,7 @@ export default function MailPassPage({ game, onBack, step, onStep }) {
         gameId: game.id, uid: email,
         packages: selectedPkgs.map(p => ({ id: p.id, amount: p.amount, price: p.price, label: p.label })),
         totalPrice,
+        paymentMethod: selectedPayment,
       });
       setOrderId(result.orderId);
       setDone(true);
@@ -149,40 +154,9 @@ export default function MailPassPage({ game, onBack, step, onStep }) {
 
         /* ── Body ── */
         .mp-body {
-          max-width: 1400px; margin: 0 auto;
-          padding: 20px 24px 100px;
+          max-width: 960px; margin: 0 auto;
+          padding: 44px 24px 100px;
         }
-
-        /* ── Stepper ── */
-        .mp-stepper {
-          display: flex; align-items: center;
-          margin-bottom: 28px; gap: 0;
-        }
-        .mp-step-item {
-          display: flex; align-items: center; gap: 8px; flex: 1;
-        }
-        .mp-step-circle {
-          width: 30px; height: 30px; border-radius: 50%;
-          display: flex; align-items: center; justify-content: center;
-          font-size: 13px; font-weight: 800;
-          flex-shrink: 0; transition: all 0.25s;
-        }
-        .mp-step-circle.done   { background: #00d1ff; color: #fff; }
-        .mp-step-circle.active { background: #00d1ff; color: #fff; box-shadow: 0 0 0 4px rgba(0,209,255,0.2); }
-        .mp-step-circle.idle   { background: #e2e8f0; color: #94a3b8; }
-        .mp-step-label {
-          font-size: 12px; font-weight: 700;
-          white-space: nowrap; transition: color 0.25s;
-        }
-        .mp-step-label.active { color: #00d1ff; }
-        .mp-step-label.done   { color: #00a3cc; }
-        .mp-step-label.idle   { color: #94a3b8; }
-        .mp-step-line {
-          flex: 1; height: 2px;
-          margin: 0 8px; transition: background 0.3s;
-        }
-        .mp-step-line.done { background: #00d1ff; }
-        .mp-step-line.idle { background: #e2e8f0; }
 
         /* ── Promo image top ── */
         .mp-promo-img {
@@ -197,14 +171,14 @@ export default function MailPassPage({ game, onBack, step, onStep }) {
         /* ── Package grid ── */
         .mp-section-title {
           font-family: 'PSL Kampanath Pro', sans-serif;
-          font-size: 16px; font-weight: 900;
+          font-size: 32px; font-weight: 900;
           color: #1e293b; letter-spacing: 0.06em;
           margin-bottom: 16px;
         }
         .mp-pkg-grid {
           display: grid;
           grid-template-columns: repeat(5, 1fr);
-          gap: 33px; margin-bottom: 36px;
+          gap: 44px 33px; margin-bottom: 36px;
         }
         @media (max-width: 768px) { .mp-pkg-grid { grid-template-columns: repeat(3, 1fr); } }
         @media (max-width: 480px) { .mp-pkg-grid { grid-template-columns: repeat(2, 1fr); } }
@@ -223,7 +197,7 @@ export default function MailPassPage({ game, onBack, step, onStep }) {
           clip-path: polygon(14px 0%, 100% 0%, 100% calc(100% - 14px), calc(100% - 14px) 100%, 0% 100%, 0% 14px);
           padding: 10px 10px 12px;
           cursor: pointer;
-          transition: transform 0.22s cubic-bezier(0.34, 1.4, 0.64, 1), filter 0.22s;
+          transition: transform 0.22s cubic-bezier(0.22, 1, 0.36, 1), filter 0.22s;
           position: relative; text-align: center; overflow: hidden;
           will-change: transform;
           animation: mp-glow-pulse 3s ease-in-out infinite;
@@ -283,7 +257,7 @@ export default function MailPassPage({ game, onBack, step, onStep }) {
           display: flex; align-items: center; justify-content: center;
           font-size: 11px; font-weight: 900; color: #fff;
           z-index: 2;
-          animation: mp-check-pop 0.28s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+          animation: mp-check-pop 0.28s cubic-bezier(0.22, 1, 0.36, 1) both;
         }
         .mp-pkg-badge {
           position: absolute; top: 5px; left: 16px;
@@ -462,6 +436,78 @@ export default function MailPassPage({ game, onBack, step, onStep }) {
         }
         .mp-info-bullet { color: #00d1ff; font-weight: 900; flex-shrink: 0; margin-top: 1px; }
 
+        /* ── Payment method grid ── */
+        .mp-pay-grid {
+          display: grid;
+          grid-template-columns: repeat(3, 1fr);
+          gap: 10px;
+        }
+        @media (max-width: 600px) {
+          .mp-pay-grid { grid-template-columns: repeat(2, 1fr); }
+        }
+        @media (max-width: 360px) {
+          .mp-pay-grid { grid-template-columns: 1fr; }
+        }
+        .mp-pay-btn {
+          display: flex; align-items: center; gap: 10px;
+          background: #fff;
+          border: 1.5px solid #e2e8f0;
+          border-radius: 10px; padding: 10px 12px;
+          cursor: pointer; font: inherit; text-align: left;
+          transition: border-color 0.18s, background 0.18s;
+          position: relative; width: 100%;
+        }
+        .mp-pay-btn.selected {
+          background: #f0fbff;
+          border-color: #00d1ff;
+        }
+        .mp-pay-btn:not(.selected):hover {
+          border-color: #bae6fd;
+          background: #f8fafc;
+        }
+        .mp-pay-btn:focus-visible {
+          outline: 2px solid #00d1ff;
+          outline-offset: 2px;
+        }
+        .mp-pay-btn:active {
+          transform: scale(0.97);
+          transition-duration: 0.08s;
+        }
+        .mp-pay-icon {
+          width: 44px; height: 44px; border-radius: 9px;
+          display: flex; align-items: center; justify-content: center;
+          flex-shrink: 0;
+        }
+        .mp-pay-icon span {
+          font-size: 10px; font-weight: 900;
+          letter-spacing: -0.03em; line-height: 1; text-align: center;
+        }
+        .mp-pay-badge {
+          position: absolute; top: 5px; right: 6px;
+          background: #ef4444; color: #fff;
+          font-size: 9px; font-weight: 900;
+          padding: 2px 6px; border-radius: 20px;
+          letter-spacing: 0.04em;
+        }
+        .mp-pay-expand {
+          margin-top: 8px; width: 100%;
+          background: none; border: 1px dashed #d1d5db;
+          border-radius: 8px; padding: 9px 16px;
+          font-size: 12px; font-weight: 700; color: #64748b;
+          cursor: pointer; font: inherit;
+          transition: background 0.15s, border-color 0.15s, color 0.15s;
+        }
+        .mp-pay-expand:hover {
+          background: #f8fafc; border-color: #bae6fd; color: #0369a1;
+        }
+        .mp-pay-expand:focus-visible {
+          outline: 2px solid #00d1ff; outline-offset: 2px;
+        }
+        .mp-pay-section-label {
+          font-size: 13px; font-weight: 700; color: #1e293b;
+          margin-bottom: 12px;
+        }
+
         /* ── Warning box ── */
         .mp-warning {
           background: #fffbeb; border: 1.5px solid #fde68a;
@@ -482,15 +528,26 @@ export default function MailPassPage({ game, onBack, step, onStep }) {
           to   { opacity: 1; transform: translateY(0); }
         }
         .mp-success-wrap {
+          position: fixed; inset: 0; z-index: 200;
+          background: rgba(15,23,42,0.55);
+          display: flex; align-items: center; justify-content: center;
+          padding: 24px;
+          animation: mp-fade-up 0.25s ease both;
+        }
+        .mp-success-box {
           display: flex; flex-direction: column; align-items: center;
-          padding: 48px 24px 80px; text-align: center;
+          background: #f0f4f8; border-radius: 20px;
+          padding: 40px 28px 32px; width: 100%; max-width: 460px;
+          max-height: 90vh; overflow-y: auto;
+          text-align: center;
+          box-shadow: 0 24px 64px rgba(0,0,0,0.22);
         }
         .mp-success-icon {
           width: 88px; height: 88px; border-radius: 50%;
           background: linear-gradient(135deg, #00d1ff, #00a3cc);
           display: flex; align-items: center; justify-content: center;
           font-size: 40px; color: #fff; margin-bottom: 24px;
-          animation: mp-pop 0.5s cubic-bezier(0.34,1.56,0.64,1) both;
+          animation: mp-pop 0.5s cubic-bezier(0.22, 1, 0.36, 1) both;
           filter: drop-shadow(0 8px 24px rgba(0,209,255,0.45));
         }
         .mp-success-title {
@@ -539,13 +596,30 @@ export default function MailPassPage({ game, onBack, step, onStep }) {
           transition: opacity 0.2s;
         }
         .mp-history-btn:hover { opacity: 0.88; }
+
+        /* ── Reduced motion fallback ── */
+        @media (prefers-reduced-motion: reduce) {
+          .mp-pkg-card,
+          .mp-pkg-card::after { animation: none; transition: filter 0.1s; }
+          .mp-pkg-check { animation: none; }
+          .mp-pay-btn { transition: none; }
+          .mp-pay-btn:active { transform: none; }
+          .mp-next-btn,
+          .mp-input,
+          .mp-pw-toggle { transition-duration: 0.01ms; }
+          .mp-success-icon { animation: none; opacity: 1; transform: none; }
+          .mp-success-title,
+          .mp-success-sub,
+          .mp-success-card,
+          .mp-success-actions { animation: none; opacity: 1; transform: none; }
+        }
       `}</style>
 
       {/* ── Coming Soon ── */}
       {(!game.packages || game.packages.length === 0) && (
         <div className="mp-page">
           <div className="mp-hero">
-            <div className="mp-hero-bg" style={{ backgroundImage: `url('${game.bg}')` }} />
+            <div className="mp-hero-bg" style={{ backgroundImage: `url('${game.promoBg || game.bg}')` }} />
             <div className="mp-hero-overlay" />
             <div className="mp-hero-content">
               <img src={game.icon} alt={game.name} className="mp-icon"
@@ -559,7 +633,7 @@ export default function MailPassPage({ game, onBack, step, onStep }) {
           </div>
           <div style={{ maxWidth: 1400, margin: '0 auto', padding: '24px 24px 80px' }}>
             <img
-              src={game.bg}
+              src={game.promoBg || game.bg}
               alt={game.name}
               className="mp-promo-img"
               style={{ aspectRatio: PROMO_ASPECT, boxShadow: '0 8px 40px rgba(0,0,0,0.14)' }}
@@ -577,7 +651,7 @@ export default function MailPassPage({ game, onBack, step, onStep }) {
         {step === 1 ? (
           <div className="mp-promo-wrap">
             <img
-              src={game.bg}
+              src={game.promoBg || game.bg}
               alt={game.name}
               className="mp-promo-img"
               style={{ aspectRatio: PROMO_ASPECT }}
@@ -587,7 +661,7 @@ export default function MailPassPage({ game, onBack, step, onStep }) {
         ) : (
           /* step 2/3/success → hero ปกติ */
           <div className="mp-hero">
-            <div className="mp-hero-bg" style={{ backgroundImage: `url('${game.bg}')` }} />
+            <div className="mp-hero-bg" style={{ backgroundImage: `url('${game.promoBg || game.bg}')` }} />
             <div className="mp-hero-overlay" />
             <div className="mp-hero-content">
               <img src={game.icon} alt={game.name} className="mp-icon"
@@ -603,28 +677,6 @@ export default function MailPassPage({ game, onBack, step, onStep }) {
 
         <div className="mp-body">
 
-          {step !== 'success' && (
-            <div className="mp-stepper">
-              {[
-                { n: 1, label: 'เลือกแพ็กเกจ' },
-                { n: 2, label: 'กรอก Email/PW' },
-                { n: 3, label: 'ยืนยันออเดอร์' },
-              ].map((s, i) => {
-                const state = step > s.n ? 'done' : step === s.n ? 'active' : 'idle';
-                return (
-                  <React.Fragment key={s.n}>
-                    <div className="mp-step-item">
-                      <div className={`mp-step-circle ${state}`}>
-                        {state === 'done' ? <FiCheck size={15} /> : s.n}
-                      </div>
-                      <span className={`mp-step-label ${state}`}>{s.label}</span>
-                    </div>
-                    {i < 2 && <div className={`mp-step-line ${step > s.n ? 'done' : 'idle'}`} />}
-                  </React.Fragment>
-                );
-              })}
-            </div>
-          )}
 
           {/* ════ STEP 1: เลือกแพ็กเกจ ════ */}
           {step === 1 && (
@@ -657,9 +709,11 @@ export default function MailPassPage({ game, onBack, step, onStep }) {
                           {pkg.badge}
                         </div>
                       )}
-                      <img src={pkg.img} alt={`${pkg.amount}`}
-                        style={{ width: '100%', aspectRatio: '1/1', objectFit: 'contain', display: 'block' }}
-                        onError={e => { e.target.style.display = 'none'; }} />
+                      <div style={{ position: 'relative', width: '100%', aspectRatio: '1/1', overflow: 'hidden' }}>
+                        <img src={pkg.img} alt={`${pkg.amount}`}
+                          style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center top', display: 'block' }}
+                          onError={e => { e.target.style.display = 'none'; }} />
+                      </div>
                       {(pkg.label || pkg.amount > 0) && (
                         <div className="mp-coupon-label">
                           {pkg.label || `${pkg.amount.toLocaleString()} ${game.currency}`}
@@ -777,26 +831,108 @@ export default function MailPassPage({ game, onBack, step, onStep }) {
                 </div>
               </div>
 
-              {/* ลิงก์วิธีเติม */}
-              <button
-                onClick={() => window.open(game.howtoImage, '_blank')}
-                style={{
-                  display: 'flex', alignItems: 'center', gap: 8,
-                  background: '#fff',
-                  border: '1.5px solid #fde68a',
-                  borderRadius: 12, padding: '13px 20px',
-                  cursor: 'pointer', width: '100%',
-                  font: 'inherit', color: '#92400e',
-                  fontSize: 14, fontWeight: 700,
-                  transition: 'background 0.2s',
-                }}
-                onMouseEnter={e => e.currentTarget.style.background = '#fffbeb'}
-                onMouseLeave={e => e.currentTarget.style.background = '#fff'}
-              >
-                <FiBook size={18} />
-                <span>ดูวิธีการเติมเกม</span>
-                <span style={{ marginLeft: 'auto', color: '#00d1ff', fontSize: 16 }}>→</span>
-              </button>
+              {/* ── วิธีเติมเกม — แสดงทุกเกม ── */}
+              {(() => {
+                const info = game.info || buildDefaultInfo(game);
+                const steps = info.sections?.find(s => s.ordered)?.items ?? [];
+                if (game.howtoImage) {
+                  return (
+                    <button
+                      onClick={() => window.open(game.howtoImage, '_blank', 'noopener,noreferrer')}
+                      style={{
+                        display: 'flex', alignItems: 'center', gap: 8,
+                        background: '#fff', border: '1.5px solid #fde68a',
+                        borderRadius: 12, padding: '13px 20px',
+                        cursor: 'pointer', width: '100%',
+                        font: 'inherit', color: '#92400e',
+                        fontSize: 14, fontWeight: 700, transition: 'background 0.2s',
+                      }}
+                      onMouseEnter={e => e.currentTarget.style.background = '#fffbeb'}
+                      onMouseLeave={e => e.currentTarget.style.background = '#fff'}
+                    >
+                      <FiBook size={18} />
+                      <span>ดูวิธีการเติมเกม</span>
+                      <span style={{ marginLeft: 'auto', color: '#00d1ff', fontSize: 16 }}>→</span>
+                    </button>
+                  );
+                }
+                if (steps.length === 0) return null;
+                return (
+                  <div>
+                    <button
+                      onClick={() => setShowHowto(v => !v)}
+                      style={{
+                        display: 'flex', alignItems: 'center', gap: 8,
+                        background: '#fff', border: '1.5px solid #fde68a',
+                        borderRadius: showHowto ? '12px 12px 0 0' : 12,
+                        padding: '13px 20px',
+                        cursor: 'pointer', width: '100%',
+                        font: 'inherit', color: '#92400e',
+                        fontSize: 14, fontWeight: 700, transition: 'background 0.2s, border-radius 0.15s',
+                      }}
+                      onMouseEnter={e => e.currentTarget.style.background = '#fffbeb'}
+                      onMouseLeave={e => e.currentTarget.style.background = '#fff'}
+                    >
+                      <FiBook size={18} />
+                      <span>ดูวิธีการเติมเกม</span>
+                      <span style={{ marginLeft: 'auto', color: '#00d1ff' }}>
+                        {showHowto ? <FiChevronUp size={16} /> : <FiChevronDown size={16} />}
+                      </span>
+                    </button>
+                    {showHowto && (
+                      <div style={{
+                        background: '#fffbeb', border: '1.5px solid #fde68a', borderTop: 'none',
+                        borderRadius: '0 0 12px 12px', padding: '14px 20px',
+                      }}>
+                        <ol style={{ margin: 0, paddingLeft: 20, display: 'flex', flexDirection: 'column', gap: 8 }}>
+                          {steps.map((step, i) => (
+                            <li key={i} style={{ fontSize: 13, color: '#78350f', lineHeight: 1.6 }}>{step}</li>
+                          ))}
+                        </ol>
+                      </div>
+                    )}
+                  </div>
+                );
+              })()}
+
+              {/* ── เลือกวิธีชำระเงิน ── */}
+              <div style={{ marginTop: 28, borderTop: '1px solid #e2e8f0', paddingTop: 24 }}>
+                <div className="mp-pay-section-label">ช่องทางชำระเงิน</div>
+                <div className="mp-pay-grid">
+                  {PAYMENT_METHODS.filter(pm => pm.popular || showAllPayment).map(pm => {
+                    const isSel = selectedPayment === pm.id;
+                    return (
+                      <button
+                        key={pm.id}
+                        className={`mp-pay-btn${isSel ? ' selected' : ''}`}
+                        onClick={() => setSelectedPayment(pm.id)}
+                        aria-pressed={isSel}
+                      >
+                        <div className="mp-pay-icon" style={{ background: pm.iconBg }}>
+                          <span style={{ color: pm.iconColor }}>{pm.iconText}</span>
+                        </div>
+                        <div style={{ minWidth: 0, flex: 1 }}>
+                          <div style={{ fontSize: 12, fontWeight: 700, color: '#0f172a', lineHeight: 1.3 }}>
+                            {pm.name}
+                          </div>
+                          {pm.desc && (
+                            <div style={{ fontSize: 10, color: '#94a3b8', marginTop: 2, lineHeight: 1.3 }}>
+                              {pm.desc}
+                            </div>
+                          )}
+                        </div>
+                        {pm.badge && <div className="mp-pay-badge">{pm.badge}</div>}
+                        {isSel && <FiCheck size={14} style={{ color: '#00d1ff', flexShrink: 0 }} />}
+                      </button>
+                    );
+                  })}
+                </div>
+                {!showAllPayment && (
+                  <button className="mp-pay-expand" onClick={() => setShowAllPayment(true)}>
+                    ดูช่องทางอื่น ↓  ({PAYMENT_METHODS.filter(pm => !pm.popular).length} ช่องทาง)
+                  </button>
+                )}
+              </div>
             </>
           )}
 
@@ -833,22 +969,33 @@ export default function MailPassPage({ game, onBack, step, onStep }) {
                   <span className="mp-summary-key">Password</span>
                   <span className="mp-summary-val" style={{ letterSpacing: '0.15em' }}>{'•'.repeat(Math.min(password.length, 10))}</span>
                 </div>
+                {selectedPayment && (() => {
+                  const pm = PAYMENT_METHODS.find(p => p.id === selectedPayment);
+                  return pm ? (
+                    <div className="mp-summary-row">
+                      <span className="mp-summary-key">ช่องทางชำระ</span>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: 7 }}>
+                        <div style={{ width: 22, height: 22, borderRadius: 4, background: pm.iconBg, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                          <span style={{ fontSize: 7, fontWeight: 900, color: pm.iconColor, letterSpacing: '-0.02em' }}>{pm.iconText}</span>
+                        </div>
+                        <span className="mp-summary-val">{pm.name}</span>
+                      </div>
+                    </div>
+                  ) : null;
+                })()}
                 <div className="mp-total-row">
                   <span style={{ fontWeight: 700, color: '#1e293b' }}>ยอดชำระรวม</span>
                   <span className="mp-total-price">{totalPrice.toLocaleString()} <span style={{ fontSize: 16, color: '#64748b' }}>บาท</span></span>
                 </div>
               </div>
 
-              <div style={{ display: 'flex', alignItems: 'center', gap: 8, background: '#fffbeb', border: '1.5px solid #fde68a', borderRadius: 12, padding: '12px 18px', fontSize: 13, color: '#92400e' }}>
-                <FiCreditCard size={16} style={{ flexShrink: 0 }} />
-                <span>ชำระเงินผ่าน PromptPay / TrueMoney Wallet / โอนธนาคาร</span>
-              </div>
             </>
           )}
 
           {/* ════ SUCCESS ════ */}
           {done && (
             <div className="mp-success-wrap">
+              <div className="mp-success-box">
               <div className="mp-success-icon"><FiCheck size={42} /></div>
               <div className="mp-success-title">สั่งซื้อสำเร็จ!</div>
               <div className="mp-success-sub">ไอเทมจะถูกเติมเข้าบัญชีของคุณภายใน 5–30 นาที</div>
@@ -895,6 +1042,7 @@ export default function MailPassPage({ game, onBack, step, onStep }) {
                   ดูประวัติคำสั่งซื้อ →
                 </button>
               </div>
+              </div>
             </div>
           )}
 
@@ -912,10 +1060,12 @@ export default function MailPassPage({ game, onBack, step, onStep }) {
                   </>
                 : <span style={{ color: '#94a3b8' }}>กรุณาเลือกแพ็กเกจ</span>
               )}
-              {step === 2 && (canProceedStep2
-                ? <><strong style={{ color: '#00d1ff' }}>{email}</strong><br />Email บัญชีเกม</>
-                : <span style={{ color: '#94a3b8' }}>กรอก Email + Password</span>
-              )}
+              {step === 2 && (() => {
+                if (!canProceedStep2) return <span style={{ color: '#94a3b8' }}>กรอก Email + Password</span>;
+                if (!selectedPayment)  return <span style={{ color: '#94a3b8' }}>กรุณาเลือกวิธีชำระเงิน</span>;
+                const pm = PAYMENT_METHODS.find(p => p.id === selectedPayment);
+                return <><strong style={{ color: '#00d1ff' }}>{email}</strong><br /><span style={{ color: '#64748b' }}>{pm?.name}</span></>;
+              })()}
               {step === 3 && (
                 <><strong>{pkgSummary}</strong> — รวม {totalPrice.toLocaleString()} บาท</>
               )}
@@ -925,7 +1075,7 @@ export default function MailPassPage({ game, onBack, step, onStep }) {
               className="mp-next-btn"
               disabled={
                 (step === 1 && selectedPkgs.length === 0) ||
-                (step === 2 && !canProceedStep2) ||
+                (step === 2 && (!canProceedStep2 || !selectedPayment)) ||
                 (step === 3 && loading)
               }
               onClick={() => {

@@ -23,6 +23,7 @@ const MLBB_SHARED = {
   bg: '/images/ALASKAN_WEB_ASSET/BACKGROUND/background_web_Alaskan/game_banner/edit/mobilelegends_web_banner.png',
   category: 'เกม MOBA',
   currency: 'เพชร',
+  showOnHome: true,
   tags: ['โปรโมชั่น', 'ขายดี'],
   accountFields: [
     { key: 'userId',   label: 'User ID',   placeholder: 'เช่น 123456789', inputMode: 'numeric', required: true },
@@ -46,6 +47,8 @@ export const GAMES = {
     howtoImage: '/images/HOW%20TO/H_ROV.jpg',
     category: 'เกม MOBA',
     currency: 'คูปอง',
+    tag: 'ขายดี',
+    showOnHome: true,
     tags: ['โปรโมชั่น', 'ขายดี'],
     info: {
       title: 'บริการเติมคูปอง ROV',
@@ -111,14 +114,14 @@ export const GAMES = {
   },
 
   // ── Mobile Legends แยกตาม server ──────────────────────────────────────────
-  'Mobile Legends':    { ...MLBB_SHARED, id: 'Mobile Legends',    subtitle: 'Mobile Legends — Server ไทย',          tags: ['ขายดี'],                           packages: MLBB_PKG('th') },
-  'Mobile Legends ID': { ...MLBB_SHARED, id: 'Mobile Legends ID', subtitle: 'Mobile Legends — Server อินโดนีเซีย', country: 'indonesia',               tags: [], packages: MLBB_PKG('id') },
-  'Mobile Legends MY': { ...MLBB_SHARED, id: 'Mobile Legends MY', subtitle: 'Mobile Legends — Server มาเลเซีย',    country: 'malaysia',                tags: [],        packages: MLBB_PKG('my') },
-  'Mobile Legends PH': { ...MLBB_SHARED, id: 'Mobile Legends PH', subtitle: 'Mobile Legends — Server ฟิลิปปินส์', country: 'philippines',              tags: [],        packages: MLBB_PKG('ph') },
-  'Mobile Legends SG': { ...MLBB_SHARED, id: 'Mobile Legends SG', subtitle: 'Mobile Legends — Server สิงคโปร์',   country: 'singapore',               tags: [],        packages: MLBB_PKG('sg') },
-  'Mobile Legends RU': { ...MLBB_SHARED, id: 'Mobile Legends RU', subtitle: 'Mobile Legends — Server รัสเซีย',     country: 'russia',                  tags: [],        packages: MLBB_PKG('ru') },
-  'Mobile Legends TR': { ...MLBB_SHARED, id: 'Mobile Legends TR', subtitle: 'Mobile Legends — Server ตุรกี',       country: 'turkey',                  tags: [],        packages: MLBB_PKG('tr') },
-  'Mobile Legends US': { ...MLBB_SHARED, id: 'Mobile Legends US', subtitle: 'Mobile Legends — Server สหรัฐฯ',      country: 'united-states-of-america', tags: [],       packages: MLBB_PKG('us') },
+  'Mobile Legends':    { ...MLBB_SHARED, id: 'Mobile Legends',    subtitle: 'Mobile Legends — Server ไทย',          tag: null,      tags: ['ขายดี'],  packages: MLBB_PKG('th') },
+  'Mobile Legends ID': { ...MLBB_SHARED, id: 'Mobile Legends ID', subtitle: 'Mobile Legends — Server อินโดนีเซีย', tag: 'ขายดี',   country: 'indonesia',               tags: [], packages: MLBB_PKG('id') },
+  'Mobile Legends MY': { ...MLBB_SHARED, id: 'Mobile Legends MY', subtitle: 'Mobile Legends — Server มาเลเซีย',    tag: null,      country: 'malaysia',                tags: [], packages: MLBB_PKG('my') },
+  'Mobile Legends PH': { ...MLBB_SHARED, id: 'Mobile Legends PH', subtitle: 'Mobile Legends — Server ฟิลิปปินส์', tag: null,      country: 'philippines',             tags: [], packages: MLBB_PKG('ph') },
+  'Mobile Legends SG': { ...MLBB_SHARED, id: 'Mobile Legends SG', subtitle: 'Mobile Legends — Server สิงคโปร์',   tag: null,      country: 'singapore',               tags: [], packages: MLBB_PKG('sg') },
+  'Mobile Legends RU': { ...MLBB_SHARED, id: 'Mobile Legends RU', subtitle: 'Mobile Legends — Server รัสเซีย',     tag: null,      country: 'russia',                  tags: [], packages: MLBB_PKG('ru') },
+  'Mobile Legends TR': { ...MLBB_SHARED, id: 'Mobile Legends TR', subtitle: 'Mobile Legends — Server ตุรกี',       tag: null,      country: 'turkey',                  tags: [], packages: MLBB_PKG('tr') },
+  'Mobile Legends US': { ...MLBB_SHARED, id: 'Mobile Legends US', subtitle: 'Mobile Legends — Server สหรัฐฯ',      tag: null,      country: 'united-states-of-america', tags: [], packages: MLBB_PKG('us') },
 
   'Honor of Kings': {
     id: 'Honor of Kings',
@@ -128,6 +131,8 @@ export const GAMES = {
     bg: '/images/GAMES BG/HONOROFKINGS_bg.png',
     category: 'เกม MOBA',
     currency: 'โทเค็น',
+    tag: null,
+    showOnHome: true,
     packages: [],
   },
 
@@ -139,6 +144,8 @@ export const GAMES = {
     bg: '/images/GAMES BG/LOLWILDRIFT_bg.png',
     category: 'เกม MOBA',
     currency: 'Wild Cores',
+    tag: null,
+    showOnHome: true,
     packages: [],
   },
 
@@ -150,6 +157,8 @@ export const GAMES = {
     bg: '/images/GAMES BG/LOL_bg.png',
     category: 'เกม MOBA',
     currency: 'RP',
+    tag: null,
+    showOnHome: true,
     packages: [],
   },
 
@@ -161,6 +170,8 @@ export const GAMES = {
     bg: '/images/GAMES BG/MAGICCHESS_bg.png',
     category: 'เกม MOBA',
     currency: 'เพชร',
+    tag: null,
+    showOnHome: true,
     packages: [],
   },
 
@@ -176,8 +187,11 @@ export const GAMES = {
     bg: '/images/GAMES BG/FREEFIRE_bg.png',
     promoBg: '/images/BG_UID/FF.png',
     promoAspect: '33 / 14',
+    howtoImage: '/images/HOW%20TO/ff.png',
     category: 'เกม Battle Royale',
     currency: 'เพชร',
+    tag: 'ขายดี',
+    showOnHome: true,
     tags: ['โปรโมชั่น', 'ขายดี'],
     packages: [
       { id: 1,  amount: 70,   price: 35,   bonus: null,   img: `${FF_BASE}/diamond1_freefire.png` },
@@ -204,6 +218,8 @@ export const GAMES = {
     bg: '/images/GAMES BG/PUBGMOBILE_bg.png',
     category: 'เกม Battle Royale',
     currency: 'UC',
+    tag: null,
+    showOnHome: true,
     tags: ['โปรโมชั่น', 'ขายดี'],
     packages: [
       { id: 1, amount: 60,   price: 35,   bonus: null,    img: `${PUBGM_BASE}/uc_pubgmobile.png` },
@@ -227,6 +243,8 @@ export const GAMES = {
     bg: '/images/GAMES BG/CALLOFDUTY_bg.png',
     category: 'เกมยิง FPS',
     currency: 'CP',
+    tag: null,
+    showOnHome: true,
     tags: ['โปรโมชั่น', 'ขายดี'],
     packages: [],
   },
@@ -239,6 +257,8 @@ export const GAMES = {
     bg: '/images/GAMES BG/DELTAFORCE_bg.png',
     category: 'เกมยิง FPS',
     currency: 'DF Points',
+    tag: 'ใหม่',
+    showOnHome: true,
     packages: [
       { id: 'df-18',       amount: 18,                                   price: 12,    img: '/images/ALASKAN_WEB_ASSET/PACKAGE%20ICON/Deltaforce_coin.png' },
       { id: 'df-30',       amount: 30,                                   price: 19,    img: '/images/ALASKAN_WEB_ASSET/PACKAGE%20ICON/Deltaforce_coin.png' },
@@ -261,6 +281,8 @@ export const GAMES = {
     bg: '/images/GAMES BG/BLOODSTRIKE_bg.png',
     category: 'เกมยิง FPS',
     currency: 'Gold',
+    tag: 'ใหม่',
+    showOnHome: true,
     packages: [
       { id: 'bs-100',  amount: 0, label: '100+5 Gold',    price: 27,    img: '/images/ALASKAN_WEB_ASSET/PACKAGE%20ICON/BLOODSTRIKE/bs_gold_s.png' },
       { id: 'bs-300',  amount: 0, label: '300+20 Gold',   price: 70,    img: '/images/ALASKAN_WEB_ASSET/PACKAGE%20ICON/BLOODSTRIKE/bs_gold_s.png' },
@@ -279,6 +301,8 @@ export const GAMES = {
     bg: '/images/GAMES BG/BALLISTICHERO_bg.png',
     category: 'เกมยิง FPS',
     currency: 'คริสตัล',
+    tag: 'ใหม่',
+    showOnHome: true,
     packages: [],
   },
 
@@ -294,6 +318,8 @@ export const GAMES = {
     bg: '/images/GAMES BG/VALORANT_bg.png',
     category: 'เกมยิงกลยุทธ์',
     currency: 'VP',
+    tag: null,
+    showOnHome: true,
     packages: [
       // ── Rogue Collection Bundles ──────────────────────────────
       { id: 'vp-rogue-gun',    amount: 0, label: '2,525 VP (Rogue Collection ปืนแยกชิ้น)', price: 628,   originalPrice: 650,   img: '/images/ALASKAN_WEB_ASSET/PACKAGE%20ICON/Valorant_points.png' },
@@ -321,6 +347,8 @@ export const GAMES = {
     bg: '/images/GAMES BG/ARENABREAKOUT_bg.png',
     category: 'เกมยิงกลยุทธ์',
     currency: 'Bonds',
+    tag: null,
+    showOnHome: true,
     packages: [
       // ── Passes & Privileges ──────────────────────────────────
       { id: 'ab-pass-monthly-adv',  amount: 0, label: 'Monthly Advanced Battle Pass',            price: 35,    originalPrice: 39,    img: '/images/ALASKAN_WEB_ASSET/PACKAGE%20ICON/ARENA%20BREAKOUT/Arena%20Breakout_AdvancedBattlePass.png' },
@@ -351,6 +379,8 @@ export const GAMES = {
     bg: '/images/GAMES BG/STARRAIL_bg.png',
     category: 'เกม RPG',
     currency: 'Oneiric Shard',
+    tag: null,
+    showOnHome: true,
     packages: [
       { id: 'hsr-pass',   amount: 0, label: 'บัตรกำนัลเสียงรถไฟ',  price: 179,   img: '/images/ALASKAN_WEB_ASSET/PACKAGE%20ICON/STARRAIL/starrail_ExpressSupplyPass.png' },
       { id: 'hsr-60',     amount: 0, label: '60 Shard',             price: 35,    img: '/images/ALASKAN_WEB_ASSET/PACKAGE%20ICON/STARRAIL/starrail_shard.png' },
@@ -370,6 +400,8 @@ export const GAMES = {
     bg: '/images/GAMES BG/AETHERGAZER_bg.png',
     category: 'เกม RPG',
     currency: 'Quartz',
+    tag: null,
+    showOnHome: true,
     packages: [],
   },
 
@@ -381,6 +413,8 @@ export const GAMES = {
     bg: '/images/GAMES BG/AFKJOURNEY_bg.png',
     category: 'เกม RPG',
     currency: 'เพชร',
+    tag: null,
+    showOnHome: true,
     packages: [],
   },
 
@@ -392,6 +426,8 @@ export const GAMES = {
     bg: '/images/GAMES BG/BLEACH_bg.png',
     category: 'เกม RPG',
     currency: 'คริสตัล',
+    tag: null,
+    showOnHome: true,
     packages: [],
   },
 
@@ -403,6 +439,8 @@ export const GAMES = {
     bg: '/images/GAMES BG/WHEREWINDMEET_bg.png',
     category: 'เกม RPG',
     currency: 'Echo Beads',
+    tag: 'ใหม่',
+    showOnHome: true,
     packages: [
       { id: 'wwm-monthly',  amount: 0, label: 'Monthly Pass',         originalPrice: 175,  price: 164,  img: '/images/ALASKAN_WEB_ASSET/PACKAGE%20ICON/Wherewindmeet_echo.png' },
       { id: 'wwm-elite',    amount: 0, label: 'Elite Battle Pass',    originalPrice: 350,  price: 324,  img: '/images/ALASKAN_WEB_ASSET/PACKAGE%20ICON/Wherewindmeet_echo.png' },
@@ -420,7 +458,7 @@ export const GAMES = {
   },
 
   // ══════════════════════════════════════════
-  //  เกมกลยุทธ์
+  //  เกมแข่งรถ
   // ══════════════════════════════════════════
 
   'ACE RACER': {
@@ -431,6 +469,8 @@ export const GAMES = {
     bg: '/images/GAMES BG/ACERACER_bg.png',
     category: 'เกมแข่งรถ',
     currency: 'Gold',
+    tag: null,
+    showOnHome: true,
     packages: [],
   },
 
@@ -446,6 +486,8 @@ export const GAMES = {
     bg: '/images/GAMES BG/BIGOLIVE_bg.png',
     category: 'สตรีมมิ่ง',
     currency: 'Beans',
+    tag: null,
+    showOnHome: true,
     packages: [],
   },
 
@@ -461,6 +503,8 @@ export const GAMES = {
     bg: '/images/GAMES BG/DUNKCITY_bg.png',
     category: 'เกมกีฬา',
     currency: 'Coin',
+    tag: null,
+    showOnHome: true,
     packages: [],
   },
 
@@ -476,10 +520,12 @@ export const GAMES = {
     bg: '/images/GAMES BG/HEARTOPIA_bg.png',
     category: 'เกมจำลอง',
     currency: 'เพชรหัวใจ',
+    tag: null,
+    showOnHome: true,
     packages: [
       { id: 'ht-pass7',   amount: 0, label: 'สมาชิกสมาคมลูกโอ๊กระดับต้น',  price: 22,   img: '/images/ALASKAN_WEB_ASSET/PACKAGE%20ICON/HEATOPIA/heartopia_pass7.png' },
       { id: 'ht-pass30',  amount: 0, label: 'สมาชิกทางการลูกกลมทองคำ',      price: 99,   img: '/images/ALASKAN_WEB_ASSET/PACKAGE%20ICON/HEATOPIA/heartopia_pass30.png' },
-      { id: 'ht-20',      amount: 20,                                         price: 19,   img: '/images/ALASKAN_WEB_ASSET/PACKAGE%20ICON/HEATOPIA/Heartopia_candy.png' },
+      { id: 'ht-20',      amount: 20,                                         price: 19,   img: '/images/ALASKAN_WEB_ASSET/PACKAGE%20ICON/HEATOPIA/heartopia_pass7.png' },
       { id: 'ht-60',      amount: 60,                                         price: 37,   img: '/images/ALASKAN_WEB_ASSET/PACKAGE%20ICON/HEATOPIA/Heartopia_candy.png' },
       { id: 'ht-300',     amount: 0, label: '300 + 20 เพชรหัวใจ',            price: 169,  img: '/images/ALASKAN_WEB_ASSET/PACKAGE%20ICON/HEATOPIA/heartopia_FestivalPack.png' },
       { id: 'ht-680',     amount: 0, label: '680 + 50 เพชรหัวใจ',            price: 365,  img: '/images/ALASKAN_WEB_ASSET/PACKAGE%20ICON/HEATOPIA/heartopia_FestivalPack.png' },
@@ -502,6 +548,8 @@ export const GAMES = {
     bg: '/images/GAMES BG/IDENTITYV_bg.png',
     category: 'เกมเอาชีวิตรอด',
     currency: 'Echoes',
+    tag: null,
+    showOnHome: true,
     packages: [
       { id: 'idv-66',    amount: 66,    price: 30,   img: '/images/ALASKAN_WEB_ASSET/PACKAGE%20ICON/IDENTITY%20V/IdentityV_letter.png' },
       { id: 'idv-203',   amount: 203,   price: 89,   img: '/images/ALASKAN_WEB_ASSET/PACKAGE%20ICON/IDENTITY%20V/IdentityV_letter.png' },

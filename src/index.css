@@ -47,9 +47,13 @@
   50%     { box-shadow:0 8px 32px rgba(24,119,242,0.55),0 0 0 10px rgba(24,119,242,0); }
 }
 @keyframes gameCardIn { from { opacity:0; transform:translateY(24px); } to { opacity:1; transform:translateY(0); } }
+@keyframes layerTextIn  { from { opacity:0; transform:translateX(-56px) scale(0.97); } to { opacity:1; transform:translateX(0) scale(1); } }
+@keyframes layerChar1In { from { opacity:0; transform:translateY(52px) scale(0.96);  } to { opacity:1; transform:translateY(0) scale(1); } }
+@keyframes layerChar2In { from { opacity:0; transform:translateX(64px); }             to { opacity:1; transform:translateX(0); } }
+@keyframes layerFadeOnly { from { opacity:0; } to { opacity:1; } }
 @keyframes pageEnter  { from { opacity:0; transform:translateY(16px); } to { opacity:1; transform:translateY(0); } }
 @keyframes pageExit   { from { opacity:1; transform:translateY(0);    } to { opacity:0; transform:translateY(-10px); } }
-.page-enter { animation: pageEnter 0.28s cubic-bezier(0.22,1,0.36,1) both; }
+.page-enter { animation: pageEnter 0.28s cubic-bezier(0.22,1,0.36,1) backwards; }
 .page-exit  { animation: pageExit  0.16s ease-in both; pointer-events:none; }
 
 @layer components {
@@ -211,6 +215,54 @@
   }
   .hs-thumb.active { border-color:#00d1ff; transform:scale(1.08); }
   .hs-thumb img { width:100%; height:100%; object-fit:cover; }
+
+  /* ─── Layer Slide ─── */
+  .hs-layer-overlay {
+    position: absolute; inset: 0; z-index: 3;
+    pointer-events: none; overflow: hidden;
+  }
+  /* scanline texture */
+  .hs-layer-overlay::after {
+    content: '';
+    position: absolute; inset: 0; z-index: 20;
+    background: repeating-linear-gradient(
+      0deg, transparent, transparent 3px,
+      rgba(0, 255, 128, 0.016) 3px, rgba(0, 255, 128, 0.016) 4px
+    );
+    pointer-events: none;
+  }
+  .hs-layer-overlay img {
+    position: absolute; left: 0; right: 0; bottom: 0; top: 0;
+    width: 100%; height: 100%;
+    object-fit: contain;
+  }
+  /* ตำแหน่ง text — ใช้ selector ที่ชนะ specificity ของ img rule */
+  .hs-layer-overlay .hs-layer-text {
+    z-index: 4;
+    top: 5%; height: 95%;           /* เลื่อนลงนิด */
+    object-position: left center;
+    animation: layerTextIn 0.9s 0.15s cubic-bezier(0.22,1,0.36,1) both;
+    filter: drop-shadow(0 0 18px rgba(0, 209, 255, 0.65)) drop-shadow(0 0 48px rgba(0, 209, 255, 0.25));
+  }
+  .hs-layer-overlay .hs-layer-char1 {
+    z-index: 5;
+    top: 8%; height: 92%;           /* ดันตัวละครลงล่าง */
+    object-position: center bottom;
+    animation: layerChar1In 1.0s 0.4s cubic-bezier(0.22,1,0.36,1) both;
+    filter: drop-shadow(0 0 24px rgba(0, 255, 100, 0.45));
+  }
+  .hs-layer-overlay .hs-layer-char2 {
+    z-index: 6;
+    top: 0%; height: 100%;          /* ดันตัวละครลงล่าง */
+    object-position: right bottom;
+    animation: layerChar2In 0.85s 0.62s cubic-bezier(0.22,1,0.36,1) both;
+    filter: drop-shadow(0 0 36px rgba(0, 255, 100, 0.65)) drop-shadow(0 0 80px rgba(0, 255, 100, 0.22));
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .hs-layer-text, .hs-layer-char1, .hs-layer-char2 {
+      animation: layerFadeOnly 0.4s both;
+    }
+  }
 
   /* ─── Divider ─── */
   .divider {

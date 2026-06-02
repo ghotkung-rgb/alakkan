@@ -10,15 +10,25 @@ const bg1Bottom  = '-5%';                        // ระยะจากล่�
 const bg1Height  = 'clamp(200px, 55vw, 780px)'; // ควบคุมด้วย height (รูป 3:1)
 const bg1Opacity = 0.85;                         // ความโปร่งแสง
 
+// แก้รูปสไลค์บนสุด
 const SLIDES = [
   { type: 'brand', mascot: HERO_MASCOT_IMG, thumb: HERO_MASCOT_IMG },
-  { type: 'brand', mascot: HERO_GR_IMG, blend: true, thumb: HERO_GR_IMG },
+  { type: 'promo', bg: '/images/Silde%20show/HOME WEB SLIDESHOW_1Alaskan.png' },
+  {
+    type: 'layer',
+    bg: '/images/Silde%20show/LAYER/HOME%20WEB%20SLIDESHOW_1Freefire-1bg.png',
+    layers: [
+      { src: '/images/Silde%20show/LAYER/HOME%20WEB%20SLIDESHOW_1Freefire-2text.png',      cls: 'hs-layer-text'  },
+      { src: '/images/Silde%20show/LAYER/HOME%20WEB%20SLIDESHOW_1Freefire-3character.png', cls: 'hs-layer-char1' },
+      { src: '/images/Silde%20show/LAYER/HOME%20WEB%20SLIDESHOW_1Freefire-4character.png', cls: 'hs-layer-char2' },
+    ],
+    thumb: '/images/GAMES BG/FREEFIRE_bg.png',
+  },
   { type: 'video', src: '/images/Silde%20show/PUBG1.mp4', src2: '/images/Silde%20show/PUBG2.mp4', thumb: '/images/GAMES BG/PUBGMOBILE_bg.png' },
   { type: 'promo', bg: '/images/PRO/rov_promotion_web1_ai.png', bgPos: 'center center', thumb: '/images/PRO/rov_promotion_web1_ai.png' },
-  { type: 'promo', bg: '/images/MAIL/FC_FOOBALL3.png', bgPos: 'center center', thumb: '/images/MAIL/FC_FOOBALL3.png' },
+  { type: 'promo', bg: '/images/Silde%20show/PUBGE1.png', bgPos: 'center center', thumb: '/images/MAIL/FC_FOOBALL3.png' },
   { type: 'promo', bg: '/images/Silde%20show/EFOOBALL.png', bgPos: 'center center', thumb: '/images/PRO/Alaskan_freefire_banner_web_ai.png' },
   { type: 'promo', bg: '/images/Silde%20show/HEARTOPIA.png', bgPos: 'center center', thumb: '/images/PRO/Alaskan_freefire_banner_web2_ai.png' },
-  { type: 'promo', bg: '/images/PRO/BLOODSTIKE2.png', bgPos: 'center center', thumb: '/images/PRO/ALASKAN_PROMOTION_WEB.png' },
   { type: 'promo', bg: '/images/BG_UID/FF.png', bgPos: 'center center', thumb: '/images/GAMES ICON/FREEFIRE_iconapp.png' },
 ];
 
@@ -205,6 +215,15 @@ export default function HeroSlider() {
       <div key={animKey} className={`hs-content hs-anim-${dir}`}>
         {slide.type === 'brand' && <BrandSlide slide={slide} />}
       </div>
+
+      {slide.type === 'layer' && (
+        <div key={`layer-${animKey}`} className="hs-layer-overlay">
+          {slide.layers.map((l, i) => (
+            <img key={i} src={l.src} alt="" className={l.cls}
+              onError={e => { e.target.style.display = 'none'; }} />
+          ))}
+        </div>
+      )}
 
       <div className="hs-dots">
         <button className="hs-nav-btn" onClick={goPrev}>&#9664;</button>

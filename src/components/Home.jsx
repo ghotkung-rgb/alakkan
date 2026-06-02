@@ -1,85 +1,13 @@
 import { useState, useEffect, useRef } from 'react';
-import { FiGrid, FiTrendingUp, FiZap } from 'react-icons/fi';
-
-const FLAG_BASE = '/images/ALASKAN_WEB_ASSET/FLAG';
-const COUNTRY_NAMES = {
-  'indonesia':                'Indonesia',
-  'malaysia':                 'Malaysia',
-  'philippines':              'Philippines',
-  'russia':                   'Russia',
-  'singapore':                'Singapore',
-  'turkey':                   'Turkey',
-  'united-states-of-america': 'USA',
-};
+import { FLAG_BASE, COUNTRY_NAMES } from '../config/constants';
+import { PROMOS, POPULAR_PACKAGES, PAGE_SIZE, FILTER_TABS } from '../config/homeData';
+import { GAMES } from '../config/games';
+import { MAILPASS_GAMES } from '../config/mailpassGames';
 import HeroSlider from './HeroSlider';
 import Footer from './Footer';
-// Note: โปรโมชั่น — เพิ่ม/ลดการ์ดได้เลย
-// gameId ต้องตรงกับ key ใน GAMES หรือ MAILPASS_GAMES, type: 'uid' | 'mailpass'
-const PROMOS = [
-  { id: 1, name: "ROV Promotion",      img: "/images/PRO/rov_promotion_web1_ai.png",      tag: "HOT",  gameId: 'ROV',        type: 'uid' },
-  { id: 2, name: "ACE RACER", category: "เกมแข่งรถ", bg: "/images/GAMES BG/ACERACER_bg.png", icon: "/images/GAMES ICON/ACERACER_iconapp.png", tag: "ใหม่", gameId: 'ACE RACER', type: 'uid' },
-  { id: 3, name: "BIGO LIVE", category: "สตรีมมิ่ง", bg: "/images/GAMES BG/BIGOLIVE_bg.png", icon: "/images/GAMES ICON/BIGOLIVE_iconapp.png", tag: "ใหม่", gameId: 'BIGO LIVE', type: 'uid' },
-  { id: 4, name: "IDENTITY V", category: "เกมเอาชีวิตรอด", bg: "/images/GAMES BG/IDENTITYV_bg.png", icon: "/images/GAMES ICON/IDENTITYV_iconapp.png", tag: null, gameId: 'Identity V', type: 'uid' },
-];
 
-// Note: ชื่อเกม , bg (ภาพพื้นหลัง) , icon (ไอคอนแอป) , category (หมวดหมู่) , tag
-const GAMES_TOPUP = [
-  { id: 1,  name: "ROV",               category: "เกม MOBA",           bg: "/images/GAMES BG/ROV_bg.png",             icon: "/images/GAMES ICON/ROV_iconapp.png",             tag: "ขายดี"  },
-  { id: 2,  name: "Mobile Legends",    category: "เกม MOBA", tag: null,     bg: "/images/ALASKAN_WEB_ASSET/BACKGROUND/background_web_Alaskan/game_banner/edit/mobilelegends_web_banner.png", icon: "/images/ALASKAN_WEB_ASSET/GAMES ICON/MOBILE LEGENDS/MOBILE LEGENDS.png" },
-  { id: 31, name: "Mobile Legends ID", category: "เกม MOBA", country: "indonesia", tag: "ขายดี", bg: "/images/ALASKAN_WEB_ASSET/BACKGROUND/background_web_Alaskan/game_banner/edit/mobilelegends_web_banner.png", icon: "/images/ALASKAN_WEB_ASSET/GAMES ICON/MOBILE LEGENDS/MOBILE LEGENDS.png" },
-  { id: 25, name: "Mobile Legends MY", category: "เกม MOBA", country: "malaysia",                 bg: "/images/ALASKAN_WEB_ASSET/BACKGROUND/background_web_Alaskan/game_banner/edit/mobilelegends_web_banner.png", icon: "/images/ALASKAN_WEB_ASSET/GAMES ICON/MOBILE LEGENDS/MOBILE LEGENDS.png", tag: null },
-  { id: 26, name: "Mobile Legends PH", category: "เกม MOBA", country: "philippines",              bg: "/images/ALASKAN_WEB_ASSET/BACKGROUND/background_web_Alaskan/game_banner/edit/mobilelegends_web_banner.png", icon: "/images/ALASKAN_WEB_ASSET/GAMES ICON/MOBILE LEGENDS/MOBILE LEGENDS.png", tag: null },
-  { id: 27, name: "Mobile Legends SG", category: "เกม MOBA", country: "singapore",                bg: "/images/ALASKAN_WEB_ASSET/BACKGROUND/background_web_Alaskan/game_banner/edit/mobilelegends_web_banner.png", icon: "/images/ALASKAN_WEB_ASSET/GAMES ICON/MOBILE LEGENDS/MOBILE LEGENDS.png", tag: null },
-  { id: 28, name: "Mobile Legends RU", category: "เกม MOBA", country: "russia",                   bg: "/images/ALASKAN_WEB_ASSET/BACKGROUND/background_web_Alaskan/game_banner/edit/mobilelegends_web_banner.png", icon: "/images/ALASKAN_WEB_ASSET/GAMES ICON/MOBILE LEGENDS/MOBILE LEGENDS.png", tag: null },
-  { id: 29, name: "Mobile Legends TR", category: "เกม MOBA", country: "turkey",                   bg: "/images/ALASKAN_WEB_ASSET/BACKGROUND/background_web_Alaskan/game_banner/edit/mobilelegends_web_banner.png", icon: "/images/ALASKAN_WEB_ASSET/GAMES ICON/MOBILE LEGENDS/MOBILE LEGENDS.png", tag: null },
-  { id: 30, name: "Mobile Legends US", category: "เกม MOBA", country: "united-states-of-america", bg: "/images/ALASKAN_WEB_ASSET/BACKGROUND/background_web_Alaskan/game_banner/edit/mobilelegends_web_banner.png", icon: "/images/ALASKAN_WEB_ASSET/GAMES ICON/MOBILE LEGENDS/MOBILE LEGENDS.png", tag: null },
-  { id: 3,  name: "PUBG Mobile",       category: "เกม Battle Royale",   bg: "/images/GAMES BG/PUBGMOBILE_bg.png",       icon: "/images/GAMES ICON/PUBGMOBILE_iconapp.png",      tag: null   },
-  { id: 4,  name: "Free Fire",         category: "เกม Battle Royale",   bg: "/images/GAMES BG/FREEFIRE_bg.png",         icon: "/images/GAMES ICON/FREEFIRE_iconapp.png",        tag: null   },
-  { id: 5,  name: "Call of Duty",      category: "เกมยิง FPS",          bg: "/images/GAMES BG/CALLOFDUTY_bg.png",       icon: "/images/GAMES ICON/CALLOFDUTY_iconapp.png",      tag: null   },
-  { id: 6,  name: "Delta Force",       category: "เกมยิง FPS",          bg: "/images/GAMES BG/DELTAFORCE_bg.png",       icon: "/images/GAMES ICON/DELTAFORCE_iconapp.png",      tag: "ใหม่" },
-  { id: 7,  name: "Blood Strike",      category: "เกมยิง FPS",          bg: "/images/GAMES BG/BLOODSTRIKE_bg.png",      icon: "/images/GAMES ICON/BLOODSTRIKE_iconapp.png",     tag: "ใหม่" },
-  { id: 8,  name: "Valorant",          category: "เกมยิงกลยุทธ์",       bg: "/images/GAMES BG/VALORANT_bg.png",         icon: "/images/GAMES ICON/VALORANT_iconapp.png",        tag: null   },
-  { id: 9,  name: "Honor of Kings",    category: "เกม MOBA",            bg: "/images/GAMES BG/HONOROFKINGS_bg.png",     icon: "/images/GAMES ICON/HONOROFKINGS_iconapp.png",    tag: null   },
-  { id: 10, name: "Honkai: Star Rail", category: "เกม RPG",             bg: "/images/GAMES BG/STARRAIL_bg.png",         icon: "/images/GAMES ICON/STARRAIL_iconapp.png",        tag: null   },
-  { id: 11, name: "Arena Breakout",    category: "เกมยิงกลยุทธ์",       bg: "/images/GAMES BG/ARENABREAKOUT_bg.png",    icon: "/images/GAMES ICON/ARENABREAKOUT_iconapp.png",   tag: null   },
-  { id: 12, name: "ACE RACER",         category: "เกมแข่งรถ",           bg: "/images/GAMES BG/ACERACER_bg.png",         icon: "/images/GAMES ICON/ACERACER_iconapp.png",        tag: null   },
-  { id: 13, name: "Aether Gazer",      category: "เกม RPG",             bg: "/images/GAMES BG/AETHERGAZER_bg.png",      icon: "/images/GAMES ICON/AETHERGAZER_iconapp.png",     tag: null   },
-  { id: 14, name: "AFK Journey",       category: "เกม RPG",             bg: "/images/GAMES BG/AFKJOURNEY_bg.png",       icon: "/images/GAMES ICON/AFKJOURNEY_iconapp.png",      tag: null   },
-  { id: 15, name: "Ballistic Hero",    category: "เกมยิง FPS",          bg: "/images/GAMES BG/BALLISTICHERO_bg.png",    icon: "/images/GAMES ICON/BALLISTICHERO_iconapp.png",   tag: "ใหม่" },
-  { id: 16, name: "BIGO LIVE",         category: "สตรีมมิ่ง",           bg: "/images/GAMES BG/BIGOLIVE_bg.png",         icon: "/images/GAMES ICON/BIGOLIVE_iconapp.png",        tag: null   },
-  { id: 17, name: "Bleach",            category: "เกม RPG",             bg: "/images/GAMES BG/BLEACH_bg.png",           icon: "/images/GAMES ICON/BLEACH_iconapp.png",          tag: null   },
-  { id: 18, name: "Dunk City Dynasty", category: "เกมกีฬา",             bg: "/images/GAMES BG/DUNKCITY_bg.png",         icon: "/images/GAMES ICON/DUNKCITY_iconapp.png",        tag: null   },
-  { id: 19, name: "Heartopia",         category: "เกมจำลอง",            bg: "/images/GAMES BG/HEARTOPIA_bg.png",        icon: "/images/GAMES ICON/HEARTOPIA_iconapp.png",       tag: null   },
-  { id: 20, name: "Identity V",        category: "เกมเอาชีวิตรอด",      bg: "/images/GAMES BG/IDENTITYV_bg.png",        icon: "/images/GAMES ICON/IDENTITYV_iconapp.png",       tag: null   },
-  { id: 21, name: "LoL: Wild Rift",    category: "เกม MOBA",            bg: "/images/GAMES BG/LOLWILDRIFT_bg.png",      icon: "/images/GAMES ICON/LOLWILDRIFT_iconapp.png",     tag: null   },
-  { id: 22, name: "League of Legends", category: "เกม MOBA",            bg: "/images/GAMES BG/LOL_bg.png",              icon: "/images/GAMES ICON/LOL_iconapp.png",             tag: null   },
-  { id: 23, name: "Magic Chess",       category: "เกมกลยุทธ์",          bg: "/images/GAMES BG/MAGICCHESS_bg.png",       icon: "/images/GAMES ICON/MAGICCHESS_iconapp.png",      tag: null   },
-  { id: 24, name: "Where Winds Meet",  category: "เกม RPG",             bg: "/images/GAMES BG/WHEREWINDMEET_bg.png",    icon: "/images/GAMES ICON/WHEREWINDMEET_iconapp.png",   tag: "ใหม่" },
-];
-
-// Note: ชื่อเกม , bg (ภาพพื้นหลัง) , icon (ไอคอนแอป) , category , tag
-const GAMES_MailPass = [
-  { id: 1, name: "eFootball",    category: "เกมฟุตบอล", bg: "/images/GAMES BG/EFOOTBALL_bg.png",  icon: "/images/GAMES ICON/EFOOTBALL_iconapp.png",  tag: "ขายดี" },
-  { id: 2, name: "FC Mobile",    category: "เกมฟุตบอล", bg: "/images/GAMES BG/FCMOBILE_bg.png",   icon: "/images/GAMES ICON/FCMOBILE_iconapp.png",   tag: "ขายดี" },
-  { id: 3, name: "Heartopia",    category: "เกมจำลอง",  bg: "/images/GAMES BG/HEARTOPIA_bg.png",  icon: "/images/GAMES ICON/HEARTOPIA_iconapp.png",  tag: null },
-  { id: 4, name: "Call of Duty", category: "เกมยิง FPS", bg: "/images/GAMES BG/CALLOFDUTY_bg.png", icon: "/images/GAMES ICON/CALLOFDUTY_iconapp.png", tag: null },
-];
-
-// Note: Popular Package — เพิ่ม/ลด/แก้ข้อความได้เลย
-const POPULAR_PACKAGES = [
-  { id: 1, img: "/images/PRO/PACKBLOOD.png" },
-  { id: 2, img: "/images/ALASKAN_WEB_ASSET/PROMOTION%20WEB/Alaskan_freefire_banner_web_ai.png" },
-  { id: 3, img: "/images/ALASKAN_WEB_ASSET/PROMOTION%20WEB/mlbb_promotion_web_ai_edit1.png" },
-  { id: 4, img: "/images/ALASKAN_WEB_ASSET/PROMOTION%20WEB/Alaskan_freefire_banner_web2_ai.png" },
-];
-
-const PAGE_SIZE = 15;
-
-const FILTER_TABS = [
-  { key: 'all',    label: 'ทั้งหมด', Icon: FiGrid        },
-  { key: 'ขายดี', label: 'ขายดี',   Icon: FiTrendingUp  },
-  { key: 'ใหม่',  label: 'ใหม่',    Icon: FiZap         },
-];
+const GAMES_TOPUP   = Object.values(GAMES).filter(g => g.showOnHome);
+const GAMES_MailPass = Object.values(MAILPASS_GAMES).filter(g => g.showOnHome);
 
 function GameGrid({ games, expanded, onCollapse, onTopup }) {
   const ref = useRef(null);
@@ -117,7 +45,8 @@ function GameGrid({ games, expanded, onCollapse, onTopup }) {
   const renderCard = (game, i, animStyle) => (
     <div className="game-card" key={`${game.id}-${i}`} style={{ ...animStyle, cursor:'pointer' }}
       onClick={() => onTopup && onTopup(game.name)}>
-      <img src={game.bg} alt={game.name}
+      {/* TODO: เพิ่ม width/height attribute เพื่อหลีกเลี่ยง CLS */}
+      <img src={game.bg} alt={game.name} loading="lazy"
         style={{ position:'absolute', inset:0, width:'100%', height:'100%', objectFit:'cover', objectPosition:'center top' }}
         onError={e => { e.target.style.display = 'none'; }} />
       {game.tag && (
@@ -128,7 +57,8 @@ function GameGrid({ games, expanded, onCollapse, onTopup }) {
       {game.country && (
         <div style={{ position:'absolute', top:20, left:10, zIndex:11, display:'flex', alignItems:'center', gap:5, background:'rgba(0,0,0,0.55)', borderRadius:20, padding:'3px 8px 3px 3px', backdropFilter:'blur(4px)' }}>
           <img src={`${FLAG_BASE}/${game.country}.png`} alt="" style={{ width:20, height:20, borderRadius:'50%', flexShrink:0, objectFit:'cover' }} onError={e => { e.target.style.display='none'; }} />
-          <span style={{ fontSize:9, color:'#fff', fontWeight:700, whiteSpace:'nowrap', marginLeft:28 }}>{COUNTRY_NAMES[game.country]}</span>
+          {/* FIXME: marginLeft:28 ทำให้ text ห่างจาก flag มากเกินไป — ลบออกแล้ว gap:5 ที่ parent ทำหน้าที่แทน */}
+          <span style={{ fontSize:9, color:'#fff', fontWeight:700, whiteSpace:'nowrap' }}>{COUNTRY_NAMES[game.country]}</span>
         </div>
       )}
       <div style={{
@@ -397,6 +327,8 @@ export default function Home({ onTopup, onMailPass }) {
         <div className="divider" />
 
         {/* ─── WHY ALASKAN ─── */}
+        {/* TODO: รูปแบบ stat-card (30%, 24h, 100%) เป็น "hero-metric template" ที่ design system ห้าม
+                  แนะนำให้เปลี่ยนเป็น icon + short copy แทนตัวเลขใหญ่ — ดู /impeccable bolder quality-section */}
         <div className="quality-section">
           <div className="quality-title">ทำไมต้องเลือก ALASKAN</div>
           <div className="quality-grid">
