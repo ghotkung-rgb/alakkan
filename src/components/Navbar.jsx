@@ -1,7 +1,5 @@
-import React from 'react';
-
-export default function Navbar({ activeMenu, setActiveMenu }) {
-  const menuItems = ['HOME', 'บริการเติมเกม', 'ข่าวสาร', 'ติดต่อเรา'];
+export default function Navbar({ activeMenu, setActiveMenu, onLogin }) {
+  const menuItems = ['HOME', 'บริการเติมเกม', 'เอเจน', 'ข่าวสาร', 'ติดต่อเรา'];
 
   return (
     <>
@@ -58,26 +56,11 @@ export default function Navbar({ activeMenu, setActiveMenu }) {
           transform: translateY(-1px);
         }
 
-        .nav-logo-text {
-          font-family: 'PSL Kampanath Pro', 'Noto Sans Thai', sans-serif;
-          font-size: 21px; font-weight: 900;
-          letter-spacing: 0.06em; color: #fff;
-          text-shadow: 0 0 18px rgba(0,209,255,0.55), 0 2px 8px rgba(0,0,0,0.5);
-          line-height: 1;
-        }
-        .nav-logo-accent {
-          color: #00d1ff;
-        }
-        .nav-logo-divider {
-          width: 1px; height: 22px;
-          background: rgba(255,255,255,0.25);
-          flex-shrink: 0;
-        }
-        .nav-logo-sub {
-          font-family: 'PSL Kampanath Pro', 'Noto Sans Thai', sans-serif;
-          font-size: 13px; font-weight: 700;
-          letter-spacing: 0.14em; color: rgba(255,255,255,0.55);
-          text-transform: uppercase; line-height: 1;
+        .nav-logo-img {
+          height: 36px;
+          width: auto;
+          object-fit: contain;
+          filter: drop-shadow(0 0 10px rgba(0,209,255,0.35));
         }
       `}</style>
 
@@ -94,11 +77,11 @@ export default function Navbar({ activeMenu, setActiveMenu }) {
             style={{ display: 'flex', alignItems: 'center', gap: 10, cursor: 'pointer', flexShrink: 0 }}
             onClick={() => setActiveMenu('HOME')}
           >
-            <span className="nav-logo-text">
-              ALA<span className="nav-logo-accent">SK</span>AN
-            </span>
-            <div className="nav-logo-divider" />
-            <span className="nav-logo-sub">TOPUP</span>
+            <img
+              src="/images/ALASKAN_WEB_ASSET/PNG/alaskan_logo-asset2.png"
+              alt="ALASKAN TOPUP"
+              className="nav-logo-img"
+            />
           </div>
 
           {/* MENU */}
@@ -109,10 +92,14 @@ export default function Navbar({ activeMenu, setActiveMenu }) {
                 className={`nav-btn ${activeMenu === item ? 'active' : ''}`}
                 onClick={() => {
                   if (item === 'ติดต่อเรา') {
-                    setActiveMenu('HOME');
-                    setTimeout(() => {
+                    if (activeMenu === 'HOME') {
                       document.getElementById('contact-section')?.scrollIntoView({ behavior: 'smooth' });
-                    }, 80);
+                    } else {
+                      setActiveMenu('HOME');
+                      setTimeout(() => {
+                        document.getElementById('contact-section')?.scrollIntoView({ behavior: 'smooth' });
+                      }, 220);
+                    }
                   } else {
                     setActiveMenu(item);
                   }
@@ -124,7 +111,7 @@ export default function Navbar({ activeMenu, setActiveMenu }) {
           </div>
 
           {/* LOGIN BUTTON */}
-          <button className="topup-btn" onClick={() => alert('Top Up Clicked')}>
+          <button className="topup-btn" onClick={onLogin}>
             ลงชื่อเข้าใช้
           </button>
         </div>

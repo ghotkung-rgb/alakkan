@@ -1,6 +1,35 @@
 const ROV_BASE   = '/images/ALASKAN_WEB_ASSET/PACKAGE ICON/ROV';
 const FF_BASE    = '/images/ALASKAN_WEB_ASSET/PACKAGE ICON/FREEFIRE';
 const PUBGM_BASE = '/images/ALASKAN_WEB_ASSET/PACKAGE ICON/PUBGM';
+const MLBB_BASE  = '/images/ALASKAN_WEB_ASSET/PACKAGE ICON/MLBB';
+
+// แพ็คต้นแบบ MLBB — ใช้ร่วมกันทุก server (แก้ราคาทีหลังต่อ server)
+const MLBB_PKG = (server) => [
+  { id: `mlbb-${server}-5`,      amount: 5,    price: 5,   img: `${MLBB_BASE}/mlbb_diamond1.png` },
+  { id: `mlbb-${server}-11`,     amount: 11,   price: 10,  img: `${MLBB_BASE}/mlbb_diamond1.png` },
+  { id: `mlbb-${server}-22`,     amount: 22,   price: 20,  img: `${MLBB_BASE}/mlbb_diamond2.png` },
+  { id: `mlbb-${server}-56`,     amount: 56,   price: 50,  badge: 'แนะนำ', img: `${MLBB_BASE}/mlbb_diamond3.png` },
+  { id: `mlbb-${server}-112`,    amount: 112,  price: 99,  img: `${MLBB_BASE}/mlbb_diamond4.png` },
+  { id: `mlbb-${server}-223`,    amount: 223,  price: 195, badge: 'ขายดี', img: `${MLBB_BASE}/mlbb_diamond5.png` },
+  { id: `mlbb-${server}-336`,    amount: 336,  price: 290, img: `${MLBB_BASE}/mlbb_diamond6.png` },
+  { id: `mlbb-${server}-570`,    amount: 570,  price: 485, img: `${MLBB_BASE}/mlbb_diamond7.png` },
+  { id: `mlbb-${server}-1163`,   amount: 1163, price: 970, img: `${MLBB_BASE}/mlbb_diamond8.png` },
+  { id: `mlbb-${server}-weekly`, amount: 0,    price: 79,  label: 'Weekly Diamond Pass', img: `${MLBB_BASE}/mlbb_WeeklyDiamondPass.png` },
+];
+
+const MLBB_SHARED = {
+  name: 'Mobile Legends',
+  icon: '/images/ALASKAN_WEB_ASSET/GAMES ICON/MOBILE LEGENDS/MOBILE LEGENDS.png',
+  bg: '/images/ALASKAN_WEB_ASSET/BACKGROUND/background_web_Alaskan/game_banner/edit/mobilelegends_web_banner.png',
+  category: 'เกม MOBA',
+  currency: 'เพชร',
+  tags: ['โปรโมชั่น', 'ขายดี'],
+  accountFields: [
+    { key: 'userId',   label: 'User ID',   placeholder: 'เช่น 123456789', inputMode: 'numeric', required: true },
+    { key: 'serverId', label: 'Server ID', placeholder: 'เช่น 1234',      inputMode: 'numeric', required: true },
+  ],
+  accountHint: 'Mobile Legends ต้องใช้ทั้ง User ID และ Server ID ตรวจสอบให้ถูกต้องก่อนยืนยัน',
+};
 
 export const GAMES = {
 
@@ -14,14 +43,44 @@ export const GAMES = {
     subtitle: 'Realm of Valor — เติมคูปอง',
     icon: '/images/GAMES ICON/ROV_iconapp.png',
     bg: '/images/GAMES BG/ROV_bg.png',
+    howtoImage: '/images/HOW%20TO/H_ROV.jpg',
     category: 'เกม MOBA',
     currency: 'คูปอง',
     tags: ['โปรโมชั่น', 'ขายดี'],
+    info: {
+      title: 'บริการเติมคูปอง ROV',
+      taglines: [
+        'ALASKAN SHOP ตัวแทนจำหน่ายและผู้ให้บริการเติมคูปองเกม ROV ในราคาคุ้มค่าสุดๆ',
+        'สะดวก รวดเร็ว ปลอดภัย ถูกต้องตามระบบที่ตัวเกมกำหนดแน่นอน 100%',
+      ],
+      sections: [
+        {
+          heading: 'เติม ROV กับ ALASKAN SHOP ดีกว่าเติมเองในเกมยังไง?',
+          ordered: false,
+          items: [
+            'คุ้มและประหยัดกว่าเติมเองในเกม',
+            'สะดวก รวดเร็ว พร้อมให้บริการตลอด 24 ช.ม.',
+            'ง่าย ไม่ยุ่งยาก ใช้แค่ OPEN ID คัดลอกจากในเกมได้เลย',
+          ],
+        },
+        {
+          heading: 'ขั้นตอนการใช้บริการเติม ROV',
+          ordered: true,
+          items: [
+            'คัดลอก OPEN ID มาใส่ในช่องที่กำหนด',
+            'เลือกแพ็กเกจที่ต้องการเติม',
+            'กดปุ่ม "ถัดไป" และยืนยันออเดอร์',
+            'เลือกช่องทางชำระเงินที่ต้องการ',
+            'ดำเนินการชำระเงิน รอรับของในเกมได้เลย!!',
+          ],
+        },
+      ],
+    },
     packages: [
       { id: 1,  amount: 11,   price: 10,   bonus: null,  popular: false, tier: 'เริ่มต้น',  img: `${ROV_BASE}/rov_coupon1.png` },
       { id: 2,  amount: 24,   price: 20,   bonus: null,  popular: false, tier: 'เริ่มต้น',  img: `${ROV_BASE}/rov_coupon1.png` },
       { id: 3,  amount: 33,   price: 29,   bonus: null,  popular: false, tier: 'เริ่มต้น',  img: `${ROV_BASE}/rov_coupon1.png` },
-      { id: 4,  amount: 48,   price: 40,   bonus: null,  popular: false, tier: 'ปกติ',      img: `${ROV_BASE}/rov_coupon2.png` },
+      { id: 4,  amount: 48,   price: 40,   bonus: null,  popular: false, tier: 'ปกติ',      badge: 'แนะนำ', img: `${ROV_BASE}/rov_coupon2.png` },
       { id: 5,  amount: 60,   price: 49,   bonus: null,  popular: false, tier: 'ปกติ',      img: `${ROV_BASE}/rov_coupon2.png` },
       { id: 6,  amount: 72,   price: 60,   bonus: null,  popular: false, tier: 'ปกติ',      img: `${ROV_BASE}/rov_coupon2.png` },
       { id: 7,  amount: 110,  price: 89,   bonus: null,  popular: false, tier: 'สแตนดาร์ด', img: `${ROV_BASE}/rov_coupon3.png` },
@@ -31,7 +90,7 @@ export const GAMES = {
       { id: 11, amount: 330,  price: 270,  bonus: null,  popular: false, tier: 'พลัส',      img: `${ROV_BASE}/rov_coupon4.png` },
       { id: 12, amount: 370,  price: 290,  bonus: null,  popular: false, tier: 'พลัส',      img: `${ROV_BASE}/rov_coupon4.png` },
       { id: 13, amount: 440,  price: 355,  bonus: null,  popular: false, tier: 'โปร',       img: `${ROV_BASE}/rov_coupon5.png` },
-      { id: 14, amount: 555,  price: 435,  bonus: null,  popular: true,  tier: 'โปร',       img: `${ROV_BASE}/rov_coupon5.png` },
+      { id: 14, amount: 555,  price: 435,  bonus: null,  popular: true,  tier: 'โปร',       badge: 'ขายดี', img: `${ROV_BASE}/rov_coupon5.png` },
       { id: 15, amount: 620,  price: 488,  bonus: null,  popular: false, tier: 'โปร',       img: `${ROV_BASE}/rov_coupon5.png` },
       { id: 16, amount: 740,  price: 580,  bonus: null,  popular: false, tier: 'พรีเมียม',  img: `${ROV_BASE}/rov_coupon6.png` },
       { id: 17, amount: 925,  price: 720,  bonus: null,  popular: false, tier: 'พรีเมียม',  img: `${ROV_BASE}/rov_coupon6.png` },
@@ -50,6 +109,16 @@ export const GAMES = {
       { id: 30, amount: 12400, price: 9600, bonus: null, popular: false, tier: 'เมกะ',      img: `${ROV_BASE}/rov_coupon9.png` },
     ],
   },
+
+  // ── Mobile Legends แยกตาม server ──────────────────────────────────────────
+  'Mobile Legends':    { ...MLBB_SHARED, id: 'Mobile Legends',    subtitle: 'Mobile Legends — Server ไทย',          tags: ['ขายดี'],                           packages: MLBB_PKG('th') },
+  'Mobile Legends ID': { ...MLBB_SHARED, id: 'Mobile Legends ID', subtitle: 'Mobile Legends — Server อินโดนีเซีย', country: 'indonesia',               tags: [], packages: MLBB_PKG('id') },
+  'Mobile Legends MY': { ...MLBB_SHARED, id: 'Mobile Legends MY', subtitle: 'Mobile Legends — Server มาเลเซีย',    country: 'malaysia',                tags: [],        packages: MLBB_PKG('my') },
+  'Mobile Legends PH': { ...MLBB_SHARED, id: 'Mobile Legends PH', subtitle: 'Mobile Legends — Server ฟิลิปปินส์', country: 'philippines',              tags: [],        packages: MLBB_PKG('ph') },
+  'Mobile Legends SG': { ...MLBB_SHARED, id: 'Mobile Legends SG', subtitle: 'Mobile Legends — Server สิงคโปร์',   country: 'singapore',               tags: [],        packages: MLBB_PKG('sg') },
+  'Mobile Legends RU': { ...MLBB_SHARED, id: 'Mobile Legends RU', subtitle: 'Mobile Legends — Server รัสเซีย',     country: 'russia',                  tags: [],        packages: MLBB_PKG('ru') },
+  'Mobile Legends TR': { ...MLBB_SHARED, id: 'Mobile Legends TR', subtitle: 'Mobile Legends — Server ตุรกี',       country: 'turkey',                  tags: [],        packages: MLBB_PKG('tr') },
+  'Mobile Legends US': { ...MLBB_SHARED, id: 'Mobile Legends US', subtitle: 'Mobile Legends — Server สหรัฐฯ',      country: 'united-states-of-america', tags: [],       packages: MLBB_PKG('us') },
 
   'Honor of Kings': {
     id: 'Honor of Kings',
@@ -105,6 +174,8 @@ export const GAMES = {
     subtitle: 'Garena Free Fire — เติมเพชร & พาส',
     icon: '/images/GAMES ICON/FREEFIRE_iconapp.png',
     bg: '/images/GAMES BG/FREEFIRE_bg.png',
+    promoBg: '/images/BG_UID/FF.png',
+    promoAspect: '33 / 14',
     category: 'เกม Battle Royale',
     currency: 'เพชร',
     tags: ['โปรโมชั่น', 'ขายดี'],
@@ -168,18 +239,36 @@ export const GAMES = {
     bg: '/images/GAMES BG/DELTAFORCE_bg.png',
     category: 'เกมยิง FPS',
     currency: 'DF Points',
-    packages: [],
+    packages: [
+      { id: 'df-18',       amount: 18,                                   price: 12,    img: '/images/ALASKAN_WEB_ASSET/PACKAGE%20ICON/Deltaforce_coin.png' },
+      { id: 'df-30',       amount: 30,                                   price: 19,    img: '/images/ALASKAN_WEB_ASSET/PACKAGE%20ICON/Deltaforce_coin.png' },
+      { id: 'df-60',       amount: 60,                                   price: 34,    img: '/images/ALASKAN_WEB_ASSET/PACKAGE%20ICON/Deltaforce_coin.png' },
+      { id: 'df-300',      amount: 0, label: '300 + 20 Delta Coin',      price: 139,   img: '/images/ALASKAN_WEB_ASSET/PACKAGE%20ICON/Deltaforce_coin.png' },
+      { id: 'df-420',      amount: 0, label: '420 + 40 Delta Coin',      price: 199,   img: '/images/ALASKAN_WEB_ASSET/PACKAGE%20ICON/Deltaforce_coin.png' },
+      { id: 'df-680',      amount: 0, label: '680 + 70 Delta Coin',      price: 269,   img: '/images/ALASKAN_WEB_ASSET/PACKAGE%20ICON/Deltaforce_coin.png' },
+      { id: 'df-1280',     amount: 0, label: '1,280 + 200 Delta Coin',   price: 519,   img: '/images/ALASKAN_WEB_ASSET/PACKAGE%20ICON/Deltaforce_coin.png' },
+      { id: 'df-1680',     amount: 0, label: '1,680 + 300 Delta Coin',   price: 649,   img: '/images/ALASKAN_WEB_ASSET/PACKAGE%20ICON/Deltaforce_coin.png' },
+      { id: 'df-3280',     amount: 0, label: '3,280 + 670 Delta Coin',   price: 1279,  img: '/images/ALASKAN_WEB_ASSET/PACKAGE%20ICON/Deltaforce_coin.png' },
+      { id: 'df-6480',     amount: 0, label: '6,480 + 1,620 Delta Coin', price: 2499,  badge: 'ขายดี', img: '/images/ALASKAN_WEB_ASSET/PACKAGE%20ICON/Deltaforce_coin.png' },
+    ],
   },
 
   'Blood Strike': {
     id: 'Blood Strike',
     name: 'Blood Strike',
-    subtitle: 'Blood Strike — เติมคริสตัล',
+    subtitle: 'Blood Strike — เติม Gold',
     icon: '/images/GAMES ICON/BLOODSTRIKE_iconapp.png',
     bg: '/images/GAMES BG/BLOODSTRIKE_bg.png',
     category: 'เกมยิง FPS',
-    currency: 'คริสตัล',
-    packages: [],
+    currency: 'Gold',
+    packages: [
+      { id: 'bs-100',  amount: 0, label: '100+5 Gold',    price: 27,    img: '/images/ALASKAN_WEB_ASSET/PACKAGE%20ICON/BLOODSTRIKE/bs_gold_s.png' },
+      { id: 'bs-300',  amount: 0, label: '300+20 Gold',   price: 70,    img: '/images/ALASKAN_WEB_ASSET/PACKAGE%20ICON/BLOODSTRIKE/bs_gold_s.png' },
+      { id: 'bs-500',  amount: 0, label: '500+40 Gold',   price: 116,   img: '/images/ALASKAN_WEB_ASSET/PACKAGE%20ICON/BLOODSTRIKE/bs_gold_m.png' },
+      { id: 'bs-1000', amount: 0, label: '1000+100 Gold', price: 231,   img: '/images/ALASKAN_WEB_ASSET/PACKAGE%20ICON/BLOODSTRIKE/bs_gold_m.png' },
+      { id: 'bs-2000', amount: 0, label: '2000+260 Gold', price: 458,   img: '/images/ALASKAN_WEB_ASSET/PACKAGE%20ICON/BLOODSTRIKE/bs_gold_l.png' },
+      { id: 'bs-5000', amount: 0, label: '5000+800 Gold', price: 1132,  badge: 'ขายดี', img: '/images/ALASKAN_WEB_ASSET/PACKAGE%20ICON/BLOODSTRIKE/bs_gold_l.png' },
+    ],
   },
 
   'Ballistic Hero': {
@@ -200,23 +289,54 @@ export const GAMES = {
   'Valorant': {
     id: 'Valorant',
     name: 'Valorant',
-    subtitle: 'Valorant — เติม VP',
+    subtitle: 'Valorant — เติม Valorant Point',
     icon: '/images/GAMES ICON/VALORANT_iconapp.png',
     bg: '/images/GAMES BG/VALORANT_bg.png',
     category: 'เกมยิงกลยุทธ์',
     currency: 'VP',
-    packages: [],
+    packages: [
+      // ── Rogue Collection Bundles ──────────────────────────────
+      { id: 'vp-rogue-gun',    amount: 0, label: '2,525 VP (Rogue Collection ปืนแยกชิ้น)', price: 628,   originalPrice: 650,   img: '/images/ALASKAN_WEB_ASSET/PACKAGE%20ICON/Valorant_points.png' },
+      { id: 'vp-rogue-melee',  amount: 0, label: '4,650 VP (Rogue Collection Melee)',       price: 1133,  originalPrice: 1180,  img: '/images/ALASKAN_WEB_ASSET/PACKAGE%20ICON/Valorant_points.png' },
+      { id: 'vp-rogue-bundle', amount: 0, label: '9,000 VP (Rogue Collection Bundle)',      price: 2153,  originalPrice: 2240,  img: '/images/ALASKAN_WEB_ASSET/PACKAGE%20ICON/Valorant_points.png' },
+      // ── Valorant Points ──────────────────────────────────────
+      { id: 'vp-475',    amount: 475,    price: 129,   originalPrice: 130,   img: '/images/ALASKAN_WEB_ASSET/PACKAGE%20ICON/Valorant_points.png' },
+      { id: 'vp-1000',   amount: 1000,   price: 249,   originalPrice: 279,   img: '/images/ALASKAN_WEB_ASSET/PACKAGE%20ICON/Valorant_points.png' },
+      { id: 'vp-1475',   amount: 1475,   price: 378,   originalPrice: 390,   img: '/images/ALASKAN_WEB_ASSET/PACKAGE%20ICON/Valorant_points.png' },
+      { id: 'vp-2050',   amount: 2050,   price: 499,   originalPrice: 559,   img: '/images/ALASKAN_WEB_ASSET/PACKAGE%20ICON/Valorant_points.png' },
+      { id: 'vp-3050',   amount: 3050,   price: 748,   originalPrice: 830,   img: '/images/ALASKAN_WEB_ASSET/PACKAGE%20ICON/Valorant_points.png' },
+      { id: 'vp-3650',   amount: 3650,   price: 884,   originalPrice: 920,   img: '/images/ALASKAN_WEB_ASSET/PACKAGE%20ICON/Valorant_points.png' },
+      { id: 'vp-5350',   amount: 5350,   price: 1269,  originalPrice: 1400,  img: '/images/ALASKAN_WEB_ASSET/PACKAGE%20ICON/Valorant_points.png' },
+      { id: 'vp-7400',   amount: 7400,   price: 1768,  originalPrice: 1959,  img: '/images/ALASKAN_WEB_ASSET/PACKAGE%20ICON/Valorant_points.png' },
+      { id: 'vp-10000',  amount: 10000,  price: 2402,  originalPrice: 2650,  badge: 'แนะนำ', img: '/images/ALASKAN_WEB_ASSET/PACKAGE%20ICON/Valorant_points.png' },
+      { id: 'vp-11000',  amount: 11000,  price: 2534,  originalPrice: 2640,  badge: 'ขายดี', img: '/images/ALASKAN_WEB_ASSET/PACKAGE%20ICON/Valorant_points.png' },
+    ],
   },
 
   'Arena Breakout': {
     id: 'Arena Breakout',
     name: 'Arena Breakout',
-    subtitle: 'Arena Breakout — เติม Armory Coin',
+    subtitle: 'Arena Breakout — เติม Bonds',
     icon: '/images/GAMES ICON/ARENABREAKOUT_iconapp.png',
     bg: '/images/GAMES BG/ARENABREAKOUT_bg.png',
     category: 'เกมยิงกลยุทธ์',
-    currency: 'Armory Coin',
-    packages: [],
+    currency: 'Bonds',
+    packages: [
+      // ── Passes & Privileges ──────────────────────────────────
+      { id: 'ab-pass-monthly-adv',  amount: 0, label: 'Monthly Advanced Battle Pass',            price: 35,    originalPrice: 39,    img: '/images/ALASKAN_WEB_ASSET/PACKAGE%20ICON/ARENA%20BREAKOUT/Arena%20Breakout_AdvancedBattlePass.png' },
+      { id: 'ab-pass-beginner',     amount: 0, label: 'Beginner Select (VIP + เชฟ 4 ช่อง 3 วัน)', price: 29,  originalPrice: 39,    img: '/images/ALASKAN_WEB_ASSET/PACKAGE%20ICON/ARENA%20BREAKOUT/Arena%20Breakout_BeginnerSelect.png' },
+      { id: 'ab-case-bullet',       amount: 0, label: 'Bulletproof Case Privileges (30 วัน)',    price: 89,    originalPrice: 110,   img: '/images/ALASKAN_WEB_ASSET/PACKAGE%20ICON/ARENA%20BREAKOUT/Arena%20Breakout_BulletproofCase.png' },
+      { id: 'ab-pass-monthly-pre',  amount: 0, label: 'Monthly Premium Battle Pass',             price: 129,   originalPrice: 159,   img: '/images/ALASKAN_WEB_ASSET/PACKAGE%20ICON/ARENA%20BREAKOUT/Arena%20Breakout_PremiumBattlePass.png' },
+      { id: 'ab-case-composite',    amount: 0, label: 'Composite Case Privileges (30 วัน)',      price: 219,   originalPrice: 335,   img: '/images/ALASKAN_WEB_ASSET/PACKAGE%20ICON/ARENA%20BREAKOUT/Arena%20Breakout_CompositeCase.png' },
+      { id: 'ab-pass-quarterly',    amount: 0, label: 'Quarterly Premium Battle Pass',           price: 369,   originalPrice: 469,   img: '/images/ALASKAN_WEB_ASSET/PACKAGE%20ICON/ARENA%20BREAKOUT/Arena%20Breakout_QuarterlyPremiumBattlePass.png' },
+      // ── Bonds ────────────────────────────────────────────────
+      { id: 'ab-66',    amount: 66,    price: 34,    originalPrice: 39,    img: '/images/ALASKAN_WEB_ASSET/PACKAGE%20ICON/ARENA%20BREAKOUT/Arena%20Breakout_bonds.png' },
+      { id: 'ab-335',   amount: 335,   price: 149,   originalPrice: 189,   img: '/images/ALASKAN_WEB_ASSET/PACKAGE%20ICON/ARENA%20BREAKOUT/Arena%20Breakout_bonds.png' },
+      { id: 'ab-675',   amount: 675,   price: 319,   originalPrice: 375,   img: '/images/ALASKAN_WEB_ASSET/PACKAGE%20ICON/ARENA%20BREAKOUT/Arena%20Breakout_bonds.png' },
+      { id: 'ab-1690',  amount: 1690,  price: 729,   originalPrice: 939,   img: '/images/ALASKAN_WEB_ASSET/PACKAGE%20ICON/ARENA%20BREAKOUT/Arena%20Breakout_bonds.png' },
+      { id: 'ab-3400',  amount: 3400,  price: 1329,  originalPrice: 1870,  img: '/images/ALASKAN_WEB_ASSET/PACKAGE%20ICON/ARENA%20BREAKOUT/Arena%20Breakout_bonds.png' },
+      { id: 'ab-6820',  amount: 6820,  price: 2599,  originalPrice: 3750,  badge: 'ขายดี', img: '/images/ALASKAN_WEB_ASSET/PACKAGE%20ICON/ARENA%20BREAKOUT/Arena%20Breakout_bonds.png' },
+    ],
   },
 
   // ══════════════════════════════════════════
@@ -231,7 +351,15 @@ export const GAMES = {
     bg: '/images/GAMES BG/STARRAIL_bg.png',
     category: 'เกม RPG',
     currency: 'Oneiric Shard',
-    packages: [],
+    packages: [
+      { id: 'hsr-pass',   amount: 0, label: 'บัตรกำนัลเสียงรถไฟ',  price: 179,   img: '/images/ALASKAN_WEB_ASSET/PACKAGE%20ICON/STARRAIL/starrail_ExpressSupplyPass.png' },
+      { id: 'hsr-60',     amount: 0, label: '60 Shard',             price: 35,    img: '/images/ALASKAN_WEB_ASSET/PACKAGE%20ICON/STARRAIL/starrail_shard.png' },
+      { id: 'hsr-300',    amount: 0, label: '300+30 Shard',         price: 179,   img: '/images/ALASKAN_WEB_ASSET/PACKAGE%20ICON/STARRAIL/starrail_shard.png' },
+      { id: 'hsr-980',    amount: 0, label: '980+110 Shard',        price: 549,   img: '/images/ALASKAN_WEB_ASSET/PACKAGE%20ICON/STARRAIL/starrail_shard.png' },
+      { id: 'hsr-1980',   amount: 0, label: '1980+260 Shard',       price: 1100,  img: '/images/ALASKAN_WEB_ASSET/PACKAGE%20ICON/STARRAIL/starrail_shard.png' },
+      { id: 'hsr-3280',   amount: 0, label: '3280+600 Shard',       price: 1800,  img: '/images/ALASKAN_WEB_ASSET/PACKAGE%20ICON/STARRAIL/starrail_shard.png' },
+      { id: 'hsr-6480',   amount: 0, label: '6480+1600 Shard',      price: 3700,  badge: 'ขายดี', img: '/images/ALASKAN_WEB_ASSET/PACKAGE%20ICON/STARRAIL/starrail_shard.png' },
+    ],
   },
 
   'Aether Gazer': {
@@ -270,12 +398,25 @@ export const GAMES = {
   'Where Winds Meet': {
     id: 'Where Winds Meet',
     name: 'Where Winds Meet',
-    subtitle: 'Where Winds Meet — เติม Gem',
+    subtitle: 'Where Winds Meet — เติม Echo Beads',
     icon: '/images/GAMES ICON/WHEREWINDMEET_iconapp.png',
     bg: '/images/GAMES BG/WHEREWINDMEET_bg.png',
     category: 'เกม RPG',
-    currency: 'Gem',
-    packages: [],
+    currency: 'Echo Beads',
+    packages: [
+      { id: 'wwm-monthly',  amount: 0, label: 'Monthly Pass',         originalPrice: 175,  price: 164,  img: '/images/ALASKAN_WEB_ASSET/PACKAGE%20ICON/Wherewindmeet_echo.png' },
+      { id: 'wwm-elite',    amount: 0, label: 'Elite Battle Pass',    originalPrice: 350,  price: 324,  img: '/images/ALASKAN_WEB_ASSET/PACKAGE%20ICON/Wherewindmeet_echo.png' },
+      { id: 'wwm-premium',  amount: 0, label: 'Premium Battle Pass',  originalPrice: 675,  price: 629,  img: '/images/ALASKAN_WEB_ASSET/PACKAGE%20ICON/Wherewindmeet_echo.png' },
+      { id: 'wwm-60',       amount: 60,    originalPrice: 39,   price: 35,   img: '/images/ALASKAN_WEB_ASSET/PACKAGE%20ICON/Wherewindmeet_echo.png' },
+      { id: 'wwm-180',      amount: 180,   originalPrice: 105,  price: 99,   img: '/images/ALASKAN_WEB_ASSET/PACKAGE%20ICON/Wherewindmeet_echo.png' },
+      { id: 'wwm-300',      amount: 300,   originalPrice: 175,  price: 165,  img: '/images/ALASKAN_WEB_ASSET/PACKAGE%20ICON/Wherewindmeet_echo.png' },
+      { id: 'wwm-600',      amount: 600,   originalPrice: 350,  price: 329,  img: '/images/ALASKAN_WEB_ASSET/PACKAGE%20ICON/Wherewindmeet_echo.png' },
+      { id: 'wwm-900',      amount: 900,   originalPrice: 520,  price: 479,  img: '/images/ALASKAN_WEB_ASSET/PACKAGE%20ICON/Wherewindmeet_echo.png' },
+      { id: 'wwm-1800',     amount: 1800,  originalPrice: 1100, price: 939,  img: '/images/ALASKAN_WEB_ASSET/PACKAGE%20ICON/Wherewindmeet_echo.png' },
+      { id: 'wwm-3000',     amount: 3000,  originalPrice: 1690, price: 1549, img: '/images/ALASKAN_WEB_ASSET/PACKAGE%20ICON/Wherewindmeet_echo.png' },
+      { id: 'wwm-6000',     amount: 6000,  originalPrice: 3390, price: 3079, img: '/images/ALASKAN_WEB_ASSET/PACKAGE%20ICON/Wherewindmeet_echo.png' },
+      { id: 'wwm-12000',    amount: 12000, originalPrice: 6690, price: 6149, badge: 'ขายดี', img: '/images/ALASKAN_WEB_ASSET/PACKAGE%20ICON/Wherewindmeet_echo.png' },
+    ],
   },
 
   // ══════════════════════════════════════════
@@ -330,12 +471,23 @@ export const GAMES = {
   'Heartopia': {
     id: 'Heartopia',
     name: 'Heartopia',
-    subtitle: 'Heartopia — เติม Gem',
+    subtitle: 'Heartopia — เติม เพชรหัวใจ',
     icon: '/images/GAMES ICON/HEARTOPIA_iconapp.png',
     bg: '/images/GAMES BG/HEARTOPIA_bg.png',
     category: 'เกมจำลอง',
-    currency: 'Gem',
-    packages: [],
+    currency: 'เพชรหัวใจ',
+    packages: [
+      { id: 'ht-pass7',   amount: 0, label: 'สมาชิกสมาคมลูกโอ๊กระดับต้น',  price: 22,   img: '/images/ALASKAN_WEB_ASSET/PACKAGE%20ICON/HEATOPIA/heartopia_pass7.png' },
+      { id: 'ht-pass30',  amount: 0, label: 'สมาชิกทางการลูกกลมทองคำ',      price: 99,   img: '/images/ALASKAN_WEB_ASSET/PACKAGE%20ICON/HEATOPIA/heartopia_pass30.png' },
+      { id: 'ht-20',      amount: 20,                                         price: 19,   img: '/images/ALASKAN_WEB_ASSET/PACKAGE%20ICON/HEATOPIA/Heartopia_candy.png' },
+      { id: 'ht-60',      amount: 60,                                         price: 37,   img: '/images/ALASKAN_WEB_ASSET/PACKAGE%20ICON/HEATOPIA/Heartopia_candy.png' },
+      { id: 'ht-300',     amount: 0, label: '300 + 20 เพชรหัวใจ',            price: 169,  img: '/images/ALASKAN_WEB_ASSET/PACKAGE%20ICON/HEATOPIA/heartopia_FestivalPack.png' },
+      { id: 'ht-680',     amount: 0, label: '680 + 50 เพชรหัวใจ',            price: 365,  img: '/images/ALASKAN_WEB_ASSET/PACKAGE%20ICON/HEATOPIA/heartopia_FestivalPack.png' },
+      { id: 'ht-1280',    amount: 0, label: '1280 + 90 เพชรหัวใจ',           price: 659,  img: '/images/ALASKAN_WEB_ASSET/PACKAGE%20ICON/HEATOPIA/heartopia_FestivalPackUP.png' },
+      { id: 'ht-1980',    amount: 0, label: '1980 + 150 เพชรหัวใจ',          price: 999,  img: '/images/ALASKAN_WEB_ASSET/PACKAGE%20ICON/HEATOPIA/heartopia_FestivalPackUP.png' },
+      { id: 'ht-3280',    amount: 0, label: '3280 + 270 เพชรหัวใจ',          price: 1699, img: '/images/ALASKAN_WEB_ASSET/PACKAGE%20ICON/HEATOPIA/heartopia_SupremeFestivalPack.png' },
+      { id: 'ht-6480',    amount: 0, label: '6480 + 570 เพชรหัวใจ',          price: 3149, badge: 'ขายดี', img: '/images/ALASKAN_WEB_ASSET/PACKAGE%20ICON/HEATOPIA/heartopia_SupremeFestivalPack.png' },
+    ],
   },
 
   // ══════════════════════════════════════════
@@ -345,12 +497,22 @@ export const GAMES = {
   'Identity V': {
     id: 'Identity V',
     name: 'Identity V',
-    subtitle: 'Identity V — เติม Echoes',
+    subtitle: 'Identity V — เติม Extra Echoes',
     icon: '/images/GAMES ICON/IDENTITYV_iconapp.png',
     bg: '/images/GAMES BG/IDENTITYV_bg.png',
     category: 'เกมเอาชีวิตรอด',
     currency: 'Echoes',
-    packages: [],
+    packages: [
+      { id: 'idv-66',    amount: 66,    price: 30,   img: '/images/ALASKAN_WEB_ASSET/PACKAGE%20ICON/IDENTITY%20V/IdentityV_letter.png' },
+      { id: 'idv-203',   amount: 203,   price: 89,   img: '/images/ALASKAN_WEB_ASSET/PACKAGE%20ICON/IDENTITY%20V/IdentityV_letter.png' },
+      { id: 'idv-335',   amount: 335,   price: 145,  img: '/images/ALASKAN_WEB_ASSET/PACKAGE%20ICON/IDENTITY%20V/IdentityV_letter.png' },
+      { id: 'idv-759',   amount: 759,   price: 291,  img: '/images/ALASKAN_WEB_ASSET/PACKAGE%20ICON/IDENTITY%20V/identityv_CluesPackage.png' },
+      { id: 'idv-2277',  amount: 2277,  price: 863,  img: '/images/ALASKAN_WEB_ASSET/PACKAGE%20ICON/IDENTITY%20V/identityv_CluesPackage.png' },
+      { id: 'idv-3795',  amount: 3795,  price: 1424, img: '/images/ALASKAN_WEB_ASSET/PACKAGE%20ICON/IDENTITY%20V/identityv_InspirationsPackage.png' },
+      { id: 'idv-6831',  amount: 6831,  price: 2547, badge: 'แนะนำ', img: '/images/ALASKAN_WEB_ASSET/PACKAGE%20ICON/IDENTITY%20V/identityv_InspirationsPackage.png' },
+      { id: 'idv-7590',  amount: 7590,  price: 2816, badge: 'ขายดี', img: '/images/ALASKAN_WEB_ASSET/PACKAGE%20ICON/IDENTITY%20V/identityv_InspirationsPackage.png' },
+      { id: 'idv-dentist', amount: 19310, label: 'โปรเหมาตู้ Dentist', price: 7163, badge: 'แนะนำ', img: '/images/ALASKAN_WEB_ASSET/PACKAGE%20ICON/IDENTITY%20V/identityv_MemorySpherePackage.png' },
+    ],
   },
 
 };

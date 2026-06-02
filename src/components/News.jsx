@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
+import { FaFire } from 'react-icons/fa';
 
 const NEWS = [
   {
@@ -378,7 +379,7 @@ export default function News() {
           cursor: pointer;
           min-height: 240px;
           display: flex; flex-direction: column; justify-content: flex-end;
-          transition: transform 0.25s cubic-bezier(0.34, 1.4, 0.64, 1), box-shadow 0.25s ease;
+          transition: transform 0.25s cubic-bezier(0.25, 1, 0.5, 1), box-shadow 0.25s ease;
         }
         .news-grid-card:hover {
           transform: translateY(-6px);
@@ -504,7 +505,7 @@ export default function News() {
                   <span className="news-tag" style={{ color: featured.tagColor, borderColor: featured.tagColor }}>
                     {featured.tag}
                   </span>
-                  {featured.hot && <span className="news-hot-badge">🔥 HOT</span>}
+                  {featured.hot && <span className="news-hot-badge"><FaFire /> HOT</span>}
                   <span className="news-date">{featured.date}</span>
                 </div>
                 <h2 className="news-featured-title">{featured.title}</h2>
@@ -547,7 +548,7 @@ export default function News() {
                         <span className="news-tag" style={{ color: n.tagColor, borderColor: n.tagColor, fontSize: 8 }}>
                           {n.tag}
                         </span>
-                        {n.hot && <span className="news-hot-badge">🔥</span>}
+                        {n.hot && <span className="news-hot-badge"><FaFire /></span>}
                         <span className="news-grid-card-date">{n.date}</span>
                       </div>
                       <h3 className="news-grid-card-title">{n.title}</h3>

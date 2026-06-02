@@ -1,62 +1,95 @@
-import React, { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef } from 'react';
+import { FiGrid, FiTrendingUp, FiZap } from 'react-icons/fi';
+
+const FLAG_BASE = '/images/ALASKAN_WEB_ASSET/FLAG';
+const COUNTRY_NAMES = {
+  'indonesia':                'Indonesia',
+  'malaysia':                 'Malaysia',
+  'philippines':              'Philippines',
+  'russia':                   'Russia',
+  'singapore':                'Singapore',
+  'turkey':                   'Turkey',
+  'united-states-of-america': 'USA',
+};
+import HeroSlider from './HeroSlider';
+import Footer from './Footer';
 // Note: โปรโมชั่น — เพิ่ม/ลดการ์ดได้เลย
+// gameId ต้องตรงกับ key ใน GAMES หรือ MAILPASS_GAMES, type: 'uid' | 'mailpass'
 const PROMOS = [
-  { id: 1, name: "ROV Promotion",      img: "/images/PRO/rov_promotion_web1_ai.png",      tag: "HOT" }, //tag คือป้ายใหม่อื่นๆ เช่น HOT, SALE, etc. (ถ้าไม่มีให้ใส่ null)
-  { id: 2, name: "ACE RACER", category: "เกมแข่งรถ", bg: "/images/GAMES BG/ACERACER_bg.png", icon: "/images/GAMES ICON/ACERACER_iconapp.png", tag: "ใหม่" },
-  { id: 3, name: "BIGO LIVE", category: "สตรีมมิ่ง", bg: "/images/GAMES BG/BIGOLIVE_bg.png", icon: "/images/GAMES ICON/BIGOLIVE_iconapp.png", tag: "ใหม่" },
-  { id: 4, name: "IDENTITY V", category: "เกมเอาชีวิตรอด", bg: "/images/GAMES BG/IDENTITYV_bg.png", icon: "/images/GAMES ICON/IDENTITYV_iconapp.png", tag: null },
+  { id: 1, name: "ROV Promotion",      img: "/images/PRO/rov_promotion_web1_ai.png",      tag: "HOT",  gameId: 'ROV',        type: 'uid' },
+  { id: 2, name: "ACE RACER", category: "เกมแข่งรถ", bg: "/images/GAMES BG/ACERACER_bg.png", icon: "/images/GAMES ICON/ACERACER_iconapp.png", tag: "ใหม่", gameId: 'ACE RACER', type: 'uid' },
+  { id: 3, name: "BIGO LIVE", category: "สตรีมมิ่ง", bg: "/images/GAMES BG/BIGOLIVE_bg.png", icon: "/images/GAMES ICON/BIGOLIVE_iconapp.png", tag: "ใหม่", gameId: 'BIGO LIVE', type: 'uid' },
+  { id: 4, name: "IDENTITY V", category: "เกมเอาชีวิตรอด", bg: "/images/GAMES BG/IDENTITYV_bg.png", icon: "/images/GAMES ICON/IDENTITYV_iconapp.png", tag: null, gameId: 'Identity V', type: 'uid' },
 ];
 
 // Note: ชื่อเกม , bg (ภาพพื้นหลัง) , icon (ไอคอนแอป) , category (หมวดหมู่) , tag
 const GAMES_TOPUP = [
   { id: 1,  name: "ROV",               category: "เกม MOBA",           bg: "/images/GAMES BG/ROV_bg.png",             icon: "/images/GAMES ICON/ROV_iconapp.png",             tag: "ขายดี"  },
-  { id: 2,  name: "PUBG Mobile",       category: "เกม Battle Royale",   bg: "/images/GAMES BG/PUBGMOBILE_bg.png",       icon: "/images/GAMES ICON/PUBGMOBILE_iconapp.png",      tag: null   },
-  { id: 3,  name: "Free Fire",         category: "เกม Battle Royale",   bg: "/images/GAMES BG/FREEFIRE_bg.png",         icon: "/images/GAMES ICON/FREEFIRE_iconapp.png",        tag: null   },
-  { id: 4,  name: "Call of Duty",      category: "เกมยิง FPS",          bg: "/images/GAMES BG/CALLOFDUTY_bg.png",       icon: "/images/GAMES ICON/CALLOFDUTY_iconapp.png",      tag: null   },
-  { id: 5,  name: "Delta Force",       category: "เกมยิง FPS",          bg: "/images/GAMES BG/DELTAFORCE_bg.png",       icon: "/images/GAMES ICON/DELTAFORCE_iconapp.png",      tag: "ใหม่" },
-  { id: 6,  name: "Blood Strike",      category: "เกมยิง FPS",          bg: "/images/GAMES BG/BLOODSTRIKE_bg.png",      icon: "/images/GAMES ICON/BLOODSTRIKE_iconapp.png",     tag: "ใหม่" },
-  { id: 7,  name: "Valorant",          category: "เกมยิงกลยุทธ์",       bg: "/images/GAMES BG/VALORANT_bg.png",         icon: "/images/GAMES ICON/VALORANT_iconapp.png",        tag: null   },
-  { id: 8,  name: "Honor of Kings",    category: "เกม MOBA",            bg: "/images/GAMES BG/HONOROFKINGS_bg.png",     icon: "/images/GAMES ICON/HONOROFKINGS_iconapp.png",    tag: null   },
-  { id: 9,  name: "Honkai: Star Rail", category: "เกม RPG",             bg: "/images/GAMES BG/STARRAIL_bg.png",         icon: "/images/GAMES ICON/STARRAIL_iconapp.png",        tag: null   },
-  { id: 10, name: "Arena Breakout",    category: "เกมยิงกลยุทธ์",       bg: "/images/GAMES BG/ARENABREAKOUT_bg.png",    icon: "/images/GAMES ICON/ARENABREAKOUT_iconapp.png",   tag: null   },
-  { id: 11, name: "ACE RACER",         category: "เกมแข่งรถ",           bg: "/images/GAMES BG/ACERACER_bg.png",         icon: "/images/GAMES ICON/ACERACER_iconapp.png",        tag: null   },
-  { id: 12, name: "Aether Gazer",      category: "เกม RPG",             bg: "/images/GAMES BG/AETHERGAZER_bg.png",      icon: "/images/GAMES ICON/AETHERGAZER_iconapp.png",     tag: null   },
-  { id: 13, name: "AFK Journey",       category: "เกม RPG",             bg: "/images/GAMES BG/AFKJOURNEY_bg.png",       icon: "/images/GAMES ICON/AFKJOURNEY_iconapp.png",      tag: null   },
-  { id: 14, name: "Ballistic Hero",    category: "เกมยิง FPS",          bg: "/images/GAMES BG/BALLISTICHERO_bg.png",    icon: "/images/GAMES ICON/BALLISTICHERO_iconapp.png",   tag: "ใหม่" },
-  { id: 15, name: "BIGO LIVE",         category: "สตรีมมิ่ง",           bg: "/images/GAMES BG/BIGOLIVE_bg.png",         icon: "/images/GAMES ICON/BIGOLIVE_iconapp.png",        tag: null   },
-  { id: 16, name: "Bleach",            category: "เกม RPG",             bg: "/images/GAMES BG/BLEACH_bg.png",           icon: "/images/GAMES ICON/BLEACH_iconapp.png",          tag: null   },
-  { id: 17, name: "Dunk City Dynasty", category: "เกมกีฬา",             bg: "/images/GAMES BG/DUNKCITY_bg.png",         icon: "/images/GAMES ICON/DUNKCITY_iconapp.png",        tag: null   },
-  { id: 18, name: "Heartopia",         category: "เกมจำลอง",            bg: "/images/GAMES BG/HEARTOPIA_bg.png",        icon: "/images/GAMES ICON/HEARTOPIA_iconapp.png",       tag: null   },
-  { id: 19, name: "Identity V",        category: "เกมเอาชีวิตรอด",      bg: "/images/GAMES BG/IDENTITYV_bg.png",        icon: "/images/GAMES ICON/IDENTITYV_iconapp.png",       tag: null   },
-  { id: 20, name: "LoL: Wild Rift",    category: "เกม MOBA",            bg: "/images/GAMES BG/LOLWILDRIFT_bg.png",      icon: "/images/GAMES ICON/LOLWILDRIFT_iconapp.png",     tag: null   },
-  { id: 21, name: "League of Legends", category: "เกม MOBA",            bg: "/images/GAMES BG/LOL_bg.png",              icon: "/images/GAMES ICON/LOL_iconapp.png",             tag: null   },
-  { id: 22, name: "Magic Chess",       category: "เกมกลยุทธ์",          bg: "/images/GAMES BG/MAGICCHESS_bg.png",       icon: "/images/GAMES ICON/MAGICCHESS_iconapp.png",      tag: null   },
-  { id: 23, name: "Where Winds Meet",  category: "เกม RPG",             bg: "/images/GAMES BG/WHEREWINDMEET_bg.png",    icon: "/images/GAMES ICON/WHEREWINDMEET_iconapp.png",   tag: "ใหม่" },
+  { id: 2,  name: "Mobile Legends",    category: "เกม MOBA", tag: null,     bg: "/images/ALASKAN_WEB_ASSET/BACKGROUND/background_web_Alaskan/game_banner/edit/mobilelegends_web_banner.png", icon: "/images/ALASKAN_WEB_ASSET/GAMES ICON/MOBILE LEGENDS/MOBILE LEGENDS.png" },
+  { id: 31, name: "Mobile Legends ID", category: "เกม MOBA", country: "indonesia", tag: "ขายดี", bg: "/images/ALASKAN_WEB_ASSET/BACKGROUND/background_web_Alaskan/game_banner/edit/mobilelegends_web_banner.png", icon: "/images/ALASKAN_WEB_ASSET/GAMES ICON/MOBILE LEGENDS/MOBILE LEGENDS.png" },
+  { id: 25, name: "Mobile Legends MY", category: "เกม MOBA", country: "malaysia",                 bg: "/images/ALASKAN_WEB_ASSET/BACKGROUND/background_web_Alaskan/game_banner/edit/mobilelegends_web_banner.png", icon: "/images/ALASKAN_WEB_ASSET/GAMES ICON/MOBILE LEGENDS/MOBILE LEGENDS.png", tag: null },
+  { id: 26, name: "Mobile Legends PH", category: "เกม MOBA", country: "philippines",              bg: "/images/ALASKAN_WEB_ASSET/BACKGROUND/background_web_Alaskan/game_banner/edit/mobilelegends_web_banner.png", icon: "/images/ALASKAN_WEB_ASSET/GAMES ICON/MOBILE LEGENDS/MOBILE LEGENDS.png", tag: null },
+  { id: 27, name: "Mobile Legends SG", category: "เกม MOBA", country: "singapore",                bg: "/images/ALASKAN_WEB_ASSET/BACKGROUND/background_web_Alaskan/game_banner/edit/mobilelegends_web_banner.png", icon: "/images/ALASKAN_WEB_ASSET/GAMES ICON/MOBILE LEGENDS/MOBILE LEGENDS.png", tag: null },
+  { id: 28, name: "Mobile Legends RU", category: "เกม MOBA", country: "russia",                   bg: "/images/ALASKAN_WEB_ASSET/BACKGROUND/background_web_Alaskan/game_banner/edit/mobilelegends_web_banner.png", icon: "/images/ALASKAN_WEB_ASSET/GAMES ICON/MOBILE LEGENDS/MOBILE LEGENDS.png", tag: null },
+  { id: 29, name: "Mobile Legends TR", category: "เกม MOBA", country: "turkey",                   bg: "/images/ALASKAN_WEB_ASSET/BACKGROUND/background_web_Alaskan/game_banner/edit/mobilelegends_web_banner.png", icon: "/images/ALASKAN_WEB_ASSET/GAMES ICON/MOBILE LEGENDS/MOBILE LEGENDS.png", tag: null },
+  { id: 30, name: "Mobile Legends US", category: "เกม MOBA", country: "united-states-of-america", bg: "/images/ALASKAN_WEB_ASSET/BACKGROUND/background_web_Alaskan/game_banner/edit/mobilelegends_web_banner.png", icon: "/images/ALASKAN_WEB_ASSET/GAMES ICON/MOBILE LEGENDS/MOBILE LEGENDS.png", tag: null },
+  { id: 3,  name: "PUBG Mobile",       category: "เกม Battle Royale",   bg: "/images/GAMES BG/PUBGMOBILE_bg.png",       icon: "/images/GAMES ICON/PUBGMOBILE_iconapp.png",      tag: null   },
+  { id: 4,  name: "Free Fire",         category: "เกม Battle Royale",   bg: "/images/GAMES BG/FREEFIRE_bg.png",         icon: "/images/GAMES ICON/FREEFIRE_iconapp.png",        tag: null   },
+  { id: 5,  name: "Call of Duty",      category: "เกมยิง FPS",          bg: "/images/GAMES BG/CALLOFDUTY_bg.png",       icon: "/images/GAMES ICON/CALLOFDUTY_iconapp.png",      tag: null   },
+  { id: 6,  name: "Delta Force",       category: "เกมยิง FPS",          bg: "/images/GAMES BG/DELTAFORCE_bg.png",       icon: "/images/GAMES ICON/DELTAFORCE_iconapp.png",      tag: "ใหม่" },
+  { id: 7,  name: "Blood Strike",      category: "เกมยิง FPS",          bg: "/images/GAMES BG/BLOODSTRIKE_bg.png",      icon: "/images/GAMES ICON/BLOODSTRIKE_iconapp.png",     tag: "ใหม่" },
+  { id: 8,  name: "Valorant",          category: "เกมยิงกลยุทธ์",       bg: "/images/GAMES BG/VALORANT_bg.png",         icon: "/images/GAMES ICON/VALORANT_iconapp.png",        tag: null   },
+  { id: 9,  name: "Honor of Kings",    category: "เกม MOBA",            bg: "/images/GAMES BG/HONOROFKINGS_bg.png",     icon: "/images/GAMES ICON/HONOROFKINGS_iconapp.png",    tag: null   },
+  { id: 10, name: "Honkai: Star Rail", category: "เกม RPG",             bg: "/images/GAMES BG/STARRAIL_bg.png",         icon: "/images/GAMES ICON/STARRAIL_iconapp.png",        tag: null   },
+  { id: 11, name: "Arena Breakout",    category: "เกมยิงกลยุทธ์",       bg: "/images/GAMES BG/ARENABREAKOUT_bg.png",    icon: "/images/GAMES ICON/ARENABREAKOUT_iconapp.png",   tag: null   },
+  { id: 12, name: "ACE RACER",         category: "เกมแข่งรถ",           bg: "/images/GAMES BG/ACERACER_bg.png",         icon: "/images/GAMES ICON/ACERACER_iconapp.png",        tag: null   },
+  { id: 13, name: "Aether Gazer",      category: "เกม RPG",             bg: "/images/GAMES BG/AETHERGAZER_bg.png",      icon: "/images/GAMES ICON/AETHERGAZER_iconapp.png",     tag: null   },
+  { id: 14, name: "AFK Journey",       category: "เกม RPG",             bg: "/images/GAMES BG/AFKJOURNEY_bg.png",       icon: "/images/GAMES ICON/AFKJOURNEY_iconapp.png",      tag: null   },
+  { id: 15, name: "Ballistic Hero",    category: "เกมยิง FPS",          bg: "/images/GAMES BG/BALLISTICHERO_bg.png",    icon: "/images/GAMES ICON/BALLISTICHERO_iconapp.png",   tag: "ใหม่" },
+  { id: 16, name: "BIGO LIVE",         category: "สตรีมมิ่ง",           bg: "/images/GAMES BG/BIGOLIVE_bg.png",         icon: "/images/GAMES ICON/BIGOLIVE_iconapp.png",        tag: null   },
+  { id: 17, name: "Bleach",            category: "เกม RPG",             bg: "/images/GAMES BG/BLEACH_bg.png",           icon: "/images/GAMES ICON/BLEACH_iconapp.png",          tag: null   },
+  { id: 18, name: "Dunk City Dynasty", category: "เกมกีฬา",             bg: "/images/GAMES BG/DUNKCITY_bg.png",         icon: "/images/GAMES ICON/DUNKCITY_iconapp.png",        tag: null   },
+  { id: 19, name: "Heartopia",         category: "เกมจำลอง",            bg: "/images/GAMES BG/HEARTOPIA_bg.png",        icon: "/images/GAMES ICON/HEARTOPIA_iconapp.png",       tag: null   },
+  { id: 20, name: "Identity V",        category: "เกมเอาชีวิตรอด",      bg: "/images/GAMES BG/IDENTITYV_bg.png",        icon: "/images/GAMES ICON/IDENTITYV_iconapp.png",       tag: null   },
+  { id: 21, name: "LoL: Wild Rift",    category: "เกม MOBA",            bg: "/images/GAMES BG/LOLWILDRIFT_bg.png",      icon: "/images/GAMES ICON/LOLWILDRIFT_iconapp.png",     tag: null   },
+  { id: 22, name: "League of Legends", category: "เกม MOBA",            bg: "/images/GAMES BG/LOL_bg.png",              icon: "/images/GAMES ICON/LOL_iconapp.png",             tag: null   },
+  { id: 23, name: "Magic Chess",       category: "เกมกลยุทธ์",          bg: "/images/GAMES BG/MAGICCHESS_bg.png",       icon: "/images/GAMES ICON/MAGICCHESS_iconapp.png",      tag: null   },
+  { id: 24, name: "Where Winds Meet",  category: "เกม RPG",             bg: "/images/GAMES BG/WHEREWINDMEET_bg.png",    icon: "/images/GAMES ICON/WHEREWINDMEET_iconapp.png",   tag: "ใหม่" },
 ];
 
 // Note: ชื่อเกม , bg (ภาพพื้นหลัง) , icon (ไอคอนแอป) , category , tag
 const GAMES_MailPass = [
-  { id: 1, name: "eFootball",    category: "เกมฟุตบอล", bg: "/images/GAMES BG/EFOOTBALL_bg.png",  icon: "/images/GAMES ICON/EFOOTBALL_iconapp.png",  tag: null },
-  { id: 2, name: "FC Mobile",    category: "เกมฟุตบอล", bg: "/images/GAMES BG/FCMOBILE_bg.png",   icon: "/images/GAMES ICON/FCMOBILE_iconapp.png",   tag: null },
+  { id: 1, name: "eFootball",    category: "เกมฟุตบอล", bg: "/images/GAMES BG/EFOOTBALL_bg.png",  icon: "/images/GAMES ICON/EFOOTBALL_iconapp.png",  tag: "ขายดี" },
+  { id: 2, name: "FC Mobile",    category: "เกมฟุตบอล", bg: "/images/GAMES BG/FCMOBILE_bg.png",   icon: "/images/GAMES ICON/FCMOBILE_iconapp.png",   tag: "ขายดี" },
   { id: 3, name: "Heartopia",    category: "เกมจำลอง",  bg: "/images/GAMES BG/HEARTOPIA_bg.png",  icon: "/images/GAMES ICON/HEARTOPIA_iconapp.png",  tag: null },
   { id: 4, name: "Call of Duty", category: "เกมยิง FPS", bg: "/images/GAMES BG/CALLOFDUTY_bg.png", icon: "/images/GAMES ICON/CALLOFDUTY_iconapp.png", tag: null },
 ];
 
 // Note: Popular Package — เพิ่ม/ลด/แก้ข้อความได้เลย
 const POPULAR_PACKAGES = [
-  { id: 1, img: "/images/ALASKAN_WEB_ASSET/PROMOTION%20WEB/Alaskan_freefire_banner_web_ai.png" },
-  { id: 2, img: "/images/ALASKAN_WEB_ASSET/PROMOTION%20WEB/mlbb_promotion_web_ai_edit1.png" },
-  { id: 3, img: "/images/ALASKAN_WEB_ASSET/PROMOTION%20WEB/Alaskan_freefire_banner_web2_ai.png" },
+  { id: 1, img: "/images/PRO/PACKBLOOD.png" },
+  { id: 2, img: "/images/ALASKAN_WEB_ASSET/PROMOTION%20WEB/Alaskan_freefire_banner_web_ai.png" },
+  { id: 3, img: "/images/ALASKAN_WEB_ASSET/PROMOTION%20WEB/mlbb_promotion_web_ai_edit1.png" },
+  { id: 4, img: "/images/ALASKAN_WEB_ASSET/PROMOTION%20WEB/Alaskan_freefire_banner_web2_ai.png" },
 ];
 
-const HERO_MASCOT_IMG = "/images/ALASKAN_WEB_ASSET/BACKGROUND/home/alaskan_mascot1.png";
-
 const PAGE_SIZE = 15;
+
+const FILTER_TABS = [
+  { key: 'all',    label: 'ทั้งหมด', Icon: FiGrid        },
+  { key: 'ขายดี', label: 'ขายดี',   Icon: FiTrendingUp  },
+  { key: 'ใหม่',  label: 'ใหม่',    Icon: FiZap         },
+];
 
 function GameGrid({ games, expanded, onCollapse, onTopup }) {
   const ref = useRef(null);
   const [seen, setSeen] = useState(false);
   const [visibleCount, setVisibleCount] = useState(PAGE_SIZE);
+  const [activeFilter, setActiveFilter] = useState('all');
+
+  const filteredGames = activeFilter === 'all'
+    ? [...games].sort((a, b) => (b.tag ? 1 : 0) - (a.tag ? 1 : 0))
+    : games.filter(g => g.tag === activeFilter);
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -66,10 +99,6 @@ function GameGrid({ games, expanded, onCollapse, onTopup }) {
     if (ref.current) observer.observe(ref.current);
     return () => observer.disconnect();
   }, []);
-
-  useEffect(() => {
-    if (!expanded) setVisibleCount(PAGE_SIZE);
-  }, [expanded]);
 
   // ── ค่าปรับได้ ──────────────────────────────────────
   const iconMarginLeft = 9;   // ไอคอน ซ้าย/ขวา
@@ -96,6 +125,12 @@ function GameGrid({ games, expanded, onCollapse, onTopup }) {
           {game.tag}
         </div>
       )}
+      {game.country && (
+        <div style={{ position:'absolute', top:20, left:10, zIndex:11, display:'flex', alignItems:'center', gap:5, background:'rgba(0,0,0,0.55)', borderRadius:20, padding:'3px 8px 3px 3px', backdropFilter:'blur(4px)' }}>
+          <img src={`${FLAG_BASE}/${game.country}.png`} alt="" style={{ width:20, height:20, borderRadius:'50%', flexShrink:0, objectFit:'cover' }} onError={e => { e.target.style.display='none'; }} />
+          <span style={{ fontSize:9, color:'#fff', fontWeight:700, whiteSpace:'nowrap', marginLeft:28 }}>{COUNTRY_NAMES[game.country]}</span>
+        </div>
+      )}
       <div style={{
         position:'absolute', bottom:0, left:0, right:0,
         background:'linear-gradient(to top, rgba(0,0,0,0.92) 0%, rgba(0,0,0,0.55) 60%, transparent 100%)',
@@ -120,10 +155,34 @@ function GameGrid({ games, expanded, onCollapse, onTopup }) {
     </div>
   );
 
+  const filterBar = (
+    <div style={{ display:'flex', gap:8, marginBottom:16, flexWrap:'wrap' }}>
+      {FILTER_TABS.map(({ key, label, Icon }) => (
+        <button
+          key={key}
+          onClick={() => { setActiveFilter(key); setVisibleCount(PAGE_SIZE); }}
+          style={{
+            display:'flex', alignItems:'center', gap:5,
+            padding:'6px 16px', borderRadius:20, border:'none', cursor:'pointer',
+            fontSize:12, fontWeight:700, lineHeight:1, transition:'all 0.2s ease',
+            background: activeFilter === key ? '#00d1ff' : 'rgba(0,0,0,0.07)',
+            color: activeFilter === key ? '#fff' : '#475569',
+            boxShadow: activeFilter === key ? '0 4px 12px rgba(0,209,255,0.35)' : 'none',
+            transform: activeFilter === key ? 'translateY(-1px)' : 'none',
+          }}
+        >
+          <Icon size={13} />
+          {label}
+        </button>
+      ))}
+    </div>
+  );
+
   if (!expanded) {
-    const preview = games.slice(0, 5);
+    const preview = filteredGames.slice(0, 5);
     return (
       <div ref={ref}>
+        {filterBar}
         <div className="games-grid" style={{ padding: '80px', margin: '-80px' }}>
           {preview.map((game, i) => renderCard(game, i, {
             opacity: seen ? 1 : 0,
@@ -135,11 +194,12 @@ function GameGrid({ games, expanded, onCollapse, onTopup }) {
     );
   }
 
-  const visibleGames = games.slice(0, visibleCount);
-  const hasMore = visibleCount < games.length;
+  const visibleGames = filteredGames.slice(0, visibleCount);
+  const hasMore = visibleCount < filteredGames.length;
 
   return (
     <div ref={ref}>
+      {filterBar}
       <div className="games-grid-expanded" style={{ padding: '80px', margin: '-80px' }}>
         {visibleGames.map((game, i) => renderCard(game, i, {
           animation: `gameCardIn 0.4s ${(i % PAGE_SIZE) * 0.03}s ease both`,
@@ -157,7 +217,7 @@ function GameGrid({ games, expanded, onCollapse, onTopup }) {
   );
 }
 
-function PromoGrid({ promos }) {
+function PromoGrid({ promos, onTopup, onMailPass }) {
   const ref = useRef(null);
   const scrollRef = useRef(null);
   const [seen, setSeen] = useState(false);
@@ -171,11 +231,10 @@ function PromoGrid({ promos }) {
     return () => observer.disconnect();
   }, []);
 
-  const scroll = (dir) => {
-    if (scrollRef.current) {
-      const amount = scrollRef.current.offsetWidth * 0.5;
-      scrollRef.current.scrollBy({ left: dir === 'next' ? amount : -amount, behavior: 'smooth' });
-    }
+  const handlePromo = (p) => {
+    if (!p.gameId) return;
+    if (p.type === 'mailpass') onMailPass?.(p.gameId);
+    else onTopup?.(p.gameId);
   };
 
   return (
@@ -183,11 +242,14 @@ function PromoGrid({ promos }) {
       <div style={{ overflow: 'hidden', margin: '0' }}>
       <div ref={scrollRef} className="promo-grid" style={{ overflow: 'hidden', padding: '60px', margin: '-60px' }}>
         {promos.map((p, i) => (
-          <div className={`promo-card${i === 0 ? ' featured' : ''}`} key={p.id} style={{
-            opacity: seen ? 1 : 0,
-            transform: seen ? 'translateY(0)' : 'translateY(40px)',
-            transition: `opacity 0.5s ${i * 0.12}s ease, transform 0.5s ${i * 0.12}s ease`,
-          }}>
+          <div className={`promo-card${i === 0 ? ' featured' : ''}`} key={p.id}
+            onClick={() => handlePromo(p)}
+            style={{
+              opacity: seen ? 1 : 0,
+              transform: seen ? 'translateY(0)' : 'translateY(40px)',
+              transition: `opacity 0.5s ${i * 0.12}s ease, transform 0.5s ${i * 0.12}s ease`,
+              cursor: p.gameId ? 'pointer' : 'default',
+            }}>
             {p.bg ? (
               <>
                 <img src={p.bg} alt={p.name}
@@ -213,7 +275,7 @@ function PromoGrid({ promos }) {
                     background:'#00d1ff', color:'#ffffff', border:'none', borderRadius:20,
                     padding:'5px 11px', fontSize:10, fontWeight:700, cursor:'pointer', flexShrink:0,
                     lineHeight:1,
-                  }}>เติมเกม</button>
+                  }} onClick={(e) => { e.stopPropagation(); handlePromo(p); }}>เติมเกม</button>
                 </div>
               </>
             ) : (
@@ -234,129 +296,28 @@ function PromoGrid({ promos }) {
   );
 }
 
-const MODAL_CONTENT = {
-  privacy: {
-    title: 'นโยบายความเป็นส่วนตัว',
-    body: [
-      { h: 'การเก็บรวบรวมข้อมูล', p: 'ALASKAN SHOP เก็บรวบรวมข้อมูลที่จำเป็นสำหรับการให้บริการเท่านั้น เช่น UID เกม, ช่องทางการติดต่อ และประวัติการสั่งซื้อ เพื่อประมวลผลคำสั่งและปรับปรุงบริการ' },
-      { h: 'การใช้ข้อมูล', p: 'ข้อมูลของท่านถูกใช้เพื่อดำเนินการเติมเกม ติดต่อกลับกรณีมีปัญหา และปรับปรุงประสบการณ์การใช้บริการ เราไม่เปิดเผยข้อมูลส่วนตัวให้แก่บุคคลที่สามโดยไม่ได้รับอนุญาต' },
-      { h: 'ความปลอดภัย', p: 'เราใช้มาตรการรักษาความปลอดภัยที่เหมาะสมเพื่อป้องกันการเข้าถึงข้อมูลโดยไม่ได้รับอนุญาต และปฏิบัติตามมาตรฐานการคุ้มครองข้อมูลส่วนบุคคล (PDPA)' },
-      { h: 'การติดต่อ', p: 'หากมีข้อสงสัยเกี่ยวกับนโยบายนี้ กรุณาติดต่อเราผ่านช่องทาง Facebook: ALASKAN.ONLINE.SHOP' },
-    ],
-  },
-  terms: {
-    title: 'เงื่อนไขการให้บริการ',
-    body: [
-      { h: 'การใช้บริการ', p: 'บริการเติมเกมของ ALASKAN SHOP มีไว้สำหรับผู้ใช้ที่มีอายุ 13 ปีขึ้นไป การใช้บริการถือว่าท่านยอมรับเงื่อนไขทั้งหมดนี้แล้ว' },
-      { h: 'ความถูกต้องของ UID', p: 'ลูกค้าต้องตรวจสอบ UID หรือข้อมูลที่ใช้เติมให้ถูกต้องก่อนยืนยันคำสั่ง เราไม่รับผิดชอบต่อความเสียหายที่เกิดจากการกรอก UID ผิดพลาด' },
-      { h: 'การคืนเงิน', p: 'หากเกิดข้อผิดพลาดจากระบบของเรา จะดำเนินการคืนเงินหรือเติมใหม่ให้ภายใน 24 ชั่วโมง กรุณาแจ้งปัญหาพร้อมหลักฐานผ่านช่องทางติดต่อ' },
-      { h: 'ข้อห้าม', p: 'ห้ามใช้บริการเพื่อวัตถุประสงค์ที่ผิดกฎหมาย หรือพยายามเข้าถึงระบบโดยไม่ได้รับอนุญาต การกระทำดังกล่าวอาจถูกระงับการใช้บริการทันที' },
-    ],
-  },
-};
 
-function HeroSlider() {
-  const slides = [
-    { type: 'brand',  thumb: HERO_MASCOT_IMG },
-    { type: 'promo', bg: '/images/PRO/rov_promotion_web1_ai.png',            thumb: '/images/PRO/rov_promotion_web1_ai.png' },
-    { type: 'promo', bg: '/images/PRO/mlbb_promotion_web_ai_edit1.png',       thumb: '/images/PRO/mlbb_promotion_web_ai_edit1.png' },
-    { type: 'promo', bg: '/images/PRO/Alaskan_freefire_banner_web_ai.png',    thumb: '/images/PRO/Alaskan_freefire_banner_web_ai.png' },
-    { type: 'promo', bg: '/images/PRO/Alaskan_freefire_banner_web2_ai.png',   thumb: '/images/PRO/Alaskan_freefire_banner_web2_ai.png' },
-  ];
-
-  const [cur, setCur] = useState(0);
-  const [animKey, setAnimKey] = useState(0);
-  const [dir, setDir] = useState('down');
-
-  const goTo = (idx) => {
-    if (idx === cur) return;
-    setDir(idx > cur ? 'down' : 'up');
-    setCur(idx);
-    setAnimKey(k => k + 1);
-  };
-  const goPrev = () => setCur(c => { const n = (c - 1 + slides.length) % slides.length; setDir('up'); setAnimKey(k => k + 1); return n; });
-  const goNext = () => setCur(c => { const n = (c + 1) % slides.length; setDir('down'); setAnimKey(k => k + 1); return n; });
-
-
-  const slide = slides[cur];
-
-  return (
-    <div className="hero-slider">
-      {slides.map((s, i) => (
-        <div key={i} className={`hs-bg${i === cur ? ' active' : ''}`}
-          style={s.type === 'brand' ? {
-            backgroundColor: 'transparent',
-          } : {
-            backgroundImage: s.bg ? `url("${s.bg}")` : 'none',
-            backgroundSize: 'cover',
-            backgroundPosition: 'center center',
-            backgroundColor: 'transparent',
-          }} />
-      ))}
-
-      {slide.type === 'brand' && <div className="hs-overlay" style={{ background: 'none' }} />}
-
-      <div key={animKey} className={`hs-content hs-anim-${dir}`}>
-        {slide.type === 'brand' && (
-          <div className="hero-inner" style={{ height: '100%', paddingTop: 0 }}>
-            <img src="/images/effect/TOPBLUE.png" alt="" style={{
-              position:'absolute', top:0, right:0,
-              width:'28%', pointerEvents:'none', zIndex:1,
-              animation:'slideFromTopRight 1.0s 0.1s ease both',
-            }} onError={e => { e.target.style.display='none'; }} />
-            <img src="/images/effect/DOWNBLUE.png" alt="" style={{
-              position:'absolute', bottom:180, left:0,
-              width:'28%', pointerEvents:'none', zIndex:1,
-              animation:'slideFromBottomLeft 1.0s 0.3s ease both',
-            }} onError={e => { e.target.style.display='none'; }} />
-            <div className="hero-text-wrap">
-              <span className="hero-text-alaskan">ALASKAN</span>
-              <span className="hero-text-sub">
-                <span>TOPUP</span>
-                <span className="hero-text-gap" />
-                <span>GAME ONLINE</span>
-              </span>
-            </div>
-            <img className="hero-mascot" src={HERO_MASCOT_IMG} alt="mascot"
-              onError={e => { e.target.style.display = 'none'; }} />
-          </div>
-        )}
-      </div>
-
-      <div className="hs-thumbs">
-        <button className="hs-nav-btn" onClick={goPrev}>&#9664;</button>
-        <div className="hs-thumb-list">
-          {slides.map((s, i) => (
-            <div key={i} className={`hs-thumb${i === cur ? ' active' : ''}`} onClick={() => goTo(i)}>
-              {s.thumb && <img src={s.thumb} alt="" onError={e => { e.target.style.display = 'none'; }} />}
-            </div>
-          ))}
-        </div>
-        <button className="hs-nav-btn" onClick={goNext}>&#9654;</button>
-      </div>
-    </div>
-  );
-}
-
-export default function Home({ onTopup }) {
-  const [visible, setVisible] = useState(false);
+export default function Home({ onTopup, onMailPass }) {
   const [uidExpanded, setUidExpanded] = useState(false);
   const [mailExpanded, setMailExpanded] = useState(false);
-  const [modal, setModal] = useState(null);
-  useEffect(() => { setVisible(true); }, []);
+  const wrapRef = useRef(null);
+  const uidSectionRef = useRef(null);
+  const mailSectionRef = useRef(null);
+
+  useEffect(() => { wrapRef.current?.scrollTo({ top: 0, behavior: 'instant' }); }, []);
 
   return (
     <>
-      <div className="home-wrap">
+      <div className="home-wrap" ref={wrapRef}>
 
         {/* BG มุมขวาบนสุด */}
-        <img src="/images/BG/TOPBLUE.png" alt=""
+        <img src="/images/effect/TOPBLUE.png" alt=""
           className="absolute top-0 right-0 w-1/4 pointer-events-none select-none z-0"
           style={{ animation: 'slideFromTopRight 1.2s 0.2s ease both' }}
           onError={e => e.target.style.display='none'} />
 
         {/* BG มุมล่างซ้ายสุด */}
-        <img src="/images/BG/DOWNBLUE.png" alt=""
+        <img src="/images/effect/DOWNBLUE.png" alt=""
           className="absolute bottom-0 left-0 w-1/4 pointer-events-none select-none z-0"
           style={{ animation: 'slideFromBottomLeft 1.2s 0.4s ease both' }}
           onError={e => e.target.style.display='none'} />
@@ -368,10 +329,10 @@ export default function Home({ onTopup }) {
           <HeroSlider />
 
           {/* PROMOTION อยู่ใน bg เดียวกัน */}
-          <div className="section relative z-1 pb-7" style={{ marginTop: 36 }}>
+          <div className="section relative z-1 pb-7" style={{ marginTop: 25 }}>
             <div className="section-inner">
-              <div className="section-title justify-center">PROMOTION</div>
-              <PromoGrid promos={PROMOS} />
+              <div className="section-title justify-center" style={{ marginBottom: 110, fontSize: 36 }}>PROMOTION</div>
+              <PromoGrid promos={PROMOS} onTopup={onTopup} onMailPass={onMailPass} />
             </div>
           </div>
 
@@ -380,7 +341,7 @@ export default function Home({ onTopup }) {
         <div className="divider" />
 
         {/* ─── UID TOP-UP ─── */}
-        <div className="section">
+        <div className="section" ref={uidSectionRef}>
           <div className="section-inner">
             <div className="section-title-row">
               <div className="section-title mb-0">
@@ -390,14 +351,14 @@ export default function Home({ onTopup }) {
                 <button className="see-more-btn" onClick={() => setUidExpanded(true)}>ดูเกมอื่นๆ</button>
               )}
             </div>
-            <GameGrid games={GAMES_TOPUP} expanded={uidExpanded} onCollapse={() => setUidExpanded(false)} onTopup={onTopup} />
+            <GameGrid games={GAMES_TOPUP} expanded={uidExpanded} onCollapse={() => { setUidExpanded(false); setTimeout(() => uidSectionRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' }), 50); }} onTopup={onTopup} />
           </div>
         </div>
 
         <div className="divider" />
 
         {/* ─── MAIL PASS ─── */}
-        <div className="section">
+        <div className="section" ref={mailSectionRef}>
           <div className="section-inner">
             <div className="section-title-row">
               <div className="section-title mb-0">
@@ -407,7 +368,7 @@ export default function Home({ onTopup }) {
                 <button className="see-more-btn" onClick={() => setMailExpanded(true)}>ดูเกมอื่นๆ</button>
               )}
             </div>
-            <GameGrid games={GAMES_MailPass} expanded={mailExpanded} onCollapse={() => setMailExpanded(false)} />
+            <GameGrid games={GAMES_MailPass} expanded={mailExpanded} onCollapse={() => { setMailExpanded(false); setTimeout(() => mailSectionRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' }), 50); }} onTopup={onMailPass} />
           </div>
         </div>
 
@@ -435,114 +396,25 @@ export default function Home({ onTopup }) {
 
         <div className="divider" />
 
-        {/* ─── บริการอย่างมีคุณภาพ ─── */}
+        {/* ─── WHY ALASKAN ─── */}
         <div className="quality-section">
-          <div className="quality-title">บริการอย่างมีคุณภาพ</div>
+          <div className="quality-title">ทำไมต้องเลือก ALASKAN</div>
           <div className="quality-grid">
-            <div className="quality-card">
-              <div className="quality-icon"><img src="/images/Asset 350.png" alt="best value" style={{ width: 48, height: 48, objectFit: 'contain' }} /></div>
-              <div className="quality-card-title">ความคุ้มค่า (Best Value)</div>
-              <div className="quality-card-desc">
-                ประหยัดกว่าเติมเองสูงสุด 10-30%<br/>
-                เราให้ราคาดีและระบบทำทุกทาง<br/>
-                ที่ให้ได้ตามต้นทุนที่คุ้มกว่า<br/>
-                เพื่อส่งต่อความประหยัดให้ลูกค้าเอง
+            {[
+              { stat: '30%',  label: 'ประหยัดกว่าเติมเอง',         desc: 'ราคาพิเศษผ่านระบบของเรา ส่งต่อส่วนลดให้ลูกค้าโดยตรง ไม่มีค่าแอบแฝง' },
+              { stat: '24h',  label: 'ระบบอัตโนมัติตลอด 24 ชม.',  desc: 'เติมเสร็จปุ๊บ ของเข้าปั๊บ ไม่ต้องรอแอดมิน ทำงานทุกวันทุกชั่วโมง' },
+              { stat: '100%', label: 'ปลอดภัย ไม่โดนแบน',          desc: 'เติมตามช่องทางของเกมโดยตรง ตามกระบวนการที่ถูกต้อง ไม่มีความเสี่ยง' },
+            ].map(({ stat, label, desc }) => (
+              <div className="quality-card" key={stat}>
+                <div className="quality-stat">{stat}</div>
+                <div className="quality-card-title">{label}</div>
+                <div className="quality-card-desc">{desc}</div>
               </div>
-            </div>
-            <div className="quality-card">
-              <div className="quality-icon"><img src="/images/Asset 360.png" alt="instant delivery" style={{ width: 48, height: 48, objectFit: 'contain' }} /></div>
-              <div className="quality-card-title">ระบบเดิมโนว รวดเร็ว<br/>(Instant Delivery)</div>
-              <div className="quality-card-desc">
-                ระบบอัตโนมัติ 24 ชม.<br/>
-                ไม่ต้องรอแอดมินตอบ<br/>
-                เดิมเสร็จปุ๊บ ของเข้าปั๊บ<br/>
-                พร้อมสุดท้ายได้ทันที
-              </div>
-            </div>
-            <div className="quality-card">
-              <div className="quality-icon"><img src="/images/Asset 370.png" alt="premium support" style={{ width: 48, height: 48, objectFit: 'contain' }} /></div>
-              <div className="quality-card-title">บริการดี ปลอดภัย<br/>(Premium Support)</div>
-              <div className="quality-card-desc">
-                รับประกันความปลอดภัย 100%<br/>
-                ไร้ความเสี่ยงโดนแบน<br/>
-                เพราะเราไม่ผ่านทางที่ก่อ<br/>
-                ตามกระบวนการของเกม
-              </div>
-            </div>
+            ))}
           </div>
         </div>
 
-        {/* ─── FOOTER ─── */}
-        <div id="contact-section" className="footer-section">
-          <div className="footer-left">
-            <div className="footer-logo">
-              <div className="footer-logo-icon">
-                <img src="/images/ALASKAN_WEB_ASSET/PNG/alaskan_logo.png" alt="Alaskan Logo"
-                  style={{ width: '100%', height: '100%', objectFit: 'contain' }}
-                  onError={e => { e.target.style.display = 'none'; }} />
-              </div>
-              <div>
-                <div className="footer-logo-name">ALASKAN</div>
-                <div className="footer-logo-sub">TOPUP GAME ONLINE</div>
-              </div>
-            </div>
-            <div className="footer-desc">
-              ALASKAN เราให้บริการในรูปแบบสะดวกทำหน้าที่เดิมเกมอย่างมีความการการ<br/>
-              เราคัดสรรเฉพาะช่องทางที่ถูกกฎหมายและปลอดภัยสูงสุด<br/>
-              เพื่อต่อตอบสนองคุณค่าทำทางด้านอสังหาริมทรัพย์คุณภาพ<br/>
-              พร้อมการดูแลและระดับบัตรอย่างไว้ใจทุกขั้นตอน
-            </div>
-            <div className="footer-contact">
-              <span className="footer-contact-label">ติดต่อเรา</span>
-              <div className="footer-icons">
-                {[
-                  { src: "/images/ALASKAN_WEB_ASSET/SOCIAL%20ICON/PNG/CHATWEB1.png",   alt: "Chat",      href: "https://www.messenger.com/t/677062779057497/?messaging_source=source%3Apages%3Amessage_shortlink&source_id=1441792&recurring_notification=0" },
-                  { src: "/images/ALASKAN_WEB_ASSET/SOCIAL%20ICON/PNG/FACEBOOK1.png",  alt: "Facebook",  href: "https://www.facebook.com/ALASKAN.ONLINE.SHOP" },
-                  { src: "/images/ALASKAN_WEB_ASSET/SOCIAL%20ICON/PNG/INSTAGRAM1.png", alt: "Instagram", href: "#" },
-                  { src: "/images/ALASKAN_WEB_ASSET/SOCIAL%20ICON/PNG/LINE1.png",      alt: "Line",      href: "#" },
-                ].map((ic) => (
-                  <a href={ic.href} target="_blank" rel="noopener noreferrer" className="footer-icon-wrap" key={ic.alt}>
-                    <div className="footer-icon-inner">
-                      <img src={ic.src} alt={ic.alt} />
-                    </div>
-                  </a>
-                ))}
-              </div>
-            </div>
-          </div>
-          <div className="footer-right">
-            <div className="footer-fanpage-title">
-              <span style={{ color: '#1877f2', fontWeight: 900 }}>FACEBOOK</span>
-              <span style={{ fontWeight: 900 }}> FANPAGE</span>
-            </div>
-            <a href="https://www.facebook.com/ALASKAN.ONLINE.SHOP" target="_blank" rel="noopener noreferrer" style={{ display:'block', textDecoration:'none' }}>
-              <div className="footer-fanpage-card">
-                <div className="footer-fanpage-img">
-                  <img src="/images/ALASKAN_WEB_ASSET/BACKGROUND/home/Alaskan_page_cover_1_ai_edit.png" alt="fanpage"
-                    style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover' }}
-                    onError={e => { e.target.style.display = 'none'; }}
-                  />
-                </div>
-              </div>
-            </a>
-          </div>
-        </div>
-
-
-        {/* ─── COPYRIGHT ─── */}
-        <div className="copyright-bar">
-          <span>© 2026 AlasKan Shop. All rights reserved.</span>
-          <div style={{ display:'flex', gap:20, marginLeft:32 }}>
-            <button onClick={() => setModal('privacy')} style={{ background:'none', border:'none', cursor:'pointer', fontSize:13, color:'#64748b', fontFamily:'inherit', letterSpacing:'0.04em' }}>นโยบายความเป็นส่วนตัว</button>
-            <button onClick={() => setModal('terms')} style={{ background:'none', border:'none', cursor:'pointer', fontSize:13, color:'#64748b', fontFamily:'inherit', letterSpacing:'0.04em' }}>เงื่อนไขการให้บริการ</button>
-          </div>
-        </div>
-
-        {/* ─── ADMIN POPUP ─── */}
-        <button className="admin-popup" style={{ display: 'none' }} onClick={() => window.open('https://www.facebook.com/ALASKAN.ONLINE.SHOP', '_blank', 'noopener,noreferrer')}>
-          <img className="admin-popup-icon" src="/images/ALASKAN_WEB_ASSET/SOCIAL%20ICON/PNG/FACEBOOK1.png" alt="Facebook" />
-          <span className="admin-popup-text">ติดต่อแอดมินตลอด 24 ชั่วโมง!</span>
-        </button>
+        <Footer />
 
 
       </div>

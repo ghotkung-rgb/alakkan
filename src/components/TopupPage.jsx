@@ -1,13 +1,84 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { createOrder } from '../services/topupService';
+import { FiTool, FiAlertTriangle, FiMapPin, FiCreditCard, FiCheck, FiBook } from 'react-icons/fi';
 
 // step: 1 = เลือกแพ็กเกจ, 2 = กรอก UID, 3 = ยืนยันออเดอร์, 'success' = สำเร็จ
-export default function TopupPage({ game, onBack }) {
-  const [step, setStep]               = useState(1);
+
+const FLAG_BASE = '/images/ALASKAN_WEB_ASSET/FLAG';
+const COUNTRY_NAMES = {
+  'indonesia':                  'Indonesia',
+  'malaysia':                   'Malaysia',
+  'philippines':                'Philippines',
+  'russia':                     'Russia',
+  'singapore':                  'Singapore',
+  'turkey':                     'Turkey',
+  'united-states-of-america':   'USA',
+};
+function buildDefaultInfo(game) {
+  return {
+    title: `บริการเติม${game.currency} ${game.name}`,
+    taglines: [
+      `ALASKAN SHOP ผู้ให้บริการเติม${game.currency}เกม ${game.name} ในราคาคุ้มค่าสุดๆ`,
+      'สะดวก รวดเร็ว ปลอดภัย ถูกต้องตามระบบที่ตัวเกมกำหนดแน่นอน 100%',
+    ],
+    sections: [
+      {
+        heading: `เติม ${game.name} กับ ALASKAN SHOP ดีกว่าเติมเองในเกมยังไง?`,
+        ordered: false,
+        items: [
+          'คุ้มและประหยัดกว่าเติมเองในเกม',
+          'สะดวก รวดเร็ว พร้อมให้บริการตลอด 24 ช.ม.',
+          'ง่าย ไม่ยุ่งยาก ใช้แค่ UID คัดลอกจากในเกมได้เลย',
+        ],
+      },
+      {
+        heading: `ขั้นตอนการใช้บริการเติม ${game.name}`,
+        ordered: true,
+        items: [
+          'คัดลอก UID มาใส่ในช่องที่กำหนด',
+          'เลือกแพ็กเกจที่ต้องการเติม',
+          'กดปุ่ม "ถัดไป" และยืนยันออเดอร์',
+          'เลือกช่องทางชำระเงินที่ต้องการ',
+          'ดำเนินการชำระเงิน รอรับของในเกมได้เลย!!',
+        ],
+      },
+    ],
+  };
+}
+
+export default function TopupPage({ game, onBack, step, onStep }) {
   const [selectedPkgs, setSelectedPkgs] = useState([]);
-  const [uid, setUid]                 = useState('');
+  const [accountValues, setAccountValues] = useState({});
   const [loading, setLoading]         = useState(false);
   const [orderId, setOrderId]         = useState(null);
+  const [done, setDone]               = useState(false);
+
+  useEffect(() => { window.scrollTo({ top: 0, behavior: 'instant' }); }, []);
+
+  const accountFields = game.accountFields || [
+    {
+      key: 'uid',
+      label: 'User ID (UID)',
+      placeholder: 'เช่น 123456789',
+      inputMode: 'numeric',
+      required: true,
+    },
+  ];
+  const accountEntries = accountFields.map(field => ({
+    ...field,
+    value: accountValues[field.key] || '',
+  }));
+  const accountComplete = accountEntries.every(field => !field.required || field.value.trim());
+  const primaryAccountValue = accountEntries.map(field => field.value.trim()).filter(Boolean).join(' / ');
+  const accountSummary = accountEntries
+    .filter(field => field.value.trim())
+    .map(field => `${field.label}: ${field.value.trim()}`)
+    .join(' · ');
+  const accountStepLabel = accountFields.length > 1 ? 'กรอกข้อมูลบัญชี' : 'กรอก UID';
+
+  const updateAccountValue = (key, value) => {
+    setAccountValues(prev => ({ ...prev, [key]: value }));
+  };
 
   const togglePkg = (pkg) => {
     setSelectedPkgs(prev =>
@@ -34,23 +105,19 @@ export default function TopupPage({ game, onBack }) {
     setLoading(true);
     try {
       const result = await createOrder({
-        gameId: game.id, uid,
+        gameId: game.id,
+        uid: primaryAccountValue,
+        account: Object.fromEntries(accountEntries.map(field => [field.key, field.value.trim()])),
         packages: selectedPkgs.map(p => ({ id: p.id, amount: p.amount, price: p.price, label: p.label })),
         totalPrice,
       });
       setOrderId(result.orderId);
-      setStep('success');
+      setDone(true);
     } finally {
       setLoading(false);
     }
   };
 
-  const handleBack = () => {
-    if (step === 1) onBack();
-    else if (step === 2) setStep(1);
-    else if (step === 3) setStep(2);
-    else if (step === 'success') { setStep(1); setSelectedPkgs([]); setUid(''); setOrderId(null); }
-  };
 
   return (
     <>
@@ -99,24 +166,10 @@ export default function TopupPage({ game, onBack }) {
         }
         .tp-game-sub { font-size: 13px; color: rgba(255,255,255,0.75); margin-top: 2px; }
 
-        /* ── Back btn ── */
-        .tp-back-btn {
-          position: absolute; top: 72px; left: 28px; z-index: 10;
-          background: rgba(255,255,255,0.85);
-          border: 1px solid #e2e8f0;
-          color: #1e293b; font-size: 13px; font-weight: 700;
-          padding: 7px 16px; border-radius: 8px;
-          cursor: pointer; font-family: 'Noto Sans Thai', sans-serif;
-          transition: background 0.2s, color 0.2s;
-          display: flex; align-items: center; gap: 5px;
-          backdrop-filter: blur(6px);
-        }
-        .tp-back-btn:hover { background: #00d1ff; color: #fff; border-color: #00d1ff; }
-
         /* ── Body ── */
         .tp-body {
           max-width: 960px; margin: 0 auto;
-          padding: 20px 24px 100px;
+          padding: 44px 24px 100px;
         }
 
         /* ── Stepper ── */
@@ -165,7 +218,7 @@ export default function TopupPage({ game, onBack }) {
         .tp-pkg-grid {
           display: grid;
           grid-template-columns: repeat(5, 1fr);
-          gap: 12px;
+          gap: 44px 33px;
           margin-bottom: 36px;
         }
         @media (max-width: 768px) {
@@ -174,45 +227,63 @@ export default function TopupPage({ game, onBack }) {
         @media (max-width: 480px) {
           .tp-pkg-grid { grid-template-columns: repeat(2, 1fr); }
         }
+        @keyframes tp-glow-pulse {
+          0%, 100% { filter: drop-shadow(0 3px 10px rgba(0,0,0,0.3)) drop-shadow(0 0 6px rgba(0,209,255,0.15)); }
+          50%       { filter: drop-shadow(0 3px 10px rgba(0,0,0,0.3)) drop-shadow(0 0 18px rgba(0,209,255,0.45)); }
+        }
+        @keyframes tp-shimmer {
+          0%   { transform: translateX(-120%) rotate(25deg); }
+          100% { transform: translateX(400%) rotate(25deg); }
+        }
         .tp-pkg-card {
-          background: #fff;
-          border: 2px solid #e2e8f0;
-          border-radius: 14px;
-          padding: 8px 8px 12px;
+          background: linear-gradient(160deg, #1e293b 0%, #0f172a 100%);
+          clip-path: polygon(14px 0%, 100% 0%, 100% calc(100% - 14px), calc(100% - 14px) 100%, 0% 100%, 0% 14px);
+          padding: 10px 10px 12px;
           cursor: pointer;
-          transition: all 0.22s cubic-bezier(0.34, 1.4, 0.64, 1);
-          position: relative;
-          text-align: center;
-          overflow: hidden;
+          transition: transform 0.22s cubic-bezier(0.25, 1, 0.5, 1), filter 0.22s;
+          position: relative; text-align: center; overflow: hidden;
           will-change: transform;
+          animation: tp-glow-pulse 3s ease-in-out infinite;
         }
         .tp-pkg-card::before {
           content: '';
-          position: absolute; top: 0; left: 0; right: 0;
-          height: 3px;
-          background: linear-gradient(90deg, #00d1ff, #0ea5e9, #00d1ff);
-          transform: scaleX(0);
-          transform-origin: left;
-          transition: transform 0.25s ease;
-          z-index: 1;
+          position: absolute; inset: 0;
+          background: radial-gradient(ellipse at 50% 20%, rgba(0,209,255,0.18) 0%, transparent 65%);
+          pointer-events: none; z-index: 0;
+        }
+        .tp-pkg-card::after {
+          content: '';
+          position: absolute;
+          top: -60%; left: -20%;
+          width: 25%; height: 220%;
+          background: linear-gradient(90deg, transparent, rgba(255,255,255,0.09), transparent);
+          transform: rotate(25deg);
+          animation: tp-shimmer 4s ease-in-out infinite;
+          pointer-events: none; z-index: 3;
+        }
+        .tp-pkg-card > * { position: relative; z-index: 2; }
+        .tp-pkg-card img {
+          filter: drop-shadow(0 0 10px rgba(0,209,255,0.55)) drop-shadow(0 2px 6px rgba(0,0,0,0.5));
+          transition: filter 0.22s;
         }
         .tp-pkg-card:hover {
-          border-color: #00d1ff;
-          box-shadow: 0 10px 30px rgba(0,209,255,0.2), 0 2px 8px rgba(0,0,0,0.05);
-          transform: translateY(-5px) scale(1.03);
+          transform: translateY(-5px) scale(1.04);
+          filter: drop-shadow(0 10px 24px rgba(0,209,255,0.5)) drop-shadow(0 0 30px rgba(0,209,255,0.25));
         }
-        .tp-pkg-card:hover::before {
-          transform: scaleX(1);
+        .tp-pkg-card:hover img {
+          filter: drop-shadow(0 0 18px rgba(0,209,255,0.9)) drop-shadow(0 2px 6px rgba(0,0,0,0.5));
         }
         .tp-pkg-card.selected {
-          border-color: #00d1ff;
-          box-shadow: 0 0 0 3px rgba(0,209,255,0.18), 0 8px 24px rgba(0,209,255,0.22);
-          background: linear-gradient(160deg, #edfaff 0%, #fff 60%);
-          transform: scale(1.03);
+          background: linear-gradient(160deg, #78350f 0%, #92400e 50%, #1e293b 100%);
+          transform: scale(1.04);
+          filter: drop-shadow(0 0 16px rgba(0,209,255,0.8)) drop-shadow(0 6px 20px rgba(0,209,255,0.4));
+          animation: none;
         }
         .tp-pkg-card.selected::before {
-          transform: scaleX(1);
-          background: linear-gradient(90deg, #00d1ff, #00e5ff, #00a3cc);
+          background: radial-gradient(ellipse at 50% 20%, rgba(0,209,255,0.35) 0%, transparent 65%);
+        }
+        .tp-pkg-card.selected img {
+          filter: drop-shadow(0 0 22px rgba(255,200,50,1)) drop-shadow(0 2px 6px rgba(0,0,0,0.5));
         }
         @keyframes check-pop {
           0%   { transform: scale(0) rotate(-15deg); opacity: 0; }
@@ -220,27 +291,36 @@ export default function TopupPage({ game, onBack }) {
           100% { transform: scale(1) rotate(0deg); opacity: 1; }
         }
         .tp-pkg-check {
-          position: absolute; top: 7px; right: 8px;
-          width: 22px; height: 22px; border-radius: 50%;
+          position: absolute; top: 6px; right: 6px;
+          width: 20px; height: 20px; border-radius: 50%;
           background: linear-gradient(135deg, #00d1ff, #00a3cc);
           display: flex; align-items: center; justify-content: center;
-          font-size: 12px; font-weight: 900; color: #fff;
-          box-shadow: 0 3px 10px rgba(0,209,255,0.55);
-          z-index: 2;
-          animation: check-pop 0.28s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+          font-size: 11px; font-weight: 900; color: #fff;
+          z-index: 4;
+          animation: check-pop 0.28s cubic-bezier(0.22, 1, 0.36, 1) both;
         }
+        .tp-pkg-badge {
+          position: absolute; top: 5px; left: 16px;
+          font-size: 9px; font-weight: 900;
+          padding: 2px 8px; border-radius: 20px;
+          letter-spacing: 0.05em; z-index: 4;
+          white-space: nowrap;
+          font-family: 'Noto Sans Thai', sans-serif;
+        }
+        .tp-pkg-badge.hot { background: linear-gradient(90deg, #fbbf24, #f59e0b); color: #78350f; }
+        .tp-pkg-badge.rec { background: linear-gradient(90deg, #00d1ff, #00a3cc); color: #fff; }
         .tp-coupon-label {
-          font-size: 14px; font-weight: 900; color: #00d1ff;
-          margin-top: 5px; letter-spacing: 0.01em;
-          text-shadow: 0 0 12px rgba(0,209,255,0.35);
+          font-size: 13px; font-weight: 900; color: #fbbf24;
+          margin-top: 4px; letter-spacing: 0.01em;
+          text-shadow: 0 0 10px rgba(0,209,255,0.5);
         }
         .tp-price {
-          font-size: 15px; font-weight: 900; color: #1e293b;
-          margin-top: 1px;
+          font-size: 14px; font-weight: 900; color: #fff;
+          margin-top: 2px;
         }
-        .tp-price-unit { font-size: 12px; color: #64748b; margin-left: 1px; font-weight: 600; }
+        .tp-price-unit { font-size: 11px; color: rgba(255,255,255,0.6); margin-left: 1px; font-weight: 600; }
 
-        /* ── UID section ── */
+        /* ── Account section ── */
         .tp-card {
           background: #fff;
           border: 1.5px solid #e2e8f0;
@@ -271,6 +351,23 @@ export default function TopupPage({ game, onBack }) {
         .tp-uid-hint {
           font-size: 12px; color: #94a3b8; margin-top: 10px;
           display: flex; align-items: center; gap: 5px;
+        }
+        .tp-account-grid {
+          display: grid;
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+          gap: 14px;
+        }
+        .tp-account-grid.single {
+          grid-template-columns: 1fr;
+        }
+        .tp-field-label {
+          font-size: 12px;
+          font-weight: 800;
+          color: #475569;
+          margin-bottom: 8px;
+        }
+        @media (max-width: 560px) {
+          .tp-account-grid { grid-template-columns: 1fr; }
         }
 
         /* ── Confirm summary card ── */
@@ -310,16 +407,69 @@ export default function TopupPage({ game, onBack }) {
         .tp-next-btn {
           background: linear-gradient(135deg, #00d1ff, #00a3cc);
           color: #fff; border: none;
-          padding: 13px 36px; font-size: 15px; font-weight: 800;
-          border-radius: 10px; cursor: pointer;
+          padding: 16px 52px; font-size: 17px; font-weight: 900;
+          border-radius: 12px; cursor: pointer;
           font-family: 'Noto Sans Thai', sans-serif;
           transition: opacity 0.2s, transform 0.15s;
-          clip-path: polygon(10px 0%, 100% 0%, calc(100% - 10px) 100%, 0% 100%);
+          clip-path: polygon(12px 0%, 100% 0%, calc(100% - 12px) 100%, 0% 100%);
           white-space: nowrap;
-          filter: drop-shadow(0 4px 12px rgba(0,209,255,0.4));
+          filter: drop-shadow(0 6px 20px rgba(0,209,255,0.55));
+          letter-spacing: 0.03em;
         }
         .tp-next-btn:disabled { opacity: 0.3; cursor: not-allowed; }
-        .tp-next-btn:not(:disabled):hover { opacity: 0.88; transform: translateY(-1px); }
+        .tp-next-btn:not(:disabled):hover { opacity: 0.88; transform: translateY(-2px); }
+
+        /* ── Info box ── */
+        .tp-info-box {
+          background: linear-gradient(160deg, #12122a 0%, #0a0a1e 100%);
+          border: 1px solid rgba(100,120,255,0.18);
+          border-radius: 20px;
+          padding: 40px 44px;
+          margin-bottom: 36px;
+          position: relative;
+          overflow: hidden;
+        }
+        .tp-info-box::before {
+          content: '';
+          position: absolute;
+          top: 0; left: 0; right: 0;
+          height: 1px;
+          background: linear-gradient(90deg, transparent, rgba(0,209,255,0.4), transparent);
+        }
+        .tp-info-title {
+          font-family: 'PSL Kampanath Pro', sans-serif;
+          font-size: 32px; font-weight: 900;
+          color: #fff; text-align: center;
+          letter-spacing: 0.04em;
+          margin-bottom: 14px;
+          line-height: 1.2;
+        }
+        .tp-info-sub {
+          font-size: 14px; color: rgba(255,255,255,0.65);
+          text-align: center; line-height: 1.8;
+          margin-bottom: 8px;
+          max-width: 560px; margin-left: auto; margin-right: auto;
+        }
+        .tp-info-section {
+          margin-top: 30px;
+        }
+        .tp-info-section-title {
+          font-size: 14px; font-weight: 800;
+          color: #fff; margin-bottom: 10px;
+          padding-bottom: 8px;
+          border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+        .tp-info-list {
+          list-style: none; padding: 0; margin: 0;
+          display: flex; flex-direction: column; gap: 8px;
+        }
+        .tp-info-list li {
+          font-size: 14px; color: rgba(255,255,255,0.72);
+          display: flex; gap: 10px; line-height: 1.6;
+        }
+        .tp-info-list li .tp-info-bullet {
+          color: #00d1ff; font-weight: 900; flex-shrink: 0; margin-top: 1px;
+        }
 
         /* ── Warning box ── */
         .tp-warning {
@@ -351,7 +501,7 @@ export default function TopupPage({ game, onBack }) {
           display: flex; align-items: center; justify-content: center;
           font-size: 40px; color: #fff;
           margin-bottom: 24px;
-          animation: tp-pop 0.5s cubic-bezier(0.34,1.56,0.64,1) both;
+          animation: tp-pop 0.5s cubic-bezier(0.22, 1, 0.36, 1) both;
           filter: drop-shadow(0 8px 24px rgba(0,209,255,0.45));
         }
         .tp-success-title {
@@ -411,22 +561,38 @@ export default function TopupPage({ game, onBack }) {
       {/* ── Coming Soon — เกมที่ยังไม่เปิด packages ── */}
       {(!game.packages || game.packages.length === 0) && (
         <div className="tp-page">
-          <div className="tp-hero">
-            <div className="tp-hero-bg" style={{ backgroundImage: `url('${game.bg}')` }} />
-            <div className="tp-hero-overlay" />
-            <button className="tp-back-btn" onClick={onBack}>&#9664; กลับ</button>
-            <div className="tp-hero-content">
-              <img src={game.icon} alt={game.name} className="tp-icon"
-                onError={e => { e.target.style.display = 'none'; }} />
-              <div>
-                <div className="tp-game-name">{game.name}</div>
-                <div className="tp-game-sub">{game.subtitle}</div>
+          {game.promoBg ? (
+            <div style={{ position: 'relative' }}>
+              <img
+                src={game.promoBg}
+                alt={game.name}
+                style={{ display: 'block', width: '100%', aspectRatio: game.promoAspect || '21 / 9' }}
+                onError={e => { e.target.style.display = 'none'; }}
+              />
+              <div style={{
+                position: 'absolute', bottom: 0, left: 0, right: 0,
+                height: '35%',
+                background: 'linear-gradient(to bottom, transparent, #f0f4f8)',
+                pointerEvents: 'none',
+              }} />
+            </div>
+          ) : (
+            <div className="tp-hero">
+              <div className="tp-hero-bg" style={{ backgroundImage: `url('${game.bg}')` }} />
+              <div className="tp-hero-overlay" />
+              <div className="tp-hero-content">
+                <img src={game.icon} alt={game.name} className="tp-icon"
+                  onError={e => { e.target.style.display = 'none'; }} />
+                <div>
+                  <div className="tp-game-name">{game.name}</div>
+                  <div className="tp-game-sub">{game.subtitle}</div>
+                </div>
               </div>
             </div>
-          </div>
+          )}
           <div style={{ display: 'flex', justifyContent: 'center', padding: '56px 24px 80px' }}>
             <div style={{ textAlign: 'center', maxWidth: 360 }}>
-              <div style={{ fontSize: 52, marginBottom: 18, filter: 'grayscale(0.2)' }}>🛠️</div>
+              <div style={{ fontSize: 52, marginBottom: 18, color: '#94a3b8' }}><FiTool size={52} /></div>
               <div style={{
                 fontFamily: "'PSL Kampanath Pro', sans-serif",
                 fontSize: 24, fontWeight: 900, color: '#1e293b',
@@ -461,24 +627,36 @@ export default function TopupPage({ game, onBack }) {
       {game.packages && game.packages.length > 0 && (
       <div className="tp-page">
 
-        {/* ── Hero ── */}
-        <div className="tp-hero">
-          <div className="tp-hero-bg" style={{ backgroundImage: `url('${game.bg}')` }} />
-          <div className="tp-hero-overlay" />
-          {step !== 'success' && (
-            <button className="tp-back-btn" onClick={handleBack}>
-              &#9664; {step === 1 ? 'กลับ' : 'ย้อนกลับ'}
-            </button>
-          )}
-          <div className="tp-hero-content">
-            <img src={game.icon} alt={game.name} className="tp-icon"
-              onError={e => { e.target.style.display = 'none'; }} />
-            <div>
-              <div className="tp-game-name">{game.name}</div>
-              <div className="tp-game-sub">{game.subtitle}</div>
+        {/* ── Hero / Promo Banner ── */}
+        {game.promoBg ? (
+          <div style={{ position: 'relative' }}>
+            <img
+              src={game.promoBg}
+              alt={game.name}
+              style={{ display: 'block', width: '100%', aspectRatio: game.promoAspect || '21 / 9' }}
+              onError={e => { e.target.style.display = 'none'; }}
+            />
+            <div style={{
+              position: 'absolute', bottom: 0, left: 0, right: 0,
+              height: '35%',
+              background: 'linear-gradient(to bottom, transparent, #f0f4f8)',
+              pointerEvents: 'none',
+            }} />
+          </div>
+        ) : (
+          <div className="tp-hero">
+            <div className="tp-hero-bg" style={{ backgroundImage: `url('${game.bg}')` }} />
+            <div className="tp-hero-overlay" />
+            <div className="tp-hero-content">
+              <img src={game.icon} alt={game.name} className="tp-icon"
+                onError={e => { e.target.style.display = 'none'; }} />
+              <div>
+                <div className="tp-game-name">{game.name}</div>
+                <div className="tp-game-sub">{game.subtitle}</div>
+              </div>
             </div>
           </div>
-        </div>
+        )}
 
         {/* ── Body ── */}
         <div className="tp-body">
@@ -488,7 +666,7 @@ export default function TopupPage({ game, onBack }) {
             <div className="tp-stepper">
               {[
                 { n: 1, label: 'เลือกแพ็กเกจ' },
-                { n: 2, label: 'กรอก UID' },
+                { n: 2, label: accountStepLabel },
                 { n: 3, label: 'ยืนยันออเดอร์' },
               ].map((s, i) => {
                 const state = step > s.n ? 'done' : step === s.n ? 'active' : 'idle';
@@ -496,7 +674,7 @@ export default function TopupPage({ game, onBack }) {
                   <React.Fragment key={s.n}>
                     <div className="tp-step-item">
                       <div className={`tp-step-circle ${state}`}>
-                        {state === 'done' ? '✓' : s.n}
+                        {state === 'done' ? <FiCheck size={15} /> : s.n}
                       </div>
                       <span className={`tp-step-label ${state}`}>{s.label}</span>
                     </div>
@@ -518,7 +696,7 @@ export default function TopupPage({ game, onBack }) {
                       {couponBreakdown}
                     </div>
                     <div style={{ fontSize: 12, color: '#64748b', marginTop: 1 }}>
-                      รวม <strong style={{ color: '#0f172a' }}>{totalPrice.toLocaleString()} ฿</strong>
+                      รวม <strong style={{ color: '#0f172a' }}>{totalPrice.toLocaleString()} บาท</strong>
                     </div>
                   </div>
                 )}
@@ -532,27 +710,81 @@ export default function TopupPage({ game, onBack }) {
                       className={`tp-pkg-card${isSelected ? ' selected' : ''}`}
                       onClick={() => togglePkg(pkg)}
                     >
-                      {isSelected && <div className="tp-pkg-check">✓</div>}
-                      <img src={pkg.img} alt={`${pkg.amount}`}
-                        style={{ width: '100%', aspectRatio: '1/1', objectFit: 'contain', display: 'block' }}
-                        onError={e => { e.target.style.display = 'none'; }} />
+                      {isSelected && <div className="tp-pkg-check"><FiCheck size={13} /></div>}
+                      {pkg.badge && (
+                        <div className={`tp-pkg-badge ${pkg.badge === 'แนะนำ' ? 'rec' : 'hot'}`}>
+                          {pkg.badge}
+                        </div>
+                      )}
+                      <div style={{ position: 'relative', width: '100%', aspectRatio: '1/1', overflow: 'hidden' }}>
+                        <img
+                          src={pkg.img || game.bg}
+                          alt={`${pkg.amount}`}
+                          style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center top', display: 'block' }}
+                          onError={e => { e.target.style.display = 'none'; }}
+                        />
+                        {(pkg.country || game.country) && (() => { const c = pkg.country || game.country; return (
+                          <div style={{ position: 'absolute', top: 7, left: 7, display: 'flex', alignItems: 'center', gap: 4, background: 'rgba(0,0,0,0.55)', borderRadius: 5, padding: '3px 6px', backdropFilter: 'blur(4px)' }}>
+                            <img
+                              src={`${FLAG_BASE}/${c}.png`}
+                              alt={c}
+                              style={{ width: 18, height: 13, objectFit: 'cover', borderRadius: 2, flexShrink: 0 }}
+                              onError={e => { e.target.style.display = 'none'; }}
+                            />
+                            <span style={{ fontSize: 10, color: '#fff', fontWeight: 700, whiteSpace: 'nowrap' }}>
+                              {COUNTRY_NAMES[c] || c}
+                            </span>
+                          </div>
+                        ); })()}
+                      </div>
                       {(pkg.label || pkg.amount > 0) && (
                         <div className="tp-coupon-label">
                           {pkg.label || `${pkg.amount.toLocaleString()} ${game.currency}`}
                         </div>
                       )}
                       <div className="tp-price">
+                        {pkg.originalPrice && (
+                          <span style={{ color: '#94a3b8', textDecoration: 'line-through', marginRight: 4, fontWeight: 400 }}>
+                            {pkg.originalPrice.toLocaleString()}
+                          </span>
+                        )}
                         {pkg.price.toLocaleString()}
-                        <span className="tp-price-unit">฿</span>
+                        <span className="tp-price-unit">บาท</span>
                       </div>
                     </div>
                   );
                 })}
               </div>
+
+              {/* ── Info box ── */}
+              {(() => {
+                const info = game.info || buildDefaultInfo(game);
+                return (
+                  <div className="tp-info-box">
+                    <div className="tp-info-title">{info.title}</div>
+                    {info.taglines && info.taglines.map((t, i) => (
+                      <div key={i} className="tp-info-sub">{t}</div>
+                    ))}
+                    {info.sections && info.sections.map((sec, si) => (
+                      <div key={si} className="tp-info-section">
+                        <div className="tp-info-section-title">{sec.heading}</div>
+                        <ul className="tp-info-list">
+                          {sec.items.map((item, ii) => (
+                            <li key={ii}>
+                              <span className="tp-info-bullet">{sec.ordered ? `${ii + 1}.` : '—'}</span>
+                              <span>{item}</span>
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+                    ))}
+                  </div>
+                );
+              })()}
             </>
           )}
 
-          {/* ═══════════════ STEP 2: กรอก UID ═══════════════ */}
+          {/* ═══════════════ STEP 2: กรอกข้อมูลบัญชี ═══════════════ */}
           {step === 2 && (
             <>
               {/* สรุปแพ็กเกจที่เลือก */}
@@ -564,11 +796,11 @@ export default function TopupPage({ game, onBack }) {
                   </div>
                   <div style={{ textAlign: 'right', flexShrink: 0 }}>
                     <div style={{ fontSize: 22, fontWeight: 900, color: '#00d1ff', fontFamily: "'PSL Kampanath Pro', sans-serif" }}>
-                      {totalPrice.toLocaleString()} ฿
+                      {totalPrice.toLocaleString()} บาท
                     </div>
                     <button
-                      onClick={() => setStep(1)}
-                      style={{ fontSize: 12, color: '#94a3b8', background: 'none', border: 'none', cursor: 'pointer', marginTop: 2, textDecoration: 'underline' }}
+                      onClick={() => onStep(1)}
+                      style={{ fontSize: 14, color: '#00d1ff', background: 'none', border: 'none', cursor: 'pointer', marginTop: 4, fontWeight: 700, textDecoration: 'underline' }}
                     >
                       เปลี่ยน
                     </button>
@@ -579,39 +811,68 @@ export default function TopupPage({ game, onBack }) {
                     {selectedPkgs.map(p => (
                       <div key={p.id} style={{ display: 'flex', justifyContent: 'space-between', fontSize: 13, color: '#475569' }}>
                         <span>{p.label || `${p.amount.toLocaleString()} ${game.currency}`}</span>
-                        <span style={{ fontWeight: 700, color: '#1e293b' }}>{p.price.toLocaleString()} ฿</span>
+                        <span style={{ fontWeight: 700, color: '#1e293b' }}>{p.price.toLocaleString()} บาท</span>
                       </div>
                     ))}
                   </div>
                 )}
               </div>
 
-              {/* UID input */}
+              {/* Account inputs */}
               <div className="tp-card">
-                <div className="tp-card-label">กรอก User ID (UID)</div>
-                <input
-                  className="tp-uid-input"
-                  type="text"
-                  inputMode="numeric"
-                  placeholder="เช่น 123456789"
-                  value={uid}
-                  onChange={e => setUid(e.target.value)}
-                  autoFocus
-                />
+                <div className="tp-card-label">{accountStepLabel}</div>
+                <div className={`tp-account-grid${accountFields.length === 1 ? ' single' : ''}`}>
+                  {accountEntries.map((field, index) => (
+                    <label key={field.key}>
+                      <div className="tp-field-label">{field.label}</div>
+                      <input
+                        className="tp-uid-input"
+                        type={field.type || 'text'}
+                        inputMode={field.inputMode || 'text'}
+                        placeholder={field.placeholder}
+                        value={field.value}
+                        onChange={e => updateAccountValue(field.key, e.target.value)}
+                        autoFocus={index === 0}
+                      />
+                    </label>
+                  ))}
+                </div>
                 <div className="tp-uid-hint">
-                  <span>⚠️</span>
-                  ตรวจสอบ UID ให้ถูกต้องก่อนยืนยัน ไอเทมจะถูกส่งไปยัง UID ที่กรอกทันที
+                  <FiAlertTriangle size={14} style={{ flexShrink: 0 }} />
+                  {game.accountHint || 'ตรวจสอบ UID ให้ถูกต้องก่อนยืนยัน ไอเทมจะถูกส่งไปยัง UID ที่กรอกทันที'}
                 </div>
               </div>
 
-              {/* วิธีหา UID */}
+              {/* วิธีหาข้อมูลบัญชี */}
               <div style={{ background: '#f8fafc', borderRadius: 12, padding: '14px 18px', fontSize: 13, color: '#475569' }}>
-                <div style={{ fontWeight: 700, marginBottom: 6, color: '#1e293b' }}>📍 วิธีดู UID ของฉันอยู่ที่ไหน?</div>
+                <div style={{ fontWeight: 700, marginBottom: 6, color: '#1e293b', display: 'flex', alignItems: 'center', gap: 6 }}><FiMapPin size={14} /> วิธีดูข้อมูลบัญชีอยู่ที่ไหน?</div>
+                {game.accountHelp && <span>{game.accountHelp}</span>}
                 {game.id === 'ROV' && <span>เปิดเกม → กดที่รูปโปรไฟล์ → UID จะแสดงใต้ชื่อตัวละคร</span>}
                 {game.id === 'Free Fire' && <span>เปิดเกม → กดที่รูปโปรไฟล์มุมซ้ายบน → UID แสดงใต้ชื่อ</span>}
                 {game.id === 'PUBG Mobile' && <span>เปิดเกม → โปรไฟล์ → UID แสดงใต้ชื่อผู้เล่น</span>}
-                {!['ROV','Free Fire','PUBG Mobile'].includes(game.id) && <span>เปิดเกม → โปรไฟล์ → ดู UID ใต้ชื่อผู้เล่น</span>}
+                {!game.accountHelp && !['ROV','Free Fire','PUBG Mobile'].includes(game.id) && <span>เปิดเกม → โปรไฟล์ → ดู UID ใต้ชื่อผู้เล่น</span>}
               </div>
+
+              {/* ── ลิงก์วิธีเติม ── */}
+              <button
+                onClick={() => window.open(game.howtoImage, '_blank')}
+                style={{
+                  display: 'flex', alignItems: 'center', gap: 8,
+                  background: '#fff',
+                  border: '1.5px solid #fde68a',
+                  borderRadius: 12, padding: '13px 20px',
+                  cursor: 'pointer', width: '100%', marginTop: 14,
+                  font: 'inherit', color: '#92400e',
+                  fontSize: 14, fontWeight: 700,
+                  transition: 'background 0.2s',
+                }}
+                onMouseEnter={e => e.currentTarget.style.background = '#fffbeb'}
+                onMouseLeave={e => e.currentTarget.style.background = '#fff'}
+              >
+                <FiBook size={18} />
+                <span>ดูวิธีการเติมเกม</span>
+                <span style={{ marginLeft: 'auto', color: '#00d1ff', fontSize: 16 }}>→</span>
+              </button>
             </>
           )}
 
@@ -619,7 +880,7 @@ export default function TopupPage({ game, onBack }) {
           {step === 3 && (
             <>
               <div className="tp-warning">
-                <span style={{ fontSize: 18, flexShrink: 0 }}>⚠️</span>
+                <FiAlertTriangle size={18} style={{ flexShrink: 0 }} />
                 <span>กรุณาตรวจสอบข้อมูลให้ถูกต้องก่อนกดยืนยัน หลังจากยืนยันแล้ว <strong>ไม่สามารถยกเลิกได้</strong> ไอเทมจะถูกส่งเข้าบัญชีทันที</span>
               </div>
 
@@ -641,8 +902,8 @@ export default function TopupPage({ game, onBack }) {
                   </div>
                 ))}
                 <div className="tp-summary-row">
-                  <span className="tp-summary-key">User ID (UID)</span>
-                  <span className="tp-summary-val" style={{ fontFamily: 'monospace', fontSize: 16, letterSpacing: '0.05em' }}>{uid}</span>
+                  <span className="tp-summary-key">ข้อมูลบัญชี</span>
+                  <span className="tp-summary-val" style={{ fontFamily: 'monospace', fontSize: 14, letterSpacing: '0.03em', textAlign: 'right' }}>{accountSummary}</span>
                 </div>
                 <div className="tp-total-row">
                   <span style={{ fontWeight: 700, color: '#1e293b' }}>ยอดชำระรวม</span>
@@ -650,18 +911,19 @@ export default function TopupPage({ game, onBack }) {
                 </div>
               </div>
 
-              <div style={{ background: '#f0fbff', border: '1.5px solid #bae6fd', borderRadius: 12, padding: '12px 18px', fontSize: 13, color: '#0369a1' }}>
-                💳 ชำระเงินผ่าน PromptPay / TrueMoney Wallet / โอนธนาคาร (เดฟจะเชื่อมระบบชำระเงินในขั้นตอนถัดไป)
+              <div style={{ display: 'flex', alignItems: 'center', gap: 8, background: '#f0fbff', border: '1.5px solid #bae6fd', borderRadius: 12, padding: '12px 18px', fontSize: 13, color: '#0369a1' }}>
+                <FiCreditCard size={16} style={{ flexShrink: 0 }} />
+                <span>ชำระเงินผ่าน PromptPay / TrueMoney Wallet / โอนธนาคาร (เดฟจะเชื่อมระบบชำระเงินในขั้นตอนถัดไป)</span>
               </div>
             </>
           )}
 
           {/* ═══════════════ SUCCESS ═══════════════ */}
-          {step === 'success' && (
+          {done && (
             <div className="tp-success-wrap">
-              <div className="tp-success-icon">✓</div>
+              <div className="tp-success-icon"><FiCheck size={42} /></div>
               <div className="tp-success-title">สั่งซื้อสำเร็จ!</div>
-              <div className="tp-success-sub">ไอเทมจะถูกส่งเข้า UID ของคุณภายใน 5–15 นาที</div>
+              <div className="tp-success-sub">ไอเทมจะถูกส่งเข้าบัญชีของคุณภายใน 5–15 นาที</div>
 
               <div className="tp-success-card">
                 <div className="tp-success-order-id">
@@ -680,8 +942,8 @@ export default function TopupPage({ game, onBack }) {
                   </div>
                 ))}
                 <div className="tp-summary-row">
-                  <span className="tp-summary-key">UID</span>
-                  <span className="tp-summary-val" style={{ fontFamily: 'monospace' }}>{uid}</span>
+                  <span className="tp-summary-key">ข้อมูลบัญชี</span>
+                  <span className="tp-summary-val" style={{ fontFamily: 'monospace', textAlign: 'right' }}>{accountSummary}</span>
                 </div>
                 <div className="tp-summary-row" style={{ border: 'none', paddingTop: 14 }}>
                   <span className="tp-summary-key">ยอดชำระรวม</span>
@@ -701,7 +963,7 @@ export default function TopupPage({ game, onBack }) {
         </div>
 
         {/* ── Bottom action bar (ซ่อนบน success) ── */}
-        {step !== 'success' && (
+        {!done && (
           <div className="tp-bar">
             <div className="tp-bar-info">
               {step === 1 && (selectedPkgs.length > 0
@@ -712,9 +974,9 @@ export default function TopupPage({ game, onBack }) {
                   </>
                 : <span style={{ color: '#94a3b8' }}>กรุณาเลือกแพ็กเกจ</span>
               )}
-              {step === 2 && (uid.trim()
-                ? <><strong>{uid}</strong><br />UID ที่กรอก</>
-                : <span style={{ color: '#94a3b8' }}>กรุณากรอก UID</span>
+              {step === 2 && (accountComplete
+                ? <><strong>{primaryAccountValue}</strong><br />ข้อมูลบัญชีที่กรอก</>
+                : <span style={{ color: '#94a3b8' }}>กรุณากรอกข้อมูลให้ครบ</span>
               )}
               {step === 3 && (
                 <><strong>{pkgSummary}</strong> — รวม {totalPrice.toLocaleString()} บาท</>
@@ -725,12 +987,12 @@ export default function TopupPage({ game, onBack }) {
               className="tp-next-btn"
               disabled={
                 (step === 1 && selectedPkgs.length === 0) ||
-                (step === 2 && !uid.trim()) ||
+                (step === 2 && !accountComplete) ||
                 (step === 3 && loading)
               }
               onClick={() => {
-                if (step === 1) setStep(2);
-                else if (step === 2) setStep(3);
+                if (step === 1) onStep(2);
+                else if (step === 2) onStep(3);
                 else if (step === 3) handleConfirm();
               }}
             >

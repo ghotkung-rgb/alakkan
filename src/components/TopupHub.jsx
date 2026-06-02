@@ -1,5 +1,16 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { GAMES } from '../config/games';
+
+const FLAG_BASE = '/images/ALASKAN_WEB_ASSET/FLAG';
+const COUNTRY_NAMES = {
+  'indonesia':                 'อินโดนีเซีย',
+  'malaysia':                  'มาเลเซีย',
+  'philippines':               'ฟิลิปปินส์',
+  'russia':                    'รัสเซีย',
+  'singapore':                 'สิงคโปร์',
+  'turkey':                    'ตุรกี',
+  'united-states-of-america':  'สหรัฐฯ',
+};
 
 const TABS = ['ทั้งหมด', 'โปรโมชั่น', 'ขายดี'];
 
@@ -135,7 +146,7 @@ export default function TopupHub({ onSelectGame, onBack }) {
           cursor: pointer;
           background: #1e293b;
           box-shadow: 0 2px 10px rgba(0,0,0,0.12);
-          transition: transform 0.22s cubic-bezier(0.34, 1.4, 0.64, 1), box-shadow 0.22s;
+          transition: transform 0.22s cubic-bezier(0.25, 1, 0.5, 1), box-shadow 0.22s;
           -webkit-tap-highlight-color: transparent;
         }
         .hub-card:hover {
@@ -289,6 +300,12 @@ export default function TopupHub({ onSelectGame, onBack }) {
                   {!hasPackages && (
                     <span className="hub-card-badge soon">เร็วๆ นี้</span>
                   )}
+                  {game.country && (
+                    <div style={{ position: 'absolute', top: 14, left: 14, display: 'flex', alignItems: 'center', gap: 5, background: 'rgba(0,0,0,0.55)', borderRadius: 20, padding: '3px 8px 3px 3px', backdropFilter: 'blur(4px)', zIndex: 3 }}>
+                      <img src={`${FLAG_BASE}/${game.country}.png`} alt="" style={{ width: 20, height: 20, borderRadius: '50%', flexShrink: 0, objectFit: 'cover' }} onError={e => { e.target.style.display = 'none'; }} />
+                      <span style={{ fontSize: 10, color: '#fff', fontWeight: 700, whiteSpace: 'nowrap', marginLeft: 28 }}>{COUNTRY_NAMES[game.country] || game.country}</span>
+                    </div>
+                  )}
                   <div className="hub-card-info">
                     <img
                       src={game.icon}
@@ -297,7 +314,9 @@ export default function TopupHub({ onSelectGame, onBack }) {
                       onError={e => { e.target.style.display = 'none'; }}
                     />
                     <div className="hub-card-name">{game.name}</div>
-                    <div className="hub-card-cat">{game.category}</div>
+                    <div className="hub-card-cat">
+                      {game.category}{game.country ? ` · ${COUNTRY_NAMES[game.country]}` : ''}
+                    </div>
                     <span className={`hub-card-btn ${hasPackages ? 'active' : 'soon'}`}>
                       {hasPackages ? 'เติมเกม' : 'เร็วๆ นี้'}
                     </span>

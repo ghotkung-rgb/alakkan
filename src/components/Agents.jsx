@@ -1,653 +1,650 @@
-import React, { useState, useEffect, useRef } from 'react';
+import { useEffect, useState } from 'react';
+import { FiActivity, FiChevronLeft, FiChevronRight, FiClock, FiShield, FiTarget, FiZap } from 'react-icons/fi';
+import { GiBrickWall, GiMedicines, GiUnlitBomb } from 'react-icons/gi';
 
-const CHARACTERS_DATA = {
-  1: {
-    name: "BLAZE",
-    subTitle: "แนะนำความสามารถ",
+const AGENTS = [
+  {
+    id: 'blaze',
+    name: 'BLAZE',
+    role: 'Rush Specialist',
+    status: 'ACTIVE',
+    motto: 'เปิดจังหวะเร็ว เคลียร์พื้นที่ไว เหมาะกับงานที่ต้องตัดสินใจเฉียบ',
+    bio: 'สายบุกแนวหน้า ใช้ความเร็วและแรงกดดันเพื่อสร้างพื้นที่ให้ทีมเข้าเติมเกมและปิดงานแบบมั่นใจ',
+    portrait: '/images/GR1.png',
+    avatar: '/images/GR.png',
+    backdrop: '/images/BG-red.png',
+    accent: '#ff4d4d',
+    softAccent: 'rgba(255,77,77,0.22)',
+    stats: { speed: 92, control: 74, support: 68 },
     skills: [
-      { id: 1, name: "นักสู้", icon: "/images/skill_1.png", desc: "มีวิชาต่อสู้" },
-      { id: 2, name: "อดทน", icon: "/images/skill_2.png", desc: "มีความทนทานสูง" }
+      { name: 'Flash Entry', desc: 'เปิดไฟต์และบังคับจังหวะคู่ต่อสู้', icon: FiZap },
+      { name: 'Close Combat', desc: 'คุมระยะประชิดและปิดงานไว', icon: FiTarget },
     ],
-    mainImg: "/images/GR1.png",
-    bgImg: "/images/BG-red.png",
-    accentColor: "#ff4444",
-    glowColor: "rgba(255,68,68,0.4)",
-    tag: "RECON",
   },
-  2: {
-    name: "JACKAL",
-    subTitle: "แนะนำความสามารถ",
+  {
+    id: 'jackal',
+    name: 'JACKAL',
+    role: 'Support Operator',
+    status: 'READY',
+    motto: 'นิ่งกว่า เดินเกมเป็นระบบกว่า ดูแลหลังบ้านให้ทีมขยับง่าย',
+    bio: 'สายซัพพอร์ตที่ออกแบบมาให้หน้าบริการดูน่าเชื่อถือขึ้น เน้นความปลอดภัย ความชัดเจน และการประคองงานจนจบ',
+    portrait: '/images/jackson.png',
+    avatar: '/images/AGENT/small_logo.jpg',
+    backdrop: '/images/1-bg.png',
+    accent: '#00d1ff',
+    softAccent: 'rgba(0,209,255,0.22)',
+    stats: { speed: 68, control: 83, support: 96 },
     skills: [
-      { id: 1, name: "โดรนรักษาพยาบาล", icon: "/images/skill_3.png", desc: "ส่งโดรนฟื้นฟูพลังงานให้ทีม" },
-      { id: 2, name: "โล่พลังงาน", icon: "/images/skill_4.png", desc: "สร้างกำแพงพลังงานป้องกันทีม" }
+      { name: 'Recovery Drone', desc: 'ดูแลรายการที่ต้องตรวจสอบต่อเนื่อง', icon: GiMedicines },
+      { name: 'Secure Guard', desc: 'ลดความเสี่ยงและปกป้องข้อมูลลูกค้า', icon: FiShield },
     ],
-    mainImg: "/images/jackson.png",
-    bgImg: "/images/jackal-bg.jpg",
-    accentColor: "#00d4ff",
-    glowColor: "rgba(0,212,255,0.4)",
-    tag: "SUPPORT",
   },
-  3: {
-    name: "WATCHMAN",
-    subTitle: "แนะนำความสามารถ",
+  {
+    id: 'watchman',
+    name: 'WATCHMAN',
+    role: 'System Sentinel',
+    status: 'STANDBY',
+    motto: 'เฝ้าระบบ จัดระเบียบ และกันความผิดพลาดก่อนถึงมือลูกค้า',
+    bio: 'เจ้าหน้าที่สายควบคุม เหมาะกับงานที่ต้องจัดการหลายรายการพร้อมกัน มองเห็นภาพรวมและแยก priority ได้ดี',
+    portrait: '/images/all.png',
+    avatar: '/images/ALASKAN_WEB_ASSET/PNG/alaskan_logo.png',
+    backdrop: '/images/GAMES BG/DELTAFORCE_bg.png',
+    accent: '#f5c84c',
+    softAccent: 'rgba(245,200,76,0.2)',
+    stats: { speed: 61, control: 97, support: 79 },
     skills: [
-      { id: 1, name: "ป้อมปืนกล", icon: "🤖", desc: "วางป้อมปืนอัตโนมัติครอบคลุมพื้นที่" },
-      { id: 2, name: "กำแพงเหล็ก", icon: "🧱", desc: "สร้างสิ่งกีดขวางชั่วคราว" }
+      { name: 'Order Grid', desc: 'จัดคิวงานและป้องกันรายการตกหล่น', icon: GiBrickWall },
+      { name: 'Live Scan', desc: 'อ่านสถานะและจับปัญหาก่อนลุกลาม', icon: FiActivity },
     ],
-    mainImg: "/images/watchman-full.png",
-    bgImg: "/images/watchman-bg.jpg",
-    accentColor: "#f2d000",
-    glowColor: "rgba(242,208,0,0.4)",
-    tag: "SENTINEL",
   },
-  4: {
-    name: "CYAN",
-    subTitle: "แนะนำความสามารถ",
+  {
+    id: 'cyan',
+    name: 'CYAN',
+    role: 'Stealth Analyst',
+    status: 'ONLINE',
+    motto: 'ทำงานเงียบ ตรวจละเอียด และเข้าถึงข้อมูลเท่าที่จำเป็น',
+    bio: 'สายวิเคราะห์สำหรับ flow ที่ละเอียดอย่าง Mail/Pass เน้นความรอบคอบ ความปลอดภัย และการสื่อสารที่ไม่ทำให้ลูกค้ากังวล',
+    portrait: '/images/GR.png',
+    avatar: '/images/skill_1.png',
+    backdrop: '/images/GAMES BG/VALORANT_bg.png',
+    accent: '#45f0c1',
+    softAccent: 'rgba(69,240,193,0.18)',
+    stats: { speed: 77, control: 86, support: 88 },
     skills: [
-      { id: 1, name: "ระเบิดสลบ", icon: "💣", desc: "ปล่อยคลื่นกระแทกทำให้ศัตรูมึนงง" },
-      { id: 2, name: "เครื่องพรางตัว", icon: "✨", desc: "กลายเป็นล่องหนชั่วคราว" }
+      { name: 'Silent Check', desc: 'ตรวจข้อมูลสำคัญโดยไม่รบกวน flow', icon: FiClock },
+      { name: 'Signal Jam', desc: 'กรองความผิดพลาดก่อนยืนยันรายการ', icon: GiUnlitBomb },
     ],
-    mainImg: "/images/cyan-full.png",
-    bgImg: "/images/cyan-bg.jpg",
-    accentColor: "#a855f7",
-    glowColor: "rgba(168,85,247,0.4)",
-    tag: "DUELIST",
-  }
-};
+  },
+];
 
-const CHARACTER_IDS = [1, 2, 3, 4];
+const METRICS = [
+  { label: 'Agents', value: '04' },
+  { label: 'Service Modes', value: 'UID / M-P' },
+  { label: 'Queue Guard', value: '24H' },
+];
 
-// Preload images to prevent disappearing on revisit
-function preloadImages() {
-  Object.values(CHARACTERS_DATA).forEach(char => {
-    const img1 = new Image(); img1.src = char.mainImg;
-    const img2 = new Image(); img2.src = char.bgImg;
-  });
-  CHARACTER_IDS.forEach(id => {
-    const av = new Image(); av.src = `/images/avatar-${id}.jpg`;
-  });
+function AgentStat({ label, value, color }) {
+  return (
+    <div className="agent-stat">
+      <div className="agent-stat-head">
+        <span>{label}</span>
+        <strong>{value}</strong>
+      </div>
+      <div className="agent-stat-track">
+        <span style={{ width: `${value}%`, background: color }} />
+      </div>
+    </div>
+  );
 }
 
-const ScanlineOverlay = () => (
-  <div style={{
-    position: 'absolute', inset: 0, zIndex: 1, pointerEvents: 'none',
-    background: 'repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,0,0,0.03) 2px, rgba(0,0,0,0.03) 4px)',
-    mixBlendMode: 'multiply'
-  }} />
-);
-
-const NoiseOverlay = () => (
-  <div style={{
-    position: 'absolute', inset: 0, zIndex: 1, pointerEvents: 'none', opacity: 0.04,
-    backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")`,
-    backgroundSize: '150px 150px'
-  }} />
-);
-
-const CornerBracket = ({ position, color }) => {
-  const styles = {
-    'top-left': { top: 16, left: 16, borderTop: `2px solid ${color}`, borderLeft: `2px solid ${color}` },
-    'top-right': { top: 16, right: 16, borderTop: `2px solid ${color}`, borderRight: `2px solid ${color}` },
-    'bottom-left': { bottom: 16, left: 16, borderBottom: `2px solid ${color}`, borderLeft: `2px solid ${color}` },
-    'bottom-right': { bottom: 16, right: 16, borderBottom: `2px solid ${color}`, borderRight: `2px solid ${color}` },
-  };
+function SkillIcon({ icon: Icon, color }) {
   return (
-    <div style={{
-      position: 'absolute', width: 32, height: 32, opacity: 0.6, zIndex: 5, pointerEvents: 'none',
-      transition: 'border-color 0.5s ease',
-      ...styles[position]
-    }} />
-  );
-};
-
-const GlitchText = ({ text, color }) => {
-  const [glitch, setGlitch] = useState(false);
-  useEffect(() => {
-    const iv = setInterval(() => {
-      setGlitch(true);
-      setTimeout(() => setGlitch(false), 150);
-    }, 3500);
-    return () => clearInterval(iv);
-  }, []);
-  return (
-    <div style={{ position: 'relative', display: 'inline-block' }}>
-      <h1 style={{
-        fontSize: 'clamp(70px, 11vw, 160px)',
-        fontFamily: "'Impact', 'Anton', sans-serif",
-        fontWeight: 900, fontStyle: 'italic',
-        letterSpacing: '-0.04em', lineHeight: 0.85,
-        color: '#f0f0f0', textTransform: 'uppercase',
-        textShadow: `4px 4px 0px rgba(0,0,0,0.5), 0 0 60px ${color}55`,
-        transition: 'color 0.5s ease, text-shadow 0.5s ease',
-        userSelect: 'none',
-        position: 'relative', zIndex: 0,
-        WebkitTextStroke: '1px rgba(255,255,255,0.1)',
-      }}>{text}</h1>
-      {/* Glitch layers */}
-      {glitch && <>
-        <h1 style={{
-          position: 'absolute', top: 0, left: 0,
-          fontSize: 'clamp(70px, 11vw, 160px)', fontFamily: "'Impact', sans-serif",
-          fontWeight: 900, fontStyle: 'italic', letterSpacing: '-0.04em', lineHeight: 0.85,
-          color: color, textTransform: 'uppercase', userSelect: 'none',
-          clipPath: 'inset(30% 0 50% 0)',
-          transform: 'translateX(-4px)', opacity: 0.7,
-          animation: 'none',
-        }}>{text}</h1>
-        <h1 style={{
-          position: 'absolute', top: 0, left: 0,
-          fontSize: 'clamp(70px, 11vw, 160px)', fontFamily: "'Impact', sans-serif",
-          fontWeight: 900, fontStyle: 'italic', letterSpacing: '-0.04em', lineHeight: 0.85,
-          color: '#00ffff', textTransform: 'uppercase', userSelect: 'none',
-          clipPath: 'inset(60% 0 10% 0)',
-          transform: 'translateX(4px)', opacity: 0.5,
-        }}>{text}</h1>
-      </>}
+    <div className="agent-skill-icon" style={{ color, borderColor: `${color}66`, boxShadow: `0 0 24px ${color}33` }}>
+      <Icon size={22} />
     </div>
   );
-};
-
-const ParticleField = ({ color }) => {
-  const particles = Array.from({ length: 12 }, (_, i) => ({
-    id: i,
-    x: Math.random() * 100,
-    y: Math.random() * 100,
-    size: Math.random() * 3 + 1,
-    duration: Math.random() * 4 + 3,
-    delay: Math.random() * 3,
-  }));
-  return (
-    <div style={{ position: 'absolute', inset: 0, pointerEvents: 'none', zIndex: 2, overflow: 'hidden' }}>
-      <style>{`
-        @keyframes floatUp {
-          0% { transform: translateY(0) scale(1); opacity: 0; }
-          20% { opacity: 0.7; }
-          80% { opacity: 0.3; }
-          100% { transform: translateY(-120px) scale(0.3); opacity: 0; }
-        }
-      `}</style>
-      {particles.map(p => (
-        <div key={p.id} style={{
-          position: 'absolute',
-          left: `${p.x}%`, bottom: `${p.y % 40}%`,
-          width: p.size, height: p.size,
-          borderRadius: '50%',
-          backgroundColor: color,
-          animation: `floatUp ${p.duration}s ease-in-out ${p.delay}s infinite`,
-          boxShadow: `0 0 6px ${color}`,
-        }} />
-      ))}
-    </div>
-  );
-};
+}
 
 export default function Agents() {
-  const [activeId, setActiveId] = useState(1);
-  const [prevId, setPrevId] = useState(null);
-  const [transitioning, setTransitioning] = useState(false);
-  const [imgLoaded, setImgLoaded] = useState({});
-  const [scrollOffset, setScrollOffset] = useState(0); // 0 = show chars 1-4 visible
-  const [hoveredSkill, setHoveredSkill] = useState(null);
-  const [mounted, setMounted] = useState(false);
-  const imgRefs = useRef({});
-
-  const VISIBLE_COUNT = 3; // how many avatars visible at once
-  const MAX_OFFSET = Math.max(0, CHARACTER_IDS.length - VISIBLE_COUNT);
+  const [activeIndex, setActiveIndex] = useState(0);
+  const active = AGENTS[activeIndex];
 
   useEffect(() => {
-    preloadImages();
-    setMounted(true);
-    // Mark all images as loaded initially
-    const loaded = {};
-    CHARACTER_IDS.forEach(id => { loaded[id] = true; });
-    setImgLoaded(loaded);
+    AGENTS.forEach(agent => {
+      [agent.portrait, agent.avatar, agent.backdrop].forEach(src => {
+        const img = new Image();
+        img.src = src;
+      });
+    });
   }, []);
 
-  const currentChar = CHARACTERS_DATA[activeId];
-const changeChar = (id) => {
-  if (id === activeId || transitioning) return;
-  setPrevId(activeId);
-  setTransitioning(true);
-  
-  // เพิ่มบรรทัดนี้ — ขยับ offset ให้ตัวที่เลือกอยู่ใน view เสมอ
-  const idx = CHARACTER_IDS.indexOf(id);
-  setScrollOffset(Math.min(Math.max(0, idx - 1), MAX_OFFSET));
-
-  setTimeout(() => {
-    setActiveId(id);
-    setTransitioning(false);
-    setPrevId(null);
-  }, 350);
-};
-
-const scrollUp = () => {
-  const currentIndex = CHARACTER_IDS.indexOf(activeId);
-  if (currentIndex > 0) {
-    const newId = CHARACTER_IDS[currentIndex - 1];
-    changeChar(newId);
-    setScrollOffset(o => Math.max(0, o - 1));
-  }
-};
-
-const scrollDown = () => {
-  const currentIndex = CHARACTER_IDS.indexOf(activeId);
-  if (currentIndex < CHARACTER_IDS.length - 1) {
-    const newId = CHARACTER_IDS[currentIndex + 1];
-    changeChar(newId);
-    setScrollOffset(o => Math.min(MAX_OFFSET, o + 1));
-  }
-};
-
-
-  const visibleIds = CHARACTER_IDS.slice(scrollOffset, scrollOffset + VISIBLE_COUNT);
+  const goPrev = () => setActiveIndex(index => (index - 1 + AGENTS.length) % AGENTS.length);
+  const goNext = () => setActiveIndex(index => (index + 1) % AGENTS.length);
 
   return (
-    <>
+    <section className="agents-page" style={{ '--agent-bg': `url("${active.backdrop}")` }}>
       <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@0,400;0,700;0,900;1,900&family=Share+Tech+Mono&display=swap');
-
-        @keyframes bgFadeIn { from { opacity: 0; } to { opacity: 1; } }
-        @keyframes slideInLeft { from { opacity: 0; transform: translateX(-40px); } to { opacity: 1; transform: translateX(0); } }
-        @keyframes slideInRight { from { opacity: 0; transform: translateX(40px); } to { opacity: 1; transform: translateX(0); } }
-        @keyframes charAppear { from { opacity: 0; transform: translateY(30px) scale(0.95); filter: blur(8px); } to { opacity: 1; transform: translateY(0) scale(1); filter: blur(0); } }
-        @keyframes scanLine { from { transform: translateY(-100%); } to { transform: translateY(100vh); } }
-        @keyframes pulseGlow { 0%,100% { opacity: 0.4; } 50% { opacity: 0.9; } }
-        @keyframes tagBlink { 0%,90%,100% { opacity: 1; } 95% { opacity: 0.3; } }
-        @keyframes avatarSlide { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
-        @keyframes borderDash {
-          0% { stroke-dashoffset: 0; }
-          100% { stroke-dashoffset: -200; }
+        .agents-page {
+          --agent-accent: ${active.accent};
+          --agent-soft: ${active.softAccent};
+          position: relative;
+          min-height: 100vh;
+          overflow: hidden;
+          background: #070b10;
+          color: #f8fafc;
+          font-family: 'Noto Sans Thai', sans-serif;
+          isolation: isolate;
         }
-        @keyframes hbarPulse {
-          0%,100% { width: 30%; opacity: 0.5; }
-          50% { width: 60%; opacity: 1; }
+        .agents-page::before {
+          content: '';
+          position: absolute;
+          inset: 0;
+          z-index: -3;
+          background-image: var(--agent-bg);
+          background-size: cover;
+          background-position: center;
+          filter: saturate(1.15) brightness(0.62);
+          transform: scale(1.04);
+          animation: agent-bg-in 0.55s ease both;
         }
-
-        .skill-card { transition: all 0.25s cubic-bezier(0.4,0,0.2,1); }
-        .skill-card:hover { transform: translateX(8px); }
-
-        .char-btn { transition: all 0.2s ease; }
-        .char-btn:hover { transform: scale(1.05); }
-
-        .scan-overlay {
-          background: linear-gradient(180deg, transparent 0%, rgba(255,255,255,0.015) 50%, transparent 100%);
-          height: 200px; width: 100%;
-          position: absolute; pointer-events: none; z-index: 4;
-          animation: scanLine 6s linear infinite;
+        .agents-page::after {
+          content: '';
+          position: absolute;
+          inset: 0;
+          z-index: -2;
+          background:
+            radial-gradient(circle at 64% 52%, var(--agent-soft) 0%, transparent 34%),
+            linear-gradient(90deg, rgba(7,11,16,0.96) 0%, rgba(7,11,16,0.74) 42%, rgba(7,11,16,0.24) 72%, rgba(7,11,16,0.84) 100%),
+            linear-gradient(180deg, rgba(7,11,16,0.35) 0%, rgba(7,11,16,0.05) 35%, #070b10 100%);
+        }
+        .agents-noise {
+          position: absolute;
+          inset: 0;
+          z-index: -1;
+          pointer-events: none;
+          opacity: 0.12;
+          background-image:
+            linear-gradient(rgba(255,255,255,0.05) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(255,255,255,0.04) 1px, transparent 1px);
+          background-size: 42px 42px;
+          mask-image: linear-gradient(180deg, transparent 0%, #000 18%, #000 78%, transparent 100%);
+        }
+        .agents-shell {
+          min-height: 100vh;
+          max-width: 1480px;
+          margin: 0 auto;
+          padding: clamp(92px, 9vw, 126px) clamp(18px, 4vw, 56px) 34px;
+          display: grid;
+          grid-template-columns: minmax(290px, 0.9fr) minmax(360px, 1.15fr) minmax(250px, 0.8fr);
+          gap: clamp(18px, 3vw, 42px);
+          align-items: end;
+        }
+        .agents-copy {
+          align-self: center;
+          animation: agent-panel-in 0.45s ease both;
+        }
+        .agents-kicker {
+          display: inline-flex;
+          align-items: center;
+          gap: 10px;
+          color: var(--agent-accent);
+          font-family: 'Good Times Rg', 'Noto Sans Thai', sans-serif;
+          font-size: 11px;
+          letter-spacing: 0.16em;
+          text-transform: uppercase;
+          margin-bottom: 18px;
+        }
+        .agents-kicker::before {
+          content: '';
+          width: 34px;
+          height: 2px;
+          background: currentColor;
+          box-shadow: 0 0 16px currentColor;
+        }
+        .agents-title {
+          margin: 0;
+          font-family: 'Ethnocentric', 'Good Times Rg', sans-serif;
+          font-size: clamp(48px, 8vw, 104px);
+          line-height: 0.88;
+          letter-spacing: 0.03em;
+          text-transform: uppercase;
+          color: #ffffff;
+          text-shadow: 0 18px 46px rgba(0,0,0,0.42), 0 0 34px var(--agent-soft);
+        }
+        .agents-role {
+          margin-top: 12px;
+          display: inline-flex;
+          align-items: center;
+          gap: 10px;
+          color: #101820;
+          background: var(--agent-accent);
+          padding: 8px 14px;
+          font-family: 'Good Times Rg', 'Noto Sans Thai', sans-serif;
+          font-size: 12px;
+          letter-spacing: 0.08em;
+          clip-path: polygon(10px 0, 100% 0, calc(100% - 10px) 100%, 0 100%);
+        }
+        .agents-motto {
+          margin: 24px 0 0;
+          max-width: 460px;
+          font-size: clamp(17px, 1.8vw, 24px);
+          line-height: 1.48;
+          font-weight: 800;
+          color: #f8fafc;
+        }
+        .agents-bio {
+          margin: 14px 0 0;
+          max-width: 520px;
+          color: rgba(226,232,240,0.78);
+          font-size: 14px;
+          line-height: 1.85;
+        }
+        .agents-metrics {
+          display: grid;
+          grid-template-columns: repeat(3, minmax(0, 1fr));
+          gap: 10px;
+          margin-top: 28px;
+          max-width: 520px;
+        }
+        .agents-metric {
+          border: 1px solid rgba(255,255,255,0.12);
+          background: rgba(4,8,14,0.58);
+          padding: 13px 14px;
+          clip-path: polygon(8px 0, 100% 0, 100% calc(100% - 8px), calc(100% - 8px) 100%, 0 100%, 0 8px);
+        }
+        .agents-metric strong {
+          display: block;
+          color: #fff;
+          font-family: 'Good Times Rg', sans-serif;
+          font-size: 18px;
+          letter-spacing: 0.08em;
+        }
+        .agents-metric span {
+          display: block;
+          color: rgba(226,232,240,0.58);
+          font-size: 10px;
+          text-transform: uppercase;
+          letter-spacing: 0.12em;
+          margin-top: 5px;
+        }
+        .agents-stage {
+          position: relative;
+          min-height: clamp(460px, 68vh, 760px);
+          display: flex;
+          align-items: flex-end;
+          justify-content: center;
+        }
+        .agents-stage::before {
+          content: '';
+          position: absolute;
+          left: 12%;
+          right: 12%;
+          bottom: 3%;
+          height: 22%;
+          background: radial-gradient(ellipse, var(--agent-soft) 0%, transparent 70%);
+          filter: blur(18px);
+        }
+        .agents-portrait {
+          position: relative;
+          z-index: 2;
+          max-height: clamp(410px, 72vh, 790px);
+          max-width: min(96%, 560px);
+          object-fit: contain;
+          object-position: bottom center;
+          filter: drop-shadow(0 0 34px var(--agent-soft)) drop-shadow(22px 24px 36px rgba(0,0,0,0.64));
+          animation: agent-portrait-in 0.48s ease both;
+        }
+        .agents-name-ghost {
+          position: absolute;
+          left: 50%;
+          bottom: 14%;
+          transform: translateX(-50%);
+          z-index: 1;
+          font-family: 'Ethnocentric', sans-serif;
+          font-size: clamp(58px, 9vw, 148px);
+          letter-spacing: 0.08em;
+          color: transparent;
+          -webkit-text-stroke: 1px rgba(255,255,255,0.14);
+          opacity: 0.7;
+          white-space: nowrap;
+          pointer-events: none;
+        }
+        .agents-panel {
+          align-self: center;
+          display: flex;
+          flex-direction: column;
+          gap: 18px;
+          animation: agent-panel-in 0.5s 0.05s ease both;
+        }
+        .agents-card {
+          border: 1px solid rgba(255,255,255,0.13);
+          background: linear-gradient(145deg, rgba(9,15,24,0.86), rgba(7,11,16,0.68));
+          backdrop-filter: blur(16px);
+          padding: 20px;
+          clip-path: polygon(16px 0, 100% 0, 100% calc(100% - 16px), calc(100% - 16px) 100%, 0 100%, 0 16px);
+          box-shadow: 0 22px 54px rgba(0,0,0,0.28);
+        }
+        .agents-card-title {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          gap: 12px;
+          margin-bottom: 14px;
+          font-family: 'Good Times Rg', 'Noto Sans Thai', sans-serif;
+          color: #fff;
+          font-size: 12px;
+          letter-spacing: 0.1em;
+          text-transform: uppercase;
+        }
+        .agents-card-title span {
+          color: var(--agent-accent);
+          font-family: 'Noto Sans Thai', sans-serif;
+          font-size: 11px;
+          letter-spacing: 0.08em;
+        }
+        .agent-stat + .agent-stat {
+          margin-top: 14px;
+        }
+        .agent-stat-head {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          color: rgba(226,232,240,0.72);
+          font-size: 12px;
+          margin-bottom: 7px;
+        }
+        .agent-stat-head strong {
+          color: #fff;
+          font-family: 'Good Times Rg', sans-serif;
+          font-size: 12px;
+        }
+        .agent-stat-track {
+          height: 7px;
+          background: rgba(255,255,255,0.1);
+          overflow: hidden;
+          clip-path: polygon(4px 0, 100% 0, calc(100% - 4px) 100%, 0 100%);
+        }
+        .agent-stat-track span {
+          display: block;
+          height: 100%;
+          box-shadow: 0 0 16px currentColor;
+        }
+        .agents-skills {
+          display: grid;
+          gap: 12px;
+        }
+        .agents-skill {
+          display: grid;
+          grid-template-columns: 48px 1fr;
+          gap: 12px;
+          align-items: center;
+          padding: 10px;
+          background: rgba(255,255,255,0.055);
+          border: 1px solid rgba(255,255,255,0.08);
+          transition: transform 0.18s ease, border-color 0.18s ease, background 0.18s ease;
+        }
+        .agents-skill:hover {
+          transform: translateX(-5px);
+          border-color: color-mix(in srgb, var(--agent-accent), transparent 35%);
+          background: rgba(255,255,255,0.085);
+        }
+        .agent-skill-icon {
+          width: 48px;
+          height: 48px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          border: 1px solid;
+          background: rgba(0,0,0,0.28);
+          clip-path: polygon(10px 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%, 0 10px);
+        }
+        .agents-skill strong {
+          display: block;
+          color: #fff;
+          font-size: 14px;
+          letter-spacing: 0.02em;
+        }
+        .agents-skill p {
+          margin: 3px 0 0;
+          color: rgba(226,232,240,0.62);
+          font-size: 12px;
+          line-height: 1.55;
+        }
+        .agents-roster {
+          display: grid;
+          grid-template-columns: repeat(4, minmax(0, 1fr));
+          gap: 8px;
+        }
+        .agents-roster-btn {
+          position: relative;
+          border: 1px solid rgba(255,255,255,0.12);
+          background: rgba(0,0,0,0.35);
+          min-height: 86px;
+          cursor: pointer;
+          overflow: hidden;
+          padding: 0;
+          transition: transform 0.18s ease, border-color 0.18s ease;
+          clip-path: polygon(10px 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%, 0 10px);
+        }
+        .agents-roster-btn:hover {
+          transform: translateY(-3px);
+          border-color: var(--agent-accent);
+        }
+        .agents-roster-btn.is-active {
+          border-color: var(--agent-accent);
+          box-shadow: 0 0 20px var(--agent-soft);
+        }
+        .agents-roster-btn img {
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+          opacity: 0.72;
+          transition: transform 0.25s ease, opacity 0.25s ease;
+        }
+        .agents-roster-btn.is-active img,
+        .agents-roster-btn:hover img {
+          opacity: 1;
+          transform: scale(1.08);
+        }
+        .agents-roster-btn span {
+          position: absolute;
+          left: 7px;
+          right: 7px;
+          bottom: 6px;
+          color: #fff;
+          font-family: 'Good Times Rg', sans-serif;
+          font-size: 8px;
+          letter-spacing: 0.04em;
+          text-shadow: 0 2px 8px rgba(0,0,0,0.8);
+        }
+        .agents-controls {
+          display: flex;
+          gap: 10px;
+          justify-content: flex-end;
+        }
+        .agents-control {
+          width: 46px;
+          height: 42px;
+          border: 1px solid rgba(255,255,255,0.14);
+          background: rgba(255,255,255,0.07);
+          color: #fff;
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          cursor: pointer;
+          transition: background 0.18s ease, color 0.18s ease, transform 0.18s ease;
+          clip-path: polygon(10px 0, 100% 0, calc(100% - 10px) 100%, 0 100%);
+        }
+        .agents-control:hover {
+          color: #071016;
+          background: var(--agent-accent);
+          transform: translateY(-2px);
+        }
+        @keyframes agent-bg-in {
+          from { opacity: 0; transform: scale(1.08); }
+          to { opacity: 1; transform: scale(1.04); }
+        }
+        @keyframes agent-panel-in {
+          from { opacity: 0; transform: translateY(18px); }
+          to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes agent-portrait-in {
+          from { opacity: 0; transform: translateY(28px) scale(0.97); }
+          to { opacity: 1; transform: translateY(0) scale(1); }
+        }
+        @media (max-width: 1120px) {
+          .agents-shell {
+            grid-template-columns: minmax(0, 1fr) minmax(320px, 0.95fr);
+            align-items: center;
+          }
+          .agents-stage {
+            grid-column: 2;
+            grid-row: 1 / span 2;
+          }
+          .agents-panel {
+            grid-column: 1 / -1;
+            display: grid;
+            grid-template-columns: minmax(0, 1fr) minmax(280px, 0.85fr);
+          }
+        }
+        @media (max-width: 760px) {
+          .agents-shell {
+            display: flex;
+            flex-direction: column;
+            align-items: stretch;
+            padding-top: 88px;
+          }
+          .agents-copy {
+            order: 1;
+          }
+          .agents-stage {
+            order: 2;
+            min-height: 390px;
+            margin: -10px -18px 0;
+          }
+          .agents-panel {
+            order: 3;
+            display: flex;
+          }
+          .agents-title {
+            font-size: clamp(42px, 15vw, 72px);
+          }
+          .agents-metrics {
+            grid-template-columns: 1fr;
+          }
+          .agents-portrait {
+            max-height: 440px;
+            max-width: 86%;
+          }
+          .agents-name-ghost {
+            font-size: clamp(42px, 16vw, 82px);
+            bottom: 22%;
+          }
+          .agents-roster {
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+          }
         }
       `}</style>
 
-      {/* ========== BACKGROUND LAYERS ========== */}
-
-      {/* BG Image - with key to force remount on change, fixing disappear bug */}
-      <div key={`bg-${activeId}`} style={{
-        position: 'absolute', inset: 0, zIndex: 0,
-        backgroundImage: `url(${currentChar.bgImg})`,
-        backgroundSize: 'cover', backgroundPosition: 'center',
-        animation: 'bgFadeIn 0.7s ease forwards',
-      }} />
-
-      {/* Dark overlay gradient */}
-      <div style={{
-        position: 'absolute', inset: 0, zIndex: 1,
-        background: 'linear-gradient(135deg, rgba(0,0,0,0.75) 0%, rgba(0,0,0,0.3) 50%, rgba(0,0,0,0.6) 100%)',
-        transition: 'background 0.7s ease',
-      }} />
-
-      {/* Accent color vignette */}
-      <div style={{
-        position: 'absolute', inset: 0, zIndex: 1,
-        background: `radial-gradient(ellipse at 60% 80%, ${currentChar.glowColor} 0%, transparent 60%)`,
-        transition: 'background 0.7s ease',
-      }} />
-
-      {/* Scanline + Noise */}
-      <ScanlineOverlay />
-      <NoiseOverlay />
-      <div className="scan-overlay" />
-
-      {/* Particles */}
-      <ParticleField color={currentChar.accentColor} key={`particles-${activeId}`} />
-
-      {/* Corner brackets */}
-      {['top-left', 'top-right', 'bottom-left', 'bottom-right'].map(pos => (
-        <CornerBracket key={pos} position={pos} color={currentChar.accentColor} />
-      ))}
-
-      {/* Horizontal accent line */}
-      <div style={{
-        position: 'absolute', top: '18%', left: 0, right: 0, height: 1, zIndex: 3,
-        background: `linear-gradient(90deg, transparent, ${currentChar.accentColor}88, transparent)`,
-        transition: 'background 0.5s ease',
-      }} />
-
-      {/* ========== HUD HEADER ========== */}
-      <div style={{
-        position: 'absolute', top: 16, left: '50%', transform: 'translateX(-50%)',
-        zIndex: 20, fontFamily: "'Share Tech Mono', monospace",
-        color: currentChar.accentColor, fontSize: 11, letterSpacing: '0.3em',
-        opacity: 0.8, transition: 'color 0.5s ease',
-        display: 'flex', alignItems: 'center', gap: 12,
-      }}>
-        <span style={{ animation: 'hbarPulse 2s ease infinite', display: 'inline-block', height: 1, background: 'currentColor', width: 40 }} />
-        AGENT SELECT // CLASSIFIED
-        <span style={{ animation: 'hbarPulse 2s ease infinite 1s', display: 'inline-block', height: 1, background: 'currentColor', width: 40 }} />
-      </div>
-
-      {/* ========== MAIN LAYOUT ========== */}
-      <div style={{
-        position: 'relative', zIndex: 10, width: '100%', height: '100%',
-        maxWidth: 1600, margin: '0 auto',
-        display: 'grid', gridTemplateColumns: '1fr',
-        padding: '80px 64px 32px',
-        boxSizing: 'border-box',
-      }}>
-
-        {/* ===== LEFT PANEL: AGENT TAG + SKILLS ===== */}
-        <div key={`left-${activeId}`} style={{
-          position: 'absolute', left: 48, top: '50%', transform: 'translateY(-40%)',
-          zIndex: 30, maxWidth: 340,
-          animation: 'slideInLeft 0.4s ease forwards',
-        }}>
-          {/* Role tag */}
-          <div style={{
-            display: 'inline-flex', alignItems: 'center', gap: 8,
-            marginBottom: 20,
-            fontFamily: "'Share Tech Mono', monospace",
-            fontSize: 11, letterSpacing: '0.4em',
-            color: currentChar.accentColor,
-            animation: 'tagBlink 4s ease infinite',
-          }}>
-            <span style={{
-              width: 8, height: 8, borderRadius: '50%', background: currentChar.accentColor,
-              boxShadow: `0 0 10px ${currentChar.accentColor}`,
-              display: 'inline-block',
-            }} />
-            {currentChar.tag} // ACTIVE
+      <div className="agents-noise" />
+      <div className="agents-shell">
+        <div className="agents-copy" key={`copy-${active.id}`}>
+          <div className="agents-kicker">ALASKAN AGENT ROSTER</div>
+          <h1 className="agents-title">{active.name}</h1>
+          <div className="agents-role">
+            <FiActivity size={14} />
+            {active.role}
           </div>
+          <p className="agents-motto">{active.motto}</p>
+          <p className="agents-bio">{active.bio}</p>
 
-          {/* Section title */}
-          <div style={{
-            borderLeft: `3px solid ${currentChar.accentColor}`,
-            paddingLeft: 16, marginBottom: 28,
-            transition: 'border-color 0.5s ease',
-          }}>
-            <p style={{
-              fontFamily: "'Share Tech Mono', monospace",
-              fontSize: 10, color: 'rgba(255,255,255,0.5)', letterSpacing: '0.25em',
-              marginBottom: 4,
-            }}>SPECIAL ABILITIES</p>
-            <h3 style={{
-              fontFamily: "'Barlow Condensed', sans-serif",
-              fontSize: 22, fontWeight: 700, color: '#fff',
-              letterSpacing: '0.05em', textTransform: 'uppercase',
-            }}>{currentChar.subTitle}</h3>
-          </div>
-
-          {/* Skills */}
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
-            {currentChar.skills.map((skill, i) => (
-              <div
-                key={skill.id}
-                className="skill-card"
-                onMouseEnter={() => setHoveredSkill(skill.id)}
-                onMouseLeave={() => setHoveredSkill(null)}
-                style={{
-                  display: 'flex', alignItems: 'center', gap: 14,
-                  cursor: 'pointer',
-                  animationDelay: `${i * 0.1}s`,
-                }}
-              >
-                {/* Icon box */}
-                <div style={{
-                  width: 60, height: 60, flexShrink: 0,
-                  background: hoveredSkill === skill.id
-                    ? currentChar.accentColor
-                    : 'rgba(10,15,20,0.85)',
-                  border: `2px solid ${hoveredSkill === skill.id ? currentChar.accentColor : 'rgba(255,255,255,0.15)'}`,
-                  display: 'flex', alignItems: 'center', justifyContent: 'center',
-                  fontSize: 26,
-                  boxShadow: hoveredSkill === skill.id ? `0 0 24px ${currentChar.glowColor}, inset 0 0 20px rgba(255,255,255,0.1)` : 'none',
-                  transition: 'all 0.25s ease',
-                  clipPath: 'polygon(0 0, calc(100% - 10px) 0, 100% 10px, 100% 100%, 10px 100%, 0 calc(100% - 10px))',
-                }}>
-
-               <img 
-    src={skill.icon} 
-    alt={skill.name}
-    style={{ width: '100%', height: '70%', objectFit: 'contain' 
-   
-  
-      
-    }}
-
-
-
-  />
-
-
-                </div>
-
-                {/* Text */}
-                <div>
-                  <div style={{
-                    fontFamily: "'Barlow Condensed', sans-serif",
-                    fontSize: 18, fontWeight: 700, color: hoveredSkill === skill.id ? currentChar.accentColor : '#fff',
-                    letterSpacing: '0.08em', textTransform: 'uppercase',
-                    transition: 'color 0.2s ease',
-                  }}>{skill.name}</div>
-                  <div style={{
-                    fontFamily: "'Share Tech Mono', monospace",
-                    fontSize: 10, color: 'rgba(255,255,255,2000.6)',
-                    marginTop: 3, letterSpacing: '0.05em',
-                    maxHeight: hoveredSkill === skill.id ? 40 : 0,
-                    overflow: 'hidden',
-                    transition: 'max-height 0.3s ease',
-                  }}>{skill.desc}</div>
-                </div>
+          <div className="agents-metrics">
+            {METRICS.map(metric => (
+              <div className="agents-metric" key={metric.label}>
+                <strong>{metric.value}</strong>
+                <span>{metric.label}</span>
               </div>
             ))}
           </div>
-
-          {/* CTA Button */}
-          <button style={{
-            marginTop: 36,
-            background: 'transparent',
-            border: `2px solid ${currentChar.accentColor}`,
-            color: currentChar.accentColor,
-            fontFamily: "'Barlow Condensed', sans-serif",
-            fontWeight: 700, fontSize: 13,
-            letterSpacing: '0.25em', textTransform: 'uppercase',
-            padding: '12px 28px',
-            cursor: 'pointer',
-            clipPath: 'polygon(12px 0, 100% 0, calc(100% - 12px) 100%, 0 100%)',
-            display: 'flex', alignItems: 'center', gap: 10,
-            transition: 'all 0.25s ease',
-            position: 'relative', overflow: 'hidden',
-          }}
-            onMouseEnter={e => {
-              e.currentTarget.style.background = currentChar.accentColor;
-              e.currentTarget.style.color = '#000';
-            }}
-            onMouseLeave={e => {
-              e.currentTarget.style.background = 'transparent';
-              e.currentTarget.style.color = currentChar.accentColor;
-            }}
-          >
-            <span>▶</span>
-            <span>ดูสกิลแบบวิดีโอ</span>
-          </button>
         </div>
 
-        {/* ===== BIG NAME TEXT (behind character) ===== */}
-        <div style={{
-          position: 'absolute', inset: 0,
-          display: 'flex', alignItems: 'flex-end', justifyContent: 'flex-start',
-          zIndex: 10, pointerEvents: 'none', userSelect: 'none', 
-          paddingLeft: '16%',             paddingBottom: '26%',           // เพิ่ม
-
-          overflow: 'hidden',
-        }}>
-          <GlitchText text={currentChar.name} color={currentChar.accentColor} />
-        </div>
-
-        {/* ===== CHARACTER IMAGE (in front of name) ===== */}
-        <div style={{
-          position: 'absolute', inset: 0,
-          display: 'flex', alignItems: 'flex-end', justifyContent: 'center',
-          zIndex: 20, pointerEvents: 'none',
-          paddingBottom: 0,
-        }}>
-          {/* Glow base under char */}
-          <div style={{
-            position: 'absolute', bottom: '5%', left: '50%', transform: 'translateX(-50%)',
-            width: '30%', height: 80,
-            background: `radial-gradient(ellipse, ${currentChar.glowColor} 0%, transparent 70%)`,
-            filter: 'blur(20px)',
-            transition: 'background 0.5s ease',
-            animation: 'pulseGlow 2.5s ease infinite',
-          }} />
-
-          {/* Transition: old image fades out */}
-          {transitioning && prevId && (
-            <img
-              src={CHARACTERS_DATA[prevId].mainImg}
-              alt=""
-              style={{
-                position: 'absolute', bottom: 0,
-                height: '90%', objectFit: 'contain', objectPosition: 'bottom',
-                opacity: 0, transition: 'opacity 0.3s ease',
-                filter: 'blur(4px)',
-              }}
-            />
-          )}
-
-          {/* Current character */}
+        <div className="agents-stage" key={`stage-${active.id}`}>
+          <div className="agents-name-ghost">{active.name}</div>
           <img
-            key={`char-${activeId}`}
-            src={currentChar.mainImg}
-            alt={currentChar.name}
-            style={{
-              height: '90%', objectFit: 'contain', objectPosition: 'bottom',
-              filter: `drop-shadow(0 0 40px ${currentChar.glowColor}) drop-shadow(20px 20px 40px rgba(0,0,0,0.8))`,
-              animation: 'charAppear 0.5s cubic-bezier(0.4,0,0.2,1) forwards',
-              transition: 'filter 0.5s ease',
+            className="agents-portrait"
+            src={active.portrait}
+            alt={active.name}
+            onError={event => {
+              event.currentTarget.src = '/images/AGENT/small_logo.jpg';
             }}
-            onError={e => { e.target.style.opacity = 0; }}
           />
         </div>
 
-     
+        <aside className="agents-panel">
+          <div className="agents-card">
+            <div className="agents-card-title">
+              Performance
+              <span>{active.status}</span>
+            </div>
+            <AgentStat label="Speed" value={active.stats.speed} color={active.accent} />
+            <AgentStat label="Control" value={active.stats.control} color={active.accent} />
+            <AgentStat label="Support" value={active.stats.support} color={active.accent} />
+          </div>
 
-        {/* ===== RIGHT PANEL: CHARACTER SELECTOR ===== */}
-        <div style={{
-          position: 'absolute', right: 24, top: '50%', transform: 'translateY(-50%)',
-          zIndex: 40,
-          display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 8,
-          background: 'rgba(0,0,0,0.6)', padding: '12px 10px',
-          backdropFilter: 'blur(16px)',
-          border: '1px solid rgba(255,255,255,0.08)',
-          clipPath: 'polygon(0 0, calc(100% - 8px) 0, 100% 8px, 100% 100%, 8px 100%, 0 calc(100% - 8px))',
-        }}>
-          {/* Scroll up button */}
-          <button
-            onClick={scrollUp}
-             disabled={CHARACTER_IDS.indexOf(activeId) === 0}
-            style={{
-              background: 'none', border: 'none',
-             color: CHARACTER_IDS.indexOf(activeId) === 0 ? 'rgba(255,255,255,0.2)' : currentChar.accentColor,
-              fontSize: 16, cursor: CHARACTER_IDS.indexOf(activeId) === 0 ? 'default' : 'pointer',
-              fontSize: 16, cursor: scrollOffset === 0 ? 'default' : 'pointer',
-              padding: '4px 8px', transition: 'color 0.2s ease',
-              lineHeight: 1,
-            }}
-          >▲</button>
+          <div className="agents-card">
+            <div className="agents-card-title">
+              Skill Loadout
+              <span>02 Slots</span>
+            </div>
+            <div className="agents-skills">
+              {active.skills.map(skill => (
+                <div className="agents-skill" key={skill.name}>
+                  <SkillIcon icon={skill.icon} color={active.accent} />
+                  <div>
+                    <strong>{skill.name}</strong>
+                    <p>{skill.desc}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
 
-          {/* Avatar list — only show VISIBLE_COUNT at a time */}
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 10, overflow: 'hidden' }}>
-            {visibleIds.map((id, idx) => {
-              const isActive = activeId === id;
-              return (
+          <div className="agents-card">
+            <div className="agents-card-title">
+              Select Agent
+              <span>{activeIndex + 1}/{AGENTS.length}</span>
+            </div>
+            <div className="agents-roster">
+              {AGENTS.map((agent, index) => (
                 <button
-                  key={id}
-                  onClick={() => changeChar(id)}
-                  className="char-btn"
-                  style={{
-                    width: 72, height: 72,
-                    padding: 0, cursor: 'pointer',
-                    border: `2px solid ${isActive ? currentChar.accentColor : 'rgba(255,255,255,0.15)'}`,
-                    background: 'rgba(10,15,20,0.8)',
-                    position: 'relative', overflow: 'hidden',
-                    boxShadow: isActive ? `0 0 20px ${currentChar.glowColor}, 0 0 40px ${currentChar.glowColor}` : 'none',
-                    transform: isActive ? 'scale(1.1)' : 'scale(1)',
-                    transition: 'all 0.3s cubic-bezier(0.4,0,0.2,1)',
-                    animation: `avatarSlide 0.3s ${idx * 0.06}s ease both`,
-                    clipPath: 'polygon(0 0, calc(100% - 8px) 0, 100% 8px, 100% 100%, 8px 100%, 0 calc(100% - 8px))',
-                    flexShrink: 0,
-                  }}
+                  className={`agents-roster-btn${index === activeIndex ? ' is-active' : ''}`}
+                  key={agent.id}
+                  onClick={() => setActiveIndex(index)}
+                  type="button"
+                  aria-label={`เลือก ${agent.name}`}
                 >
                   <img
-                    src={`/images/avatar-${id}.jpg`}
-                    alt={CHARACTERS_DATA[id].name}
-                    style={{
-                      width: '100%', height: '100%', objectFit: 'cover',
-                      filter: isActive ? 'brightness(1)' : 'brightness(0.5) grayscale(0.4)',
-                      transition: 'filter 0.3s ease',
+                    src={agent.avatar}
+                    alt=""
+                    onError={event => {
+                      event.currentTarget.src = '/images/AGENT/small_logo.jpg';
                     }}
-                    onError={e => { e.target.style.display = 'none'; }}
                   />
-                  {/* Active indicator */}
-                  {isActive && (
-                    <div style={{
-                      position: 'absolute', inset: 0,
-                      background: `linear-gradient(135deg, ${currentChar.accentColor}22 0%, transparent 60%)`,
-                    }} />
-                  )}
-                  {/* Name label */}
-                  <div style={{
-                    position: 'absolute', bottom: 0, left: 0, right: 0,
-                    background: 'linear-gradient(transparent, rgba(0,0,0,0.85))',
-                    padding: '10px 4px 4px',
-                    fontFamily: "'Barlow Condensed', sans-serif",
-                    fontSize: 9, fontWeight: 700, letterSpacing: '0.12em',
-                    color: isActive ? currentChar.accentColor : 'rgba(255,255,255,0.6)',
-                    textAlign: 'center', textTransform: 'uppercase',
-                    transition: 'color 0.3s ease',
-                  }}>
-                    {CHARACTERS_DATA[id].name}
-                  </div>
+                  <span>{agent.name}</span>
                 </button>
-              );
-            })}
+              ))}
+            </div>
+            <div className="agents-controls" style={{ marginTop: 16 }}>
+              <button className="agents-control" onClick={goPrev} type="button" aria-label="ก่อนหน้า">
+                <FiChevronLeft size={22} />
+              </button>
+              <button className="agents-control" onClick={goNext} type="button" aria-label="ถัดไป">
+                <FiChevronRight size={22} />
+              </button>
+            </div>
           </div>
-
-          {/* Scroll down button */}
-          <button
-            onClick={scrollDown}
-             disabled={CHARACTER_IDS.indexOf(activeId) === CHARACTER_IDS.length - 1}
-            style={{
-              background: 'none', border: 'none',
-              color: CHARACTER_IDS.indexOf(activeId) === CHARACTER_IDS.length - 1 ? 'rgba(255,255,255,0.2)' : currentChar.accentColor,
-              fontSize: 16, cursor: scrollOffset >= MAX_OFFSET ? 'default' : 'pointer',
-              padding: '4px 8px', transition: 'color 0.2s ease',
-              lineHeight: 1,
-            }}
-          >▼</button>
-
-          {/* Scroll position indicator */}
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 3, marginTop: 4 }}>
-            {CHARACTER_IDS.map(id => (
-              <div key={id} style={{
-                width: 4, height: 4, borderRadius: '50%',
-                background: activeId === id ? currentChar.accentColor : 'rgba(255,255,255,0.2)',
-                boxShadow: activeId === id ? `0 0 6px ${currentChar.accentColor}` : 'none',
-                transition: 'all 0.3s ease',
-              }} />
-            ))}
-          </div>
-        </div>
-
+        </aside>
       </div>
-    </>
+    </section>
   );
 }

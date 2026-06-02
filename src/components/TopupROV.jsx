@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 
 const BASE = '/images/ALASKAN_WEB_ASSET/PACKAGE ICON/ROV';
 const ROV_PACKAGES = [
