@@ -114,7 +114,7 @@ export const GAMES = {
   },
 
   // ── Mobile Legends แยกตาม server ──────────────────────────────────────────
-  'Mobile Legends':    { ...MLBB_SHARED, id: 'Mobile Legends',    subtitle: 'Mobile Legends — Server ไทย',          tag: null,      tags: ['ขายดี'],  packages: MLBB_PKG('th') },
+  'Mobile Legends':    { ...MLBB_SHARED, id: 'Mobile Legends',    subtitle: 'Mobile Legends — Server ไทย',          tag: null,      country: 'thailand', tags: ['ขายดี'],  packages: MLBB_PKG('th') },
   'Mobile Legends ID': { ...MLBB_SHARED, id: 'Mobile Legends ID', subtitle: 'Mobile Legends — Server อินโดนีเซีย', tag: 'ขายดี',   country: 'indonesia',               tags: [], packages: MLBB_PKG('id') },
   'Mobile Legends MY': { ...MLBB_SHARED, id: 'Mobile Legends MY', subtitle: 'Mobile Legends — Server มาเลเซีย',    tag: null,      country: 'malaysia',                tags: [], packages: MLBB_PKG('my') },
   'Mobile Legends PH': { ...MLBB_SHARED, id: 'Mobile Legends PH', subtitle: 'Mobile Legends — Server ฟิลิปปินส์', tag: null,      country: 'philippines',             tags: [], packages: MLBB_PKG('ph') },

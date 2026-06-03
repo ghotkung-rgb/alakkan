@@ -1,16 +1,6 @@
 import { useState } from 'react';
 import { GAMES } from '../config/games';
-
-const FLAG_BASE = '/images/ALASKAN_WEB_ASSET/FLAG';
-const COUNTRY_NAMES = {
-  'indonesia':                 'อินโดนีเซีย',
-  'malaysia':                  'มาเลเซีย',
-  'philippines':               'ฟิลิปปินส์',
-  'russia':                    'รัสเซีย',
-  'singapore':                 'สิงคโปร์',
-  'turkey':                    'ตุรกี',
-  'united-states-of-america':  'สหรัฐฯ',
-};
+import { FLAG_BASE, COUNTRY_NAMES_TH as COUNTRY_NAMES } from '../config/constants';
 
 const TABS = ['ทั้งหมด', 'โปรโมชั่น', 'ขายดี'];
 

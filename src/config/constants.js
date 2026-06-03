@@ -11,6 +11,7 @@ export const COUNTRY_NAMES = {
   'philippines':              'Philippines',
   'russia':                   'Russia',
   'singapore':                'Singapore',
+  'thailand':                 'Thailand',
   'turkey':                   'Turkey',
   'united-states-of-america': 'USA',
 };
@@ -22,6 +23,7 @@ export const COUNTRY_NAMES_TH = {
   'philippines':              'ฟิลิปปินส์',
   'russia':                   'รัสเซีย',
   'singapore':                'สิงคโปร์',
+  'thailand':                 'ไทย',
   'turkey':                   'ตุรกี',
   'united-states-of-america': 'อเมริกา',
 };
