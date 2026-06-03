@@ -239,7 +239,7 @@
   /* ตำแหน่ง text — ใช้ selector ที่ชนะ specificity ของ img rule */
   .hs-layer-overlay .hs-layer-text {
     z-index: 4;
-    top: 5%; height: 95%;           /* เลื่อนลงนิด */
+    top: 15%; height: 78%;           /* เลื่อนลงนิด */
     object-position: left center;
     animation: layerTextIn 0.9s 0.15s cubic-bezier(0.22,1,0.36,1) both;
     filter: drop-shadow(0 0 18px rgba(0, 209, 255, 0.65)) drop-shadow(0 0 48px rgba(0, 209, 255, 0.25));

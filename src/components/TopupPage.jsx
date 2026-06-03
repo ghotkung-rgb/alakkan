@@ -1,19 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { createOrder } from '../services/topupService';
-import { FiTool, FiAlertTriangle, FiMapPin, FiCreditCard, FiCheck, FiBook } from 'react-icons/fi';
+import { FiTool, FiAlertTriangle, FiMapPin, FiCheck, FiBook, FiChevronDown, FiChevronUp, FiX } from 'react-icons/fi';
+import { FLAG_BASE, COUNTRY_NAMES, PAYMENT_METHODS } from '../config/constants';
 
 // step: 1 = เลือกแพ็กเกจ, 2 = กรอก UID, 3 = ยืนยันออเดอร์, 'success' = สำเร็จ
-
-const FLAG_BASE = '/images/ALASKAN_WEB_ASSET/FLAG';
-const COUNTRY_NAMES = {
-  'indonesia':                  'Indonesia',
-  'malaysia':                   'Malaysia',
-  'philippines':                'Philippines',
-  'russia':                     'Russia',
-  'singapore':                  'Singapore',
-  'turkey':                     'Turkey',
-  'united-states-of-america':   'USA',
-};
 function buildDefaultInfo(game) {
   return {
     title: `บริการเติม${game.currency} ${game.name}`,
@@ -49,11 +39,69 @@ function buildDefaultInfo(game) {
 export default function TopupPage({ game, onBack, step, onStep }) {
   const [selectedPkgs, setSelectedPkgs] = useState([]);
   const [accountValues, setAccountValues] = useState({});
+  const [fieldErrors, setFieldErrors]     = useState({});
   const [loading, setLoading]         = useState(false);
   const [orderId, setOrderId]         = useState(null);
   const [done, setDone]               = useState(false);
+  const [showHowto, setShowHowto]             = useState(false);
+  const [selectedPayment, setSelectedPayment] = useState(null);
+  const [showAllPayment, setShowAllPayment]   = useState(false);
+  const [infoOpen, setInfoOpen]               = useState(false);
+  const [imgZoom, setImgZoom]   = useState(1);
+  const [imgPan, setImgPan]     = useState({ x: 0, y: 0 });
+  const dragRef = useRef(null);
+
+  const closeHowto = useCallback(() => {
+    setShowHowto(false);
+    setImgZoom(1);
+    setImgPan({ x: 0, y: 0 });
+  }, []);
+
+  const onImgWheel = useCallback((e) => {
+    e.preventDefault();
+    setImgZoom(z => {
+      const next = Math.min(4, Math.max(1, z - e.deltaY * 0.003));
+      if (next === 1) setImgPan({ x: 0, y: 0 });
+      return next;
+    });
+  }, []);
+
+  const onImgMouseDown = useCallback((e) => {
+    if (imgZoom <= 1) return;
+    e.preventDefault();
+    dragRef.current = { startX: e.clientX - imgPan.x, startY: e.clientY - imgPan.y };
+  }, [imgZoom, imgPan]);
+
+  const onImgMouseMove = useCallback((e) => {
+    if (!dragRef.current) return;
+    setImgPan({ x: e.clientX - dragRef.current.startX, y: e.clientY - dragRef.current.startY });
+  }, []);
+
+  const onImgMouseUp = useCallback(() => { dragRef.current = null; }, []);
 
   useEffect(() => { window.scrollTo({ top: 0, behavior: 'instant' }); }, []);
+
+  useEffect(() => {
+    if (showHowto) {
+      const scrollY = window.scrollY;
+      document.body.style.position = 'fixed';
+      document.body.style.top = `-${scrollY}px`;
+      document.body.style.width = '100%';
+    } else {
+      const top = document.body.style.top;
+      document.body.style.position = '';
+      document.body.style.top = '';
+      document.body.style.width = '';
+      if (top) window.scrollTo(0, parseInt(top) * -1);
+    }
+    return () => {
+      const top = document.body.style.top;
+      document.body.style.position = '';
+      document.body.style.top = '';
+      document.body.style.width = '';
+      if (top) window.scrollTo(0, parseInt(top) * -1);
+    };
+  }, [showHowto]);
 
   const accountFields = game.accountFields || [
     {
@@ -68,7 +116,8 @@ export default function TopupPage({ game, onBack, step, onStep }) {
     ...field,
     value: accountValues[field.key] || '',
   }));
-  const accountComplete = accountEntries.every(field => !field.required || field.value.trim());
+  const accountComplete = accountEntries.every(field => !field.required || field.value.trim())
+    && accountEntries.every(field => !fieldErrors[field.key]);
   const primaryAccountValue = accountEntries.map(field => field.value.trim()).filter(Boolean).join(' / ');
   const accountSummary = accountEntries
     .filter(field => field.value.trim())
@@ -76,8 +125,25 @@ export default function TopupPage({ game, onBack, step, onStep }) {
     .join(' · ');
   const accountStepLabel = accountFields.length > 1 ? 'กรอกข้อมูลบัญชี' : 'กรอก UID';
 
+  const validateField = (field, value) => {
+    const trimmed = value.trim();
+    if (field.required && !trimmed) return 'กรุณากรอก ' + field.label;
+    if (field.inputMode === 'numeric' && trimmed && !/^\d+$/.test(trimmed))
+      return 'กรอกเฉพาะตัวเลขเท่านั้น ไม่มีตัวอักษรหรือช่องว่าง';
+    if (field.inputMode === 'numeric' && trimmed && trimmed.length < 5)
+      return 'UID ต้องมีอย่างน้อย 5 หลัก';
+    return null;
+  };
+
   const updateAccountValue = (key, value) => {
     setAccountValues(prev => ({ ...prev, [key]: value }));
+    if (fieldErrors[key]) setFieldErrors(prev => ({ ...prev, [key]: null }));
+  };
+
+  const blurAccountField = (field) => {
+    const trimmed = (accountValues[field.key] || '').trim();
+    setAccountValues(prev => ({ ...prev, [field.key]: trimmed }));
+    setFieldErrors(prev => ({ ...prev, [field.key]: validateField(field, trimmed) }));
   };
 
   const togglePkg = (pkg) => {
@@ -110,6 +176,7 @@ export default function TopupPage({ game, onBack, step, onStep }) {
         account: Object.fromEntries(accountEntries.map(field => [field.key, field.value.trim()])),
         packages: selectedPkgs.map(p => ({ id: p.id, amount: p.amount, price: p.price, label: p.label })),
         totalPrice,
+        paymentMethod: selectedPayment,
       });
       setOrderId(result.orderId);
       setDone(true);
@@ -172,46 +239,10 @@ export default function TopupPage({ game, onBack, step, onStep }) {
           padding: 44px 24px 100px;
         }
 
-        /* ── Stepper ── */
-        .tp-stepper {
-          display: flex; align-items: center;
-          margin-bottom: 28px;
-          gap: 0;
-        }
-        .tp-step-item {
-          display: flex; align-items: center; gap: 8px;
-          flex: 1;
-        }
-        .tp-step-circle {
-          width: 30px; height: 30px; border-radius: 50%;
-          display: flex; align-items: center; justify-content: center;
-          font-size: 13px; font-weight: 800;
-          flex-shrink: 0;
-          transition: all 0.25s;
-        }
-        .tp-step-circle.done   { background: #00d1ff; color: #fff; }
-        .tp-step-circle.active { background: #00d1ff; color: #fff; box-shadow: 0 0 0 4px rgba(0,209,255,0.2); }
-        .tp-step-circle.idle   { background: #e2e8f0; color: #94a3b8; }
-        .tp-step-label {
-          font-size: 12px; font-weight: 700;
-          white-space: nowrap;
-          transition: color 0.25s;
-        }
-        .tp-step-label.active { color: #00d1ff; }
-        .tp-step-label.done   { color: #0ea5e9; }
-        .tp-step-label.idle   { color: #94a3b8; }
-        .tp-step-line {
-          flex: 1; height: 2px;
-          margin: 0 8px;
-          transition: background 0.3s;
-        }
-        .tp-step-line.done   { background: #00d1ff; }
-        .tp-step-line.idle   { background: #e2e8f0; }
-
         /* ── Package grid ── */
         .tp-section-title {
           font-family: 'PSL Kampanath Pro', sans-serif;
-          font-size: 16px; font-weight: 900;
+          font-size: 32px; font-weight: 900;
           color: #1e293b; letter-spacing: 0.06em;
           margin-bottom: 16px;
         }
@@ -227,6 +258,8 @@ export default function TopupPage({ game, onBack, step, onStep }) {
         @media (max-width: 480px) {
           .tp-pkg-grid { grid-template-columns: repeat(2, 1fr); }
         }
+        /* TODO [PERF]: tp-glow-pulse + tp-shimmer รันพร้อมกันทุก card (อาจ 30+ card)
+                       ถ้า frame drop เกิดขึ้น ให้ลด animation เหลือเฉพาะ hover state */
         @keyframes tp-glow-pulse {
           0%, 100% { filter: drop-shadow(0 3px 10px rgba(0,0,0,0.3)) drop-shadow(0 0 6px rgba(0,209,255,0.15)); }
           50%       { filter: drop-shadow(0 3px 10px rgba(0,0,0,0.3)) drop-shadow(0 0 18px rgba(0,209,255,0.45)); }
@@ -235,6 +268,8 @@ export default function TopupPage({ game, onBack, step, onStep }) {
           0%   { transform: translateX(-120%) rotate(25deg); }
           100% { transform: translateX(400%) rotate(25deg); }
         }
+        /* TODO [PERF]: will-change: transform บน card ทุกใบ = compositor layer ทุกใบ
+                       ลบ will-change ออกถ้าไม่มีปัญหา scroll jank */
         .tp-pkg-card {
           background: linear-gradient(160deg, #1e293b 0%, #0f172a 100%);
           clip-path: polygon(14px 0%, 100% 0%, 100% calc(100% - 14px), calc(100% - 14px) 100%, 0% 100%, 0% 14px);
@@ -348,6 +383,9 @@ export default function TopupPage({ game, onBack, step, onStep }) {
         }
         .tp-uid-input::placeholder { color: #94a3b8; font-weight: 400; letter-spacing: 0; }
         .tp-uid-input:focus { border-color: #00d1ff; background: #fff; }
+        .tp-uid-input.error { border-color: #f87171; background: #fff5f5; }
+        .tp-uid-input.error:focus { border-color: #ef4444; }
+        .tp-field-error { font-size: 12px; color: #ef4444; margin-top: 5px; display: flex; align-items: center; gap: 4px; }
         .tp-uid-hint {
           font-size: 12px; color: #94a3b8; margin-top: 10px;
           display: flex; align-items: center; gap: 5px;
@@ -368,6 +406,79 @@ export default function TopupPage({ game, onBack, step, onStep }) {
         }
         @media (max-width: 560px) {
           .tp-account-grid { grid-template-columns: 1fr; }
+        }
+
+        /* ── Payment method grid ── */
+        .tp-pay-grid {
+          display: grid;
+          grid-template-columns: repeat(3, 1fr);
+          gap: 10px;
+        }
+        @media (max-width: 600px) {
+          .tp-pay-grid { grid-template-columns: repeat(2, 1fr); }
+        }
+        @media (max-width: 360px) {
+          .tp-pay-grid { grid-template-columns: 1fr; }
+        }
+        .tp-pay-btn {
+          display: flex; align-items: center; gap: 10px;
+          background: #fff;
+          border: 1.5px solid #e2e8f0;
+          border-radius: 10px; padding: 10px 12px;
+          cursor: pointer; font: inherit; text-align: left;
+          transition: border-color 0.18s, background 0.18s;
+          position: relative; width: 100%;
+        }
+        .tp-pay-btn.selected {
+          background: #f0fbff;
+          border-color: #00d1ff;
+        }
+        .tp-pay-btn:not(.selected):hover {
+          border-color: #bae6fd;
+          background: #f8fafc;
+        }
+        .tp-pay-btn:focus-visible {
+          outline: 2px solid #00d1ff;
+          outline-offset: 2px;
+        }
+        .tp-pay-btn:active {
+          transform: scale(0.97);
+          transition-duration: 0.08s;
+        }
+        .tp-pay-icon {
+          width: 44px; height: 44px; border-radius: 9px;
+          display: flex; align-items: center; justify-content: center;
+          flex-shrink: 0;
+        }
+        .tp-pay-icon span {
+          font-size: 10px; font-weight: 900;
+          letter-spacing: -0.03em; line-height: 1;
+          text-align: center;
+        }
+        .tp-pay-badge {
+          position: absolute; top: 5px; right: 6px;
+          background: #ef4444; color: #fff;
+          font-size: 9px; font-weight: 900;
+          padding: 2px 6px; border-radius: 20px;
+          letter-spacing: 0.04em;
+        }
+        .tp-pay-expand {
+          margin-top: 8px; width: 100%;
+          background: none; border: 1px dashed #d1d5db;
+          border-radius: 8px; padding: 9px 16px;
+          font-size: 12px; font-weight: 700; color: #64748b;
+          cursor: pointer; font: inherit;
+          transition: background 0.15s, border-color 0.15s, color 0.15s;
+        }
+        .tp-pay-expand:hover {
+          background: #f8fafc; border-color: #bae6fd; color: #0369a1;
+        }
+        .tp-pay-expand:focus-visible {
+          outline: 2px solid #00d1ff; outline-offset: 2px;
+        }
+        .tp-pay-section-label {
+          font-size: 13px; font-weight: 700; color: #1e293b;
+          margin-bottom: 12px;
         }
 
         /* ── Confirm summary card ── */
@@ -491,9 +602,73 @@ export default function TopupPage({ game, onBack, step, onStep }) {
           to   { opacity: 1; transform: translateY(0); }
         }
         .tp-success-wrap {
+          position: fixed; inset: 0; z-index: 200;
+          background: rgba(15,23,42,0.55);
+          display: flex; align-items: center; justify-content: center;
+          padding: 24px;
+          animation: tp-fade-up 0.25s ease both;
+        }
+        .tp-success-box {
           display: flex; flex-direction: column; align-items: center;
-          padding: 48px 24px 80px;
+          background: #f0f4f8; border-radius: 20px;
+          padding: 40px 28px 32px; width: 100%; max-width: 460px;
+          max-height: 90vh; overflow-y: auto;
           text-align: center;
+          box-shadow: 0 24px 64px rgba(0,0,0,0.22);
+        }
+        .tp-howto-overlay {
+          position: fixed; inset: 0; z-index: 210;
+          background: rgba(10,15,28,0.82);
+          display: flex; align-items: center; justify-content: center;
+          padding: 16px;
+          animation: tp-fade-up 0.2s ease both;
+        }
+        .tp-howto-box {
+          position: relative;
+          border-radius: 14px; overflow: hidden;
+          max-width: 560px; width: 100%;
+          max-height: 92vh;
+          box-shadow: 0 32px 80px rgba(0,0,0,0.55);
+          display: flex; flex-direction: column;
+        }
+        .tp-howto-fab {
+          position: absolute; top: 10px; right: 10px; z-index: 10;
+          display: flex; gap: 6px;
+        }
+        .tp-howto-close {
+          width: 34px; height: 34px; border-radius: 50%;
+          background: rgba(0,0,0,0.55); border: none;
+          color: #fff; cursor: pointer;
+          display: flex; align-items: center; justify-content: center;
+          transition: background 0.15s;
+          backdrop-filter: blur(4px);
+        }
+        .tp-howto-close:hover { background: rgba(0,0,0,0.8); }
+        .tp-howto-zoom-bar {
+          position: absolute; bottom: 12px; left: 50%; transform: translateX(-50%);
+          display: flex; align-items: center; gap: 8px;
+          background: rgba(0,0,0,0.55); backdrop-filter: blur(6px);
+          border-radius: 20px; padding: 5px 14px;
+          z-index: 10;
+        }
+        .tp-howto-zoom-btn {
+          width: 26px; height: 26px; border-radius: 50%;
+          background: rgba(255,255,255,0.12); border: none;
+          color: #fff; cursor: pointer; font-size: 16px; font-weight: 700;
+          display: flex; align-items: center; justify-content: center;
+          transition: background 0.15s;
+        }
+        .tp-howto-zoom-btn:hover { background: rgba(255,255,255,0.25); }
+        .tp-howto-zoom-label {
+          font-size: 11px; color: rgba(255,255,255,0.75);
+          min-width: 34px; text-align: center;
+        }
+        .tp-howto-imgwrap {
+          overflow: hidden; line-height: 0;
+        }
+        .tp-howto-img {
+          width: 100%; display: block;
+          object-fit: contain; max-height: 92vh;
         }
         .tp-success-icon {
           width: 88px; height: 88px; border-radius: 50%;
@@ -556,6 +731,25 @@ export default function TopupPage({ game, onBack, step, onStep }) {
           transition: opacity 0.2s;
         }
         .tp-history-btn:hover { opacity: 0.88; }
+
+        /* ── Reduced motion fallback ── */
+        @media (prefers-reduced-motion: reduce) {
+          .tp-pkg-card,
+          .tp-pkg-card::after { animation: none; transition: filter 0.1s; }
+          .tp-pkg-check { animation: none; }
+          .tp-pay-btn { transition: none; }
+          .tp-pay-btn:active { transform: none; }
+          .tp-next-btn,
+          .tp-uid-input,
+          .tp-home-btn,
+          .tp-history-btn { transition-duration: 0.01ms; }
+          .tp-howto-overlay { animation: none; }
+          .tp-success-icon { animation: none; opacity: 1; transform: none; }
+          .tp-success-title,
+          .tp-success-sub,
+          .tp-success-card,
+          .tp-success-actions { animation: none; opacity: 1; transform: none; }
+        }
       `}</style>
 
       {/* ── Coming Soon — เกมที่ยังไม่เปิด packages ── */}
@@ -661,29 +855,6 @@ export default function TopupPage({ game, onBack, step, onStep }) {
         {/* ── Body ── */}
         <div className="tp-body">
 
-          {/* Stepper (ซ่อนบน success) */}
-          {step !== 'success' && (
-            <div className="tp-stepper">
-              {[
-                { n: 1, label: 'เลือกแพ็กเกจ' },
-                { n: 2, label: accountStepLabel },
-                { n: 3, label: 'ยืนยันออเดอร์' },
-              ].map((s, i) => {
-                const state = step > s.n ? 'done' : step === s.n ? 'active' : 'idle';
-                return (
-                  <React.Fragment key={s.n}>
-                    <div className="tp-step-item">
-                      <div className={`tp-step-circle ${state}`}>
-                        {state === 'done' ? <FiCheck size={15} /> : s.n}
-                      </div>
-                      <span className={`tp-step-label ${state}`}>{s.label}</span>
-                    </div>
-                    {i < 2 && <div className={`tp-step-line ${step > s.n ? 'done' : 'idle'}`} />}
-                  </React.Fragment>
-                );
-              })}
-            </div>
-          )}
 
           {/* ═══════════════ STEP 1: เลือกแพ็กเกจ ═══════════════ */}
           {step === 1 && (
@@ -756,28 +927,47 @@ export default function TopupPage({ game, onBack, step, onStep }) {
                 })}
               </div>
 
-              {/* ── Info box ── */}
+              {/* ── Info box (collapsible) ── */}
               {(() => {
                 const info = game.info || buildDefaultInfo(game);
                 return (
-                  <div className="tp-info-box">
-                    <div className="tp-info-title">{info.title}</div>
-                    {info.taglines && info.taglines.map((t, i) => (
-                      <div key={i} className="tp-info-sub">{t}</div>
-                    ))}
-                    {info.sections && info.sections.map((sec, si) => (
-                      <div key={si} className="tp-info-section">
-                        <div className="tp-info-section-title">{sec.heading}</div>
-                        <ul className="tp-info-list">
-                          {sec.items.map((item, ii) => (
-                            <li key={ii}>
-                              <span className="tp-info-bullet">{sec.ordered ? `${ii + 1}.` : '—'}</span>
-                              <span>{item}</span>
-                            </li>
-                          ))}
-                        </ul>
+                  <div className="tp-info-box" style={{ padding: 0, overflow: 'hidden' }}>
+                    <button
+                      onClick={() => setInfoOpen(v => !v)}
+                      style={{
+                        width: '100%', background: 'none', border: 'none',
+                        cursor: 'pointer', padding: '22px 44px',
+                        display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+                        gap: 12, font: 'inherit',
+                      }}
+                    >
+                      <div className="tp-info-title" style={{ margin: 0, textAlign: 'left', fontSize: 'clamp(18px, 2.4vw, 26px)' }}>
+                        {info.title}
                       </div>
-                    ))}
+                      <span style={{ color: '#00d1ff', flexShrink: 0, display: 'flex', alignItems: 'center', transition: 'transform 0.25s', transform: infoOpen ? 'rotate(180deg)' : 'rotate(0deg)' }}>
+                        <FiChevronDown size={20} />
+                      </span>
+                    </button>
+                    {infoOpen && (
+                      <div style={{ padding: '0 44px 32px' }}>
+                        {info.taglines && info.taglines.map((t, i) => (
+                          <div key={i} className="tp-info-sub" style={{ marginLeft: 0, marginRight: 0 }}>{t}</div>
+                        ))}
+                        {info.sections && info.sections.map((sec, si) => (
+                          <div key={si} className="tp-info-section">
+                            <div className="tp-info-section-title">{sec.heading}</div>
+                            <ul className="tp-info-list">
+                              {sec.items.map((item, ii) => (
+                                <li key={ii}>
+                                  <span className="tp-info-bullet">{sec.ordered ? `${ii + 1}.` : '—'}</span>
+                                  <span>{item}</span>
+                                </li>
+                              ))}
+                            </ul>
+                          </div>
+                        ))}
+                      </div>
+                    )}
                   </div>
                 );
               })()}
@@ -826,14 +1016,21 @@ export default function TopupPage({ game, onBack, step, onStep }) {
                     <label key={field.key}>
                       <div className="tp-field-label">{field.label}</div>
                       <input
-                        className="tp-uid-input"
+                        className={`tp-uid-input${fieldErrors[field.key] ? ' error' : ''}`}
                         type={field.type || 'text'}
                         inputMode={field.inputMode || 'text'}
                         placeholder={field.placeholder}
                         value={field.value}
                         onChange={e => updateAccountValue(field.key, e.target.value)}
+                        onBlur={() => blurAccountField(field)}
                         autoFocus={index === 0}
                       />
+                      {fieldErrors[field.key] && (
+                        <div className="tp-field-error">
+                          <FiAlertTriangle size={12} />
+                          {fieldErrors[field.key]}
+                        </div>
+                      )}
                     </label>
                   ))}
                 </div>
@@ -846,33 +1043,118 @@ export default function TopupPage({ game, onBack, step, onStep }) {
               {/* วิธีหาข้อมูลบัญชี */}
               <div style={{ background: '#f8fafc', borderRadius: 12, padding: '14px 18px', fontSize: 13, color: '#475569' }}>
                 <div style={{ fontWeight: 700, marginBottom: 6, color: '#1e293b', display: 'flex', alignItems: 'center', gap: 6 }}><FiMapPin size={14} /> วิธีดูข้อมูลบัญชีอยู่ที่ไหน?</div>
+                {/* TODO: ย้าย accountHelp text ไปไว้ใน games.js config แต่ละเกมเลย
+                         อย่า hardcode game.id ใน component — เปราะบางมากเมื่อเปลี่ยนชื่อเกม */}
                 {game.accountHelp && <span>{game.accountHelp}</span>}
-                {game.id === 'ROV' && <span>เปิดเกม → กดที่รูปโปรไฟล์ → UID จะแสดงใต้ชื่อตัวละคร</span>}
-                {game.id === 'Free Fire' && <span>เปิดเกม → กดที่รูปโปรไฟล์มุมซ้ายบน → UID แสดงใต้ชื่อ</span>}
-                {game.id === 'PUBG Mobile' && <span>เปิดเกม → โปรไฟล์ → UID แสดงใต้ชื่อผู้เล่น</span>}
+                {!game.accountHelp && game.id === 'ROV' && <span>เปิดเกม → กดที่รูปโปรไฟล์ → UID จะแสดงใต้ชื่อตัวละคร</span>}
+                {!game.accountHelp && game.id === 'Free Fire' && <span>เปิดเกม → กดที่รูปโปรไฟล์มุมซ้ายบน → UID แสดงใต้ชื่อ</span>}
+                {!game.accountHelp && game.id === 'PUBG Mobile' && <span>เปิดเกม → โปรไฟล์ → UID แสดงใต้ชื่อผู้เล่น</span>}
                 {!game.accountHelp && !['ROV','Free Fire','PUBG Mobile'].includes(game.id) && <span>เปิดเกม → โปรไฟล์ → ดู UID ใต้ชื่อผู้เล่น</span>}
               </div>
 
-              {/* ── ลิงก์วิธีเติม ── */}
-              <button
-                onClick={() => window.open(game.howtoImage, '_blank')}
-                style={{
-                  display: 'flex', alignItems: 'center', gap: 8,
-                  background: '#fff',
-                  border: '1.5px solid #fde68a',
-                  borderRadius: 12, padding: '13px 20px',
-                  cursor: 'pointer', width: '100%', marginTop: 14,
-                  font: 'inherit', color: '#92400e',
-                  fontSize: 14, fontWeight: 700,
-                  transition: 'background 0.2s',
-                }}
-                onMouseEnter={e => e.currentTarget.style.background = '#fffbeb'}
-                onMouseLeave={e => e.currentTarget.style.background = '#fff'}
-              >
-                <FiBook size={18} />
-                <span>ดูวิธีการเติมเกม</span>
-                <span style={{ marginLeft: 'auto', color: '#00d1ff', fontSize: 16 }}>→</span>
-              </button>
+              {/* ── วิธีเติมเกม — แสดงทุกเกม ── */}
+              {(() => {
+                const info = game.info || buildDefaultInfo(game);
+                const steps = info.sections?.find(s => s.ordered)?.items ?? [];
+                if (game.howtoImage) {
+                  return (
+                    <button
+                      onClick={() => setShowHowto(true)}
+                      style={{
+                        display: 'flex', alignItems: 'center', gap: 8,
+                        background: '#fff', border: '1.5px solid #fde68a',
+                        borderRadius: 12, padding: '13px 20px',
+                        cursor: 'pointer', width: '100%', marginTop: 14,
+                        font: 'inherit', color: '#92400e',
+                        fontSize: 14, fontWeight: 700, transition: 'background 0.2s',
+                      }}
+                      onMouseEnter={e => e.currentTarget.style.background = '#fffbeb'}
+                      onMouseLeave={e => e.currentTarget.style.background = '#fff'}
+                    >
+                      <FiBook size={18} />
+                      <span>ดูวิธีการเติมเกม</span>
+                      <span style={{ marginLeft: 'auto', color: '#00d1ff', fontSize: 16 }}>→</span>
+                    </button>
+                  );
+                }
+                if (steps.length === 0) return null;
+                return (
+                  <div style={{ marginTop: 14 }}>
+                    <button
+                      onClick={() => setShowHowto(v => !v)}
+                      style={{
+                        display: 'flex', alignItems: 'center', gap: 8,
+                        background: '#fff', border: '1.5px solid #fde68a',
+                        borderRadius: showHowto ? '12px 12px 0 0' : 12,
+                        padding: '13px 20px',
+                        cursor: 'pointer', width: '100%',
+                        font: 'inherit', color: '#92400e',
+                        fontSize: 14, fontWeight: 700, transition: 'background 0.2s, border-radius 0.15s',
+                        borderBottom: showHowto ? '1.5px solid #fde68a' : undefined,
+                      }}
+                      onMouseEnter={e => e.currentTarget.style.background = '#fffbeb'}
+                      onMouseLeave={e => e.currentTarget.style.background = '#fff'}
+                    >
+                      <FiBook size={18} />
+                      <span>ดูวิธีการเติมเกม</span>
+                      <span style={{ marginLeft: 'auto', color: '#00d1ff' }}>
+                        {showHowto ? <FiChevronUp size={16} /> : <FiChevronDown size={16} />}
+                      </span>
+                    </button>
+                    {showHowto && (
+                      <div style={{
+                        background: '#fffbeb', border: '1.5px solid #fde68a', borderTop: 'none',
+                        borderRadius: '0 0 12px 12px', padding: '14px 20px',
+                      }}>
+                        <ol style={{ margin: 0, paddingLeft: 20, display: 'flex', flexDirection: 'column', gap: 8 }}>
+                          {steps.map((step, i) => (
+                            <li key={i} style={{ fontSize: 13, color: '#78350f', lineHeight: 1.6 }}>{step}</li>
+                          ))}
+                        </ol>
+                      </div>
+                    )}
+                  </div>
+                );
+              })()}
+
+              {/* ── เลือกวิธีชำระเงิน ── */}
+              <div style={{ marginTop: 28, borderTop: '1px solid #e2e8f0', paddingTop: 24 }}>
+                <div className="tp-pay-section-label">ช่องทางชำระเงิน</div>
+                <div className="tp-pay-grid">
+                  {PAYMENT_METHODS.filter(pm => pm.popular || showAllPayment).map(pm => {
+                    const isSel = selectedPayment === pm.id;
+                    return (
+                      <button
+                        key={pm.id}
+                        className={`tp-pay-btn${isSel ? ' selected' : ''}`}
+                        onClick={() => setSelectedPayment(pm.id)}
+                        aria-pressed={isSel}
+                      >
+                        <div className="tp-pay-icon" style={{ background: pm.iconBg }}>
+                          <span style={{ color: pm.iconColor }}>{pm.iconText}</span>
+                        </div>
+                        <div style={{ minWidth: 0, flex: 1 }}>
+                          <div style={{ fontSize: 12, fontWeight: 700, color: '#0f172a', lineHeight: 1.3 }}>
+                            {pm.name}
+                          </div>
+                          {pm.desc && (
+                            <div style={{ fontSize: 10, color: '#94a3b8', marginTop: 2, lineHeight: 1.3 }}>
+                              {pm.desc}
+                            </div>
+                          )}
+                        </div>
+                        {pm.badge && <div className="tp-pay-badge">{pm.badge}</div>}
+                        {isSel && <FiCheck size={14} style={{ color: '#00d1ff', flexShrink: 0 }} />}
+                      </button>
+                    );
+                  })}
+                </div>
+                {!showAllPayment && (
+                  <button className="tp-pay-expand" onClick={() => setShowAllPayment(true)}>
+                    ดูช่องทางอื่น ↓  ({PAYMENT_METHODS.filter(pm => !pm.popular).length} ช่องทาง)
+                  </button>
+                )}
+              </div>
             </>
           )}
 
@@ -905,22 +1187,54 @@ export default function TopupPage({ game, onBack, step, onStep }) {
                   <span className="tp-summary-key">ข้อมูลบัญชี</span>
                   <span className="tp-summary-val" style={{ fontFamily: 'monospace', fontSize: 14, letterSpacing: '0.03em', textAlign: 'right' }}>{accountSummary}</span>
                 </div>
+                {selectedPayment && (() => {
+                  const pm = PAYMENT_METHODS.find(p => p.id === selectedPayment);
+                  return pm ? (
+                    <div className="tp-summary-row">
+                      <span className="tp-summary-key">ช่องทางชำระ</span>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: 7 }}>
+                        <div style={{ width: 22, height: 22, borderRadius: 4, background: pm.iconBg, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                          <span style={{ fontSize: 7, fontWeight: 900, color: pm.iconColor, letterSpacing: '-0.02em' }}>{pm.iconText}</span>
+                        </div>
+                        <span className="tp-summary-val">{pm.name}</span>
+                      </div>
+                    </div>
+                  ) : null;
+                })()}
                 <div className="tp-total-row">
                   <span style={{ fontWeight: 700, color: '#1e293b' }}>ยอดชำระรวม</span>
                   <span className="tp-total-price">{totalPrice.toLocaleString()} <span style={{ fontSize: 16, color: '#64748b' }}>บาท</span></span>
                 </div>
               </div>
 
-              <div style={{ display: 'flex', alignItems: 'center', gap: 8, background: '#f0fbff', border: '1.5px solid #bae6fd', borderRadius: 12, padding: '12px 18px', fontSize: 13, color: '#0369a1' }}>
-                <FiCreditCard size={16} style={{ flexShrink: 0 }} />
-                <span>ชำระเงินผ่าน PromptPay / TrueMoney Wallet / โอนธนาคาร (เดฟจะเชื่อมระบบชำระเงินในขั้นตอนถัดไป)</span>
-              </div>
+              <button
+                onClick={() => onStep(2)}
+                style={{
+                  display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6,
+                  width: '100%',
+                  background: 'none',
+                  border: '1.5px solid #e2e8f0',
+                  borderRadius: 10,
+                  padding: '11px 20px',
+                  fontSize: 13, fontWeight: 700, color: '#64748b',
+                  cursor: 'pointer',
+                  fontFamily: "'Noto Sans Thai', sans-serif",
+                  transition: 'border-color 0.18s, color 0.18s, background 0.18s',
+                  marginTop: 4,
+                }}
+                onMouseEnter={e => { e.currentTarget.style.borderColor = '#00d1ff'; e.currentTarget.style.color = '#0369a1'; e.currentTarget.style.background = '#f0fbff'; }}
+                onMouseLeave={e => { e.currentTarget.style.borderColor = '#e2e8f0'; e.currentTarget.style.color = '#64748b'; e.currentTarget.style.background = 'none'; }}
+              >
+                ↩ แก้ไขข้อมูล
+              </button>
+
             </>
           )}
 
           {/* ═══════════════ SUCCESS ═══════════════ */}
           {done && (
             <div className="tp-success-wrap">
+              <div className="tp-success-box">
               <div className="tp-success-icon"><FiCheck size={42} /></div>
               <div className="tp-success-title">สั่งซื้อสำเร็จ!</div>
               <div className="tp-success-sub">ไอเทมจะถูกส่งเข้าบัญชีของคุณภายใน 5–15 นาที</div>
@@ -957,6 +1271,7 @@ export default function TopupPage({ game, onBack, step, onStep }) {
                   ดูประวัติคำสั่งซื้อ →
                 </button>
               </div>
+              </div>
             </div>
           )}
 
@@ -974,10 +1289,12 @@ export default function TopupPage({ game, onBack, step, onStep }) {
                   </>
                 : <span style={{ color: '#94a3b8' }}>กรุณาเลือกแพ็กเกจ</span>
               )}
-              {step === 2 && (accountComplete
-                ? <><strong>{primaryAccountValue}</strong><br />ข้อมูลบัญชีที่กรอก</>
-                : <span style={{ color: '#94a3b8' }}>กรุณากรอกข้อมูลให้ครบ</span>
-              )}
+              {step === 2 && (() => {
+                if (!accountComplete) return <span style={{ color: '#94a3b8' }}>กรุณากรอกข้อมูลให้ครบ</span>;
+                if (!selectedPayment)  return <span style={{ color: '#94a3b8' }}>กรุณาเลือกวิธีชำระเงิน</span>;
+                const pm = PAYMENT_METHODS.find(p => p.id === selectedPayment);
+                return <><strong>{primaryAccountValue}</strong><br /><span style={{ color: '#64748b' }}>{pm?.name}</span></>;
+              })()}
               {step === 3 && (
                 <><strong>{pkgSummary}</strong> — รวม {totalPrice.toLocaleString()} บาท</>
               )}
@@ -987,7 +1304,7 @@ export default function TopupPage({ game, onBack, step, onStep }) {
               className="tp-next-btn"
               disabled={
                 (step === 1 && selectedPkgs.length === 0) ||
-                (step === 2 && !accountComplete) ||
+                (step === 2 && (!accountComplete || !selectedPayment)) ||
                 (step === 3 && loading)
               }
               onClick={() => {
@@ -1005,6 +1322,50 @@ export default function TopupPage({ game, onBack, step, onStep }) {
         )}
 
       </div>
+      )}
+
+      {/* ═══════════════ HOWTO MODAL (root level — fixed เต็มหน้าจอเสมอ) ═══════════════ */}
+      {showHowto && game.howtoImage && (
+        <div className="tp-howto-overlay" onClick={closeHowto}>
+          <div className="tp-howto-box" onClick={e => e.stopPropagation()}>
+
+            <div className="tp-howto-fab">
+              <button className="tp-howto-close" onClick={closeHowto} aria-label="ปิด">
+                <FiX size={16} />
+              </button>
+            </div>
+
+            <div
+              className="tp-howto-imgwrap"
+              onWheel={onImgWheel}
+              onMouseDown={onImgMouseDown}
+              onMouseMove={onImgMouseMove}
+              onMouseUp={onImgMouseUp}
+              onMouseLeave={onImgMouseUp}
+              style={{ cursor: imgZoom > 1 ? (dragRef.current ? 'grabbing' : 'grab') : 'zoom-in' }}
+            >
+              <img
+                src={game.howtoImage}
+                alt="วิธีเติมเกม"
+                className="tp-howto-img"
+                style={{
+                  transform: `scale(${imgZoom}) translate(${imgPan.x / imgZoom}px, ${imgPan.y / imgZoom}px)`,
+                  transition: dragRef.current ? 'none' : 'transform 0.15s ease',
+                  transformOrigin: 'center center',
+                  userSelect: 'none', pointerEvents: 'none',
+                }}
+                draggable={false}
+              />
+            </div>
+
+            <div className="tp-howto-zoom-bar">
+              <button className="tp-howto-zoom-btn" onClick={() => { const z = Math.max(1, +(imgZoom - 0.5).toFixed(1)); setImgZoom(z); if (z === 1) setImgPan({ x: 0, y: 0 }); }} aria-label="ซูมออก">−</button>
+              <span className="tp-howto-zoom-label">{Math.round(imgZoom * 100)}%</span>
+              <button className="tp-howto-zoom-btn" onClick={() => setImgZoom(z => Math.min(4, +(z + 0.5).toFixed(1)))} aria-label="ซูมเข้า">+</button>
+            </div>
+
+          </div>
+        </div>
       )}
 
     </>

@@ -122,7 +122,7 @@ export default function App() {
         ) : (
           <>
             {activeMenu === 'HOME' && <Home onTopup={goTopup} onMailPass={goMailPass} />}
-{activeMenu === 'ข่าวสาร' && <News />}
+            {activeMenu === 'ข่าวสาร' && <News />}
             {activeMenu === 'บริการเติมเกม' && (
               <TopupHub onSelectGame={goTopup} onBack={() => handleMenuChange('HOME')} />
             )}
@@ -131,6 +131,8 @@ export default function App() {
             )}
             {activeMenu === 'ADMIN' && <AdminPage onHome={() => handleMenuChange('HOME')} />}
             {activeMenu === 'เอเจน' && <Agents />}
+            {/* TODO [A11Y]: bg-[#111] + text-gray-500 = contrast ~3:1 ต่ำกว่า WCAG AA (4.5:1)
+                            เปลี่ยนเป็น bg-[#f0f4f8] + text-[#475569] ให้ตรงธีม */}
             {!KNOWN_MENUS.includes(activeMenu) && (
               <div className="w-full h-full flex items-center justify-center bg-[#111] text-gray-500">
                 <p className="text-xl italic font-bold" style={{ display: 'flex', alignItems: 'center', gap: 8 }}><FiTarget /> หน้า [{activeMenu}] กำลังอยู่ในช่วงพัฒนา...</p>
