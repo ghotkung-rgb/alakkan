@@ -154,7 +154,7 @@ export default function MailPassPage({ game, onBack, step, onStep }) {
 
         /* ── Body ── */
         .mp-body {
-          max-width: 960px; margin: 0 auto;
+          max-width: 1300px; margin: 0 auto;
           padding: 44px 24px 100px;
         }
 
@@ -177,7 +177,8 @@ export default function MailPassPage({ game, onBack, step, onStep }) {
         }
         .mp-pkg-grid {
           display: grid;
-          grid-template-columns: repeat(5, 1fr);
+          grid-template-columns: repeat(5, 224px);
+          justify-content: center;
           gap: 44px 33px; margin-bottom: 36px;
         }
         @media (max-width: 768px) { .mp-pkg-grid { grid-template-columns: repeat(3, 1fr); } }

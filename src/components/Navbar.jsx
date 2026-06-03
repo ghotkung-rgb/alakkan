@@ -101,6 +101,11 @@ export default function Navbar({ activeMenu, setActiveMenu, onLogin }) {
           filter: drop-shadow(0 0 10px rgba(0,209,255,0.30));
           display: block;
         }
+        .nav-logo-asset1 {
+          height: 26px;
+          margin-left: 8px;
+          filter: drop-shadow(0 0 8px rgba(0,209,255,0.25));
+        }
 
         /* ── Menu ── */
         .nav-menu {
@@ -366,6 +371,11 @@ export default function Navbar({ activeMenu, setActiveMenu, onLogin }) {
               alt="ALASKAN TOPUP"
               className="nav-logo-img"
             />
+            <img
+              src="/images/ALASKAN_WEB_ASSET/PNG/alaskan_logo-asset1.png"
+              alt=""
+              className="nav-logo-img nav-logo-asset1"
+            />
           </div>
 
           {/* MENU — desktop */}
@@ -405,11 +415,18 @@ export default function Navbar({ activeMenu, setActiveMenu, onLogin }) {
         <div className={`nav-drawer-backdrop${isClosing ? ' closing' : ''}`} onClick={closeDrawer} />
         <div className={`nav-drawer-panel${isClosing ? ' closing' : ''}`}>
           <div className="nav-drawer-top">
-            <img
-              src="/images/ALASKAN_WEB_ASSET/LOGO%203D/ALASKAN_3D_LOGO_2000.png"
-              alt="ALASKAN TOPUP"
-              className="nav-drawer-logo"
-            />
+            <div style={{ display: 'flex', alignItems: 'center' }}>
+              <img
+                src="/images/ALASKAN_WEB_ASSET/LOGO%203D/ALASKAN_3D_LOGO_2000.png"
+                alt="ALASKAN TOPUP"
+                className="nav-drawer-logo"
+              />
+              <img
+                src="/images/ALASKAN_WEB_ASSET/PNG/alaskan_logo-asset1.png"
+                alt=""
+                style={{ height: 22, width: 'auto', objectFit: 'contain', marginLeft: 8, filter: 'drop-shadow(0 0 8px rgba(0,209,255,0.25))' }}
+              />
+            </div>
             <button className="nav-drawer-close" aria-label="ปิดเมนู" onClick={closeDrawer}>
               <FiX size={18} />
             </button>
