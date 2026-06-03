@@ -80,13 +80,38 @@ export default function App() {
       '',
       '#' + stateToHash(initState),
     );
+
+    // คืน scroll position หลัง refresh
+    const saved = sessionStorage.getItem('scrollPos');
+    if (saved) {
+      try {
+        const { hash, y } = JSON.parse(saved);
+        if (hash === window.location.hash && y > 0) {
+          setTimeout(() => window.scrollTo(0, y), 80);
+        }
+      } catch {}
+      sessionStorage.removeItem('scrollPos');
+    }
+
+    // บันทึก scroll ก่อน refresh
+    const saveScroll = () => {
+      sessionStorage.setItem('scrollPos', JSON.stringify({
+        hash: window.location.hash,
+        y: window.scrollY,
+      }));
+    };
+    window.addEventListener('beforeunload', saveScroll);
+
     const handlePopState = (e) => {
       const s = e.state || hashToState(window.location.hash);
       setExiting(true);
       setTimeout(() => applyNav(s), 160);
     };
     window.addEventListener('popstate', handlePopState);
-    return () => window.removeEventListener('popstate', handlePopState);
+    return () => {
+      window.removeEventListener('beforeunload', saveScroll);
+      window.removeEventListener('popstate', handlePopState);
+    };
   }, []);
 
   useEffect(() => {

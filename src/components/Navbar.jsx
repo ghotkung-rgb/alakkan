@@ -1,17 +1,48 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import { FiMenu, FiX } from 'react-icons/fi';
 
 export default function Navbar({ activeMenu, setActiveMenu, onLogin }) {
   const menuItems = ['HOME', 'บริการเติมเกม', 'เอเจน', 'ข่าวสาร', 'ติดต่อเรา'];
   const [isOpen, setIsOpen] = useState(false);
+  const [isClosing, setIsClosing] = useState(false);
+  const closeTimer = useRef(null);
+
+  const CLOSE_DURATION = 240;
+
+  const openDrawer = useCallback(() => {
+    clearTimeout(closeTimer.current);
+    setIsClosing(false);
+    setIsOpen(true);
+  }, []);
+
+  const closeDrawer = useCallback(() => {
+    setIsClosing(true);
+    closeTimer.current = setTimeout(() => {
+      setIsOpen(false);
+      setIsClosing(false);
+    }, CLOSE_DURATION);
+  }, []);
 
   useEffect(() => {
     document.body.style.overflow = isOpen ? 'hidden' : '';
     return () => { document.body.style.overflow = ''; };
   }, [isOpen]);
 
+  useEffect(() => () => clearTimeout(closeTimer.current), []);
+
+  // swipe down on navbar area to open, swipe up on drawer to close
+  const touchStartY = useRef(null);
+  const onNavTouchStart = (e) => { touchStartY.current = e.touches[0].clientY; };
+  const onNavTouchEnd = (e) => {
+    if (touchStartY.current === null) return;
+    const dy = e.changedTouches[0].clientY - touchStartY.current;
+    if (dy > 40 && !isOpen) openDrawer();
+    if (dy < -40 && isOpen) closeDrawer();
+    touchStartY.current = null;
+  };
+
   const handleNav = (item) => {
-    setIsOpen(false);
+    closeDrawer();
     if (item === 'ติดต่อเรา') {
       if (activeMenu === 'HOME') {
         setTimeout(() => document.getElementById('contact-section')?.scrollIntoView({ behavior: 'smooth' }), 50);
@@ -287,9 +318,24 @@ export default function Navbar({ activeMenu, setActiveMenu, onLogin }) {
           from { opacity: 0; }
           to   { opacity: 1; }
         }
+        @keyframes fadeOut {
+          from { opacity: 1; }
+          to   { opacity: 0; }
+        }
         @keyframes slideDown {
           from { transform: translateY(-100%); opacity: 0; }
           to   { transform: translateY(0);     opacity: 1; }
+        }
+        @keyframes slideUp {
+          from { transform: translateY(0);     opacity: 1; }
+          to   { transform: translateY(-100%); opacity: 0; }
+        }
+
+        .nav-drawer-backdrop.closing {
+          animation: fadeOut 0.24s ease both;
+        }
+        .nav-drawer-panel.closing {
+          animation: slideUp 0.24s cubic-bezier(0.25,1,0.5,1) both;
         }
 
         @media (max-width: 767px) {
@@ -310,13 +356,13 @@ export default function Navbar({ activeMenu, setActiveMenu, onLogin }) {
         }
       `}</style>
 
-      <nav className="navbar-root">
+      <nav className="navbar-root" onTouchStart={onNavTouchStart} onTouchEnd={onNavTouchEnd}>
         <div className="nav-inner">
 
           {/* LOGO */}
           <div className="nav-logo-wrap" onClick={() => { setIsOpen(false); setActiveMenu('HOME'); }}>
             <img
-              src="/images/ALASKAN_WEB_ASSET/PNG/alaskan_logo-asset2.png"
+              src="/images/ALASKAN_WEB_ASSET/LOGO%203D/ALASKAN_3D_LOGO_2000.png"
               alt="ALASKAN TOPUP"
               className="nav-logo-img"
             />
@@ -346,7 +392,7 @@ export default function Navbar({ activeMenu, setActiveMenu, onLogin }) {
             className="nav-hamburger"
             aria-label={isOpen ? 'ปิดเมนู' : 'เปิดเมนู'}
             aria-expanded={isOpen}
-            onClick={() => setIsOpen(v => !v)}
+            onClick={() => isOpen ? closeDrawer() : openDrawer()}
           >
             {isOpen ? <FiX size={20} /> : <FiMenu size={20} />}
           </button>
@@ -355,16 +401,16 @@ export default function Navbar({ activeMenu, setActiveMenu, onLogin }) {
       </nav>
 
       {/* MOBILE DRAWER */}
-      <div className={`nav-drawer${isOpen ? ' open' : ''}`} aria-hidden={!isOpen}>
-        <div className="nav-drawer-backdrop" onClick={() => setIsOpen(false)} />
-        <div className="nav-drawer-panel">
+      <div className={`nav-drawer${isOpen ? ' open' : ''}`} aria-hidden={!isOpen} onTouchStart={onNavTouchStart} onTouchEnd={onNavTouchEnd}>
+        <div className={`nav-drawer-backdrop${isClosing ? ' closing' : ''}`} onClick={closeDrawer} />
+        <div className={`nav-drawer-panel${isClosing ? ' closing' : ''}`}>
           <div className="nav-drawer-top">
             <img
-              src="/images/ALASKAN_WEB_ASSET/PNG/alaskan_logo-asset2.png"
+              src="/images/ALASKAN_WEB_ASSET/LOGO%203D/ALASKAN_3D_LOGO_2000.png"
               alt="ALASKAN TOPUP"
               className="nav-drawer-logo"
             />
-            <button className="nav-drawer-close" aria-label="ปิดเมนู" onClick={() => setIsOpen(false)}>
+            <button className="nav-drawer-close" aria-label="ปิดเมนู" onClick={closeDrawer}>
               <FiX size={18} />
             </button>
           </div>
@@ -379,7 +425,7 @@ export default function Navbar({ activeMenu, setActiveMenu, onLogin }) {
               </button>
             ))}
           </div>
-          <button className="nav-drawer-cta" onClick={() => { setIsOpen(false); onLogin?.(); }}>
+          <button className="nav-drawer-cta" onClick={() => { closeDrawer(); setTimeout(() => onLogin?.(), CLOSE_DURATION); }}>
             ลงชื่อเข้าใช้
           </button>
         </div>

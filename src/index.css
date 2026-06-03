@@ -26,6 +26,14 @@
   font-weight: normal; font-style: normal; font-display: swap;
 }
 
+
+/* ─── Scrollbar ─── */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: rgba(0,0,0,0.18); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: rgba(0,0,0,0.32); }
+* { scrollbar-width: thin; scrollbar-color: rgba(0,0,0,0.18) transparent; }
+
 /* ─── Easing tokens ─── */
 :root {
   --ease-out-quart: cubic-bezier(0.25, 1, 0.5, 1);
@@ -241,26 +249,34 @@
     z-index: 4;
     top: 15%; height: 78%;           /* เลื่อนลงนิด */
     object-position: left center;
-    animation: layerTextIn 0.9s 0.15s cubic-bezier(0.22,1,0.36,1) both;
+    animation: layerTextIn 0.9s 0.5s cubic-bezier(0.22,1,0.36,1) both;
     filter: drop-shadow(0 0 18px rgba(0, 209, 255, 0.65)) drop-shadow(0 0 48px rgba(0, 209, 255, 0.25));
+  }
+  /* overlay ทับ text — ขนาดเดียวกันเป๊ะ */
+  .hs-layer-overlay .hs-layer-text2 {
+    z-index: 6;
+    top: 31%; height: 46%;
+    object-position: left center;
+    translate: 80px 0;                 /* ← ขยับซ้าย/ขวา: ลบ=ซ้าย, บวก=ขวา (แยกจาก animation) */
+    animation: layerTextIn 0.9s 0.75s cubic-bezier(0.22,1,0.36,1) both;
   }
   .hs-layer-overlay .hs-layer-char1 {
     z-index: 5;
     top: 8%; height: 92%;           /* ดันตัวละครลงล่าง */
     object-position: center bottom;
-    animation: layerChar1In 1.0s 0.4s cubic-bezier(0.22,1,0.36,1) both;
+    animation: layerChar1In 1.0s 0.9s cubic-bezier(0.22,1,0.36,1) both;
     filter: drop-shadow(0 0 24px rgba(0, 255, 100, 0.45));
   }
   .hs-layer-overlay .hs-layer-char2 {
-    z-index: 6;
+    z-index: 7;
     top: 0%; height: 100%;          /* ดันตัวละครลงล่าง */
     object-position: right bottom;
-    animation: layerChar2In 0.85s 0.62s cubic-bezier(0.22,1,0.36,1) both;
+    animation: layerChar2In 0.85s 1.2s cubic-bezier(0.22,1,0.36,1) both;
     filter: drop-shadow(0 0 36px rgba(0, 255, 100, 0.65)) drop-shadow(0 0 80px rgba(0, 255, 100, 0.22));
   }
   @media (prefers-reduced-motion: reduce) {
-    .hs-layer-text, .hs-layer-char1, .hs-layer-char2 {
-      animation: layerFadeOnly 0.4s both;
+    .hs-layer-text, .hs-layer-text2, .hs-layer-char1, .hs-layer-char2 {
+      animation: layerFadeOnly 3s both;
     }
   }
 

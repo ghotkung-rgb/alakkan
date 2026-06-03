@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
-import { FLAG_BASE, COUNTRY_NAMES } from '../config/constants';
+import { COUNTRY_NAMES, FLAG_BASE } from '../config/constants';
 import { FILTER_TABS, PAGE_SIZE } from '../config/homeData';
 
 export default function GameGrid({ games, expanded, onCollapse, onTopup }) {
@@ -35,10 +35,16 @@ export default function GameGrid({ games, expanded, onCollapse, onTopup }) {
   const barPadLeft     = 60;
   // ────────────────────────────────────────────────────
 
-  const renderCard = (game, i, animStyle) => (
+  const renderCard = (game, i, animStyle) => {
+    const countryLabel = game.country ? (COUNTRY_NAMES[game.country] || game.country) : '';
+    const displayName = game.country && game.id?.startsWith('Mobile Legends')
+      ? (game.id === 'Mobile Legends' ? 'Mobile Legends TH' : game.id)
+      : game.name;
+
+    return (
     <div className="game-card" key={`${game.id}-${i}`} style={{ ...animStyle, cursor: 'pointer' }}
-      onClick={() => onTopup && onTopup(game.name)}>
-      <img src={game.bg} alt={game.name} loading="lazy"
+      onClick={() => onTopup && onTopup(game.id)}>
+      <img src={game.bg} alt={displayName} loading="lazy"
         style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center top' }}
         onError={e => { e.target.style.display = 'none'; }} />
       {game.tag && (
@@ -47,9 +53,17 @@ export default function GameGrid({ games, expanded, onCollapse, onTopup }) {
         </div>
       )}
       {game.country && (
-        <div style={{ position: 'absolute', top: 20, left: 10, zIndex: 11, display: 'flex', alignItems: 'center', gap: 5, background: 'rgba(0,0,0,0.55)', borderRadius: 20, padding: '3px 8px 3px 3px', backdropFilter: 'blur(4px)' }}>
-          <img src={`${FLAG_BASE}/${game.country}.png`} alt="" style={{ width: 20, height: 20, borderRadius: '50%', flexShrink: 0, objectFit: 'cover' }} onError={e => { e.target.style.display = 'none'; }} />
-          <span style={{ fontSize: 9, color: '#fff', fontWeight: 700, whiteSpace: 'nowrap' }}>{COUNTRY_NAMES[game.country]}</span>
+        <div style={{
+          position: 'absolute', top: 12, left: 10, zIndex: 11,
+          display: 'flex', alignItems: 'center', gap: 5,
+          padding: '3px 8px 3px 3px',
+          borderRadius: 999, background: 'rgba(15,23,42,0.76)',
+          color: '#fff', fontSize: 10, fontWeight: 700, lineHeight: 1,
+          boxShadow: '0 0 0 1px rgba(255,255,255,0.2), 0 1px 4px rgba(0,0,0,0.28)',
+          whiteSpace: 'nowrap',
+        }}>
+          <img src={`${FLAG_BASE}/${game.country}.png`} alt="" style={{ width: 18, height: 18, borderRadius: '50%', objectFit: 'cover', flexShrink: 0 }} onError={e => { e.target.style.display = 'none'; }} />
+          <span style={{ paddingLeft: 20 }}>{countryLabel}</span>
         </div>
       )}
       <div style={{
@@ -63,17 +77,18 @@ export default function GameGrid({ games, expanded, onCollapse, onTopup }) {
             <img src={game.icon} alt=""
               style={{ width: 36, height: 37, borderRadius: 8, objectFit: 'cover', flexShrink: 0, border: '1.5px solid rgba(255,255,255,0.18)', marginLeft: iconMarginLeft, marginTop: iconMarginTop }}
               onError={e => { e.target.style.display = 'none'; }} />
-            <span style={{ color: '#fff', fontWeight: 700, fontSize: nameFontSize, lineHeight: 1.2, whiteSpace: 'nowrap', position: 'relative', top: nameTop, left: nameLeft }}>{game.name}</span>
+            <span style={{ color: '#fff', fontWeight: 700, fontSize: nameFontSize, lineHeight: 1.2, whiteSpace: 'nowrap', position: 'relative', top: nameTop, left: nameLeft }}>{displayName}</span>
           </div>
           {game.category && <div style={{ color: '#ffffff', fontSize: catFontSize, position: 'relative', top: catTop, left: catLeft }}>{game.category}</div>}
         </div>
         <button style={{
           background: '#00d1ff', color: '#ffffff', border: 'none', borderRadius: 20,
           padding: btnPad, fontSize: btnFontSize, fontWeight: 700, cursor: 'pointer', flexShrink: 0, lineHeight: 1,
-        }} onClick={() => onTopup && onTopup(game.name)}>เติมเกม</button>
+        }} onClick={() => onTopup && onTopup(game.id)}>เติมเกม</button>
       </div>
     </div>
-  );
+    );
+  };
 
   const filterBar = (
     <div style={{ display: 'flex', gap: 8, marginBottom: 16, flexWrap: 'wrap' }}>

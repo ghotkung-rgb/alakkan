@@ -4,7 +4,7 @@ const PUBGM_BASE = '/images/ALASKAN_WEB_ASSET/PACKAGE ICON/PUBGM';
 const MLBB_BASE  = '/images/ALASKAN_WEB_ASSET/PACKAGE ICON/MLBB';
 
 // แพ็คต้นแบบ MLBB — ใช้ร่วมกันทุก server (แก้ราคาทีหลังต่อ server)
-const MLBB_PKG = (server) => [
+const MLBB_PKG = (server, country) => [
   { id: `mlbb-${server}-5`,      amount: 5,    price: 5,   img: `${MLBB_BASE}/mlbb_diamond1.png` },
   { id: `mlbb-${server}-11`,     amount: 11,   price: 10,  img: `${MLBB_BASE}/mlbb_diamond1.png` },
   { id: `mlbb-${server}-22`,     amount: 22,   price: 20,  img: `${MLBB_BASE}/mlbb_diamond2.png` },
@@ -15,7 +15,7 @@ const MLBB_PKG = (server) => [
   { id: `mlbb-${server}-570`,    amount: 570,  price: 485, img: `${MLBB_BASE}/mlbb_diamond7.png` },
   { id: `mlbb-${server}-1163`,   amount: 1163, price: 970, img: `${MLBB_BASE}/mlbb_diamond8.png` },
   { id: `mlbb-${server}-weekly`, amount: 0,    price: 79,  label: 'Weekly Diamond Pass', img: `${MLBB_BASE}/mlbb_WeeklyDiamondPass.png` },
-];
+].map(pkg => ({ ...pkg, country }));
 
 const MLBB_SHARED = {
   name: 'Mobile Legends',
@@ -114,14 +114,14 @@ export const GAMES = {
   },
 
   // ── Mobile Legends แยกตาม server ──────────────────────────────────────────
-  'Mobile Legends':    { ...MLBB_SHARED, id: 'Mobile Legends',    subtitle: 'Mobile Legends — Server ไทย',          tag: null,      country: 'thailand', tags: ['ขายดี'],  packages: MLBB_PKG('th') },
-  'Mobile Legends ID': { ...MLBB_SHARED, id: 'Mobile Legends ID', subtitle: 'Mobile Legends — Server อินโดนีเซีย', tag: 'ขายดี',   country: 'indonesia',               tags: [], packages: MLBB_PKG('id') },
-  'Mobile Legends MY': { ...MLBB_SHARED, id: 'Mobile Legends MY', subtitle: 'Mobile Legends — Server มาเลเซีย',    tag: null,      country: 'malaysia',                tags: [], packages: MLBB_PKG('my') },
-  'Mobile Legends PH': { ...MLBB_SHARED, id: 'Mobile Legends PH', subtitle: 'Mobile Legends — Server ฟิลิปปินส์', tag: null,      country: 'philippines',             tags: [], packages: MLBB_PKG('ph') },
-  'Mobile Legends SG': { ...MLBB_SHARED, id: 'Mobile Legends SG', subtitle: 'Mobile Legends — Server สิงคโปร์',   tag: null,      country: 'singapore',               tags: [], packages: MLBB_PKG('sg') },
-  'Mobile Legends RU': { ...MLBB_SHARED, id: 'Mobile Legends RU', subtitle: 'Mobile Legends — Server รัสเซีย',     tag: null,      country: 'russia',                  tags: [], packages: MLBB_PKG('ru') },
-  'Mobile Legends TR': { ...MLBB_SHARED, id: 'Mobile Legends TR', subtitle: 'Mobile Legends — Server ตุรกี',       tag: null,      country: 'turkey',                  tags: [], packages: MLBB_PKG('tr') },
-  'Mobile Legends US': { ...MLBB_SHARED, id: 'Mobile Legends US', subtitle: 'Mobile Legends — Server สหรัฐฯ',      tag: null,      country: 'united-states-of-america', tags: [], packages: MLBB_PKG('us') },
+  'Mobile Legends':    { ...MLBB_SHARED, id: 'Mobile Legends',    subtitle: 'Mobile Legends — Server ไทย',          tag: null,      country: 'thailand',                 tags: ['ขายดี'], packages: MLBB_PKG('th', 'thailand') },
+  'Mobile Legends ID': { ...MLBB_SHARED, id: 'Mobile Legends ID', subtitle: 'Mobile Legends — Server อินโดนีเซีย', tag: 'ขายดี',   country: 'indonesia',               tags: [], packages: MLBB_PKG('id', 'indonesia') },
+  'Mobile Legends MY': { ...MLBB_SHARED, id: 'Mobile Legends MY', subtitle: 'Mobile Legends — Server มาเลเซีย',    tag: null,      country: 'malaysia',                tags: [], packages: MLBB_PKG('my', 'malaysia') },
+  'Mobile Legends PH': { ...MLBB_SHARED, id: 'Mobile Legends PH', subtitle: 'Mobile Legends — Server ฟิลิปปินส์', tag: null,      country: 'philippines',             tags: [], packages: MLBB_PKG('ph', 'philippines') },
+  'Mobile Legends SG': { ...MLBB_SHARED, id: 'Mobile Legends SG', subtitle: 'Mobile Legends — Server สิงคโปร์',   tag: null,      country: 'singapore',               tags: [], packages: MLBB_PKG('sg', 'singapore') },
+  'Mobile Legends RU': { ...MLBB_SHARED, id: 'Mobile Legends RU', subtitle: 'Mobile Legends — Server รัสเซีย',     tag: null,      country: 'russia',                  tags: [], packages: MLBB_PKG('ru', 'russia') },
+  'Mobile Legends TR': { ...MLBB_SHARED, id: 'Mobile Legends TR', subtitle: 'Mobile Legends — Server ตุรกี',       tag: null,      country: 'turkey',                  tags: [], packages: MLBB_PKG('tr', 'turkey') },
+  'Mobile Legends US': { ...MLBB_SHARED, id: 'Mobile Legends US', subtitle: 'Mobile Legends — Server สหรัฐฯ',      tag: null,      country: 'united-states-of-america', tags: [], packages: MLBB_PKG('us', 'united-states-of-america') },
 
   'Honor of Kings': {
     id: 'Honor of Kings',
@@ -318,7 +318,7 @@ export const GAMES = {
     bg: '/images/GAMES BG/VALORANT_bg.png',
     category: 'เกมยิงกลยุทธ์',
     currency: 'VP',
-    tag: null,
+    tag: 'ขายดี',  // แก้แท็กเกมในหน้า UID TOP Up เช่น ขายดี , ใหม่ 
     showOnHome: true,
     packages: [
       // ── Rogue Collection Bundles ──────────────────────────────
@@ -439,8 +439,9 @@ export const GAMES = {
     bg: '/images/GAMES BG/WHEREWINDMEET_bg.png',
     category: 'เกม RPG',
     currency: 'Echo Beads',
-    tag: 'ใหม่',
+    tag: 'มาแรง',
     showOnHome: true,
+    tags: ['ขายดี'],
     packages: [
       { id: 'wwm-monthly',  amount: 0, label: 'Monthly Pass',         originalPrice: 175,  price: 164,  img: '/images/ALASKAN_WEB_ASSET/PACKAGE%20ICON/Wherewindmeet_echo.png' },
       { id: 'wwm-elite',    amount: 0, label: 'Elite Battle Pass',    originalPrice: 350,  price: 324,  img: '/images/ALASKAN_WEB_ASSET/PACKAGE%20ICON/Wherewindmeet_echo.png' },

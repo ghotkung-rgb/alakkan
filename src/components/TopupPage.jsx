@@ -691,7 +691,7 @@ export default function TopupPage({ game, onBack, step, onStep }) {
           animation: tp-fade-up 0.4s 0.3s both;
         }
         .tp-success-card {
-          background: #fff; border-radius: 16px;
+          background: #fff; border-radius: 4px;
           border: 1.5px solid #e2e8f0;
           padding: 20px 28px;
           width: 100%; max-width: 420px;
