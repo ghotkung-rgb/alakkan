@@ -8,7 +8,6 @@ import MailPassHub from './components/MailPassHub';
 import MailPassPage from './components/MailPassPage';
 import News from './components/News';
 import AdminPage from './components/AdminPage';
-import Agents from './components/Agents'; // หน้าเอเจน — character showcase
 import { GAMES } from './config/games';
 import { MAILPASS_GAMES } from './config/mailpassGames';
 
@@ -16,14 +15,14 @@ import { MAILPASS_GAMES } from './config/mailpassGames';
 const stateToHash = (s) => {
   if (s.topupGame)    return `topup/${encodeURIComponent(s.topupGame)}`;
   if (s.mailpassGame) return `mailpass/${encodeURIComponent(s.mailpassGame)}`;
-  const m = { HOME: 'home', 'ข่าวสาร': 'news', 'บริการเติมเกม': 'topup', 'บริการ Mail/Pass': 'mailpass', ADMIN: 'admin', 'เอเจน': 'agents' };
+  const m = { HOME: 'home', 'ข่าวสาร': 'news', 'บริการเติมเกม': 'topup', 'บริการ Mail/Pass': 'mailpass', ADMIN: 'admin' };
   return m[s.activeMenu] ?? 'home';
 };
 const hashToState = (hash) => {
   const h = (hash || '').replace(/^#/, '');
   if (h.startsWith('topup/'))    return { activeMenu: 'HOME', topupGame: decodeURIComponent(h.slice(6)),    mailpassGame: null, topupStep: 1, mailpassStep: 1 };
   if (h.startsWith('mailpass/')) return { activeMenu: 'HOME', topupGame: null, mailpassGame: decodeURIComponent(h.slice(9)), topupStep: 1, mailpassStep: 1 };
-  const m = { '': 'HOME', home: 'HOME', news: 'ข่าวสาร', topup: 'บริการเติมเกม', mailpass: 'บริการ Mail/Pass', admin: 'ADMIN', agents: 'เอเจน' };
+  const m = { '': 'HOME', home: 'HOME', news: 'ข่าวสาร', topup: 'บริการเติมเกม', mailpass: 'บริการ Mail/Pass', admin: 'ADMIN' };
   return { activeMenu: m[h] ?? 'HOME', topupGame: null, mailpassGame: null, topupStep: 1, mailpassStep: 1 };
 };
 
@@ -127,7 +126,7 @@ export default function App() {
 
   const handleMenuChange = (menu) => navigate({ activeMenu: menu, topupGame: null, mailpassGame: null });
 
-  const KNOWN_MENUS = ['HOME', 'ข่าวสาร', 'บริการเติมเกม', 'บริการ Mail/Pass', 'ADMIN', 'เอเจน'];
+  const KNOWN_MENUS = ['HOME', 'ข่าวสาร', 'บริการเติมเกม', 'บริการ Mail/Pass', 'ADMIN'];
 
   return (
     <div className="relative w-full min-h-screen font-sans text-black select-none"
@@ -153,7 +152,6 @@ export default function App() {
               <MailPassHub onSelectGame={goMailPass} onBack={() => handleMenuChange('HOME')} />
             )}
             {activeMenu === 'ADMIN' && <AdminPage onHome={() => handleMenuChange('HOME')} />}
-            {activeMenu === 'เอเจน' && <Agents />}
             {!KNOWN_MENUS.includes(activeMenu) && (
               <div className="w-full h-full flex items-center justify-center bg-[#f0f4f8] text-[#334155]">
                 <p className="text-xl italic font-bold" style={{ display: 'flex', alignItems: 'center', gap: 8 }}><FiTarget /> หน้า [{activeMenu}] กำลังอยู่ในช่วงพัฒนา...</p>
