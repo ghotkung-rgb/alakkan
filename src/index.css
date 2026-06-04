@@ -74,6 +74,7 @@
     color:#1e293b;
     scrollbar-width:thin;
     scrollbar-color:#00d1ff #e2e8f0;
+    will-change: scroll-position;
   }
   .home-wrap::-webkit-scrollbar       { width:6px; }
   .home-wrap::-webkit-scrollbar-track { background:#e2e8f0; }
@@ -456,6 +457,10 @@
 
   /* ─── Games grid ─── */
   .games-grid { display:flex; flex-direction:row; gap:8px; justify-content:center; }
+  /* pre-promote cards to compositor layer when grid is hovered (avoids stutter on first hover) */
+  .games-grid:hover .game-card,
+  .games-grid-expanded:hover .game-card,
+  .promo-grid:hover .promo-card { will-change: transform, filter; }
   .games-grid-expanded {
     display:grid;
     grid-template-columns:repeat(5, 260px);

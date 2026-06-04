@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { FiChevronLeft } from 'react-icons/fi';
 
 const BASE = '/images/ALASKAN_WEB_ASSET/PACKAGE ICON/ROV';
 const ROV_PACKAGES = [
@@ -217,7 +218,7 @@ export default function TopupROV({ onBack }) {
           <div className="rov-hero-bg" />
           <div className="rov-hero-overlay" />
           <button className="rov-back-btn" onClick={onBack}>
-            &#9664; กลับ
+            <FiChevronLeft size={14} /> กลับ
           </button>
           <div className="rov-hero-content">
             <img src="/images/GAMES ICON/ROV_iconapp.png" alt="ROV" className="rov-icon"
@@ -256,7 +257,7 @@ export default function TopupROV({ onBack }) {
                 onClick={() => setSelected(pkg)}
               >
                 {pkg.bonus && <div className="rov-pkg-bonus">โบนัส {pkg.bonus}</div>}
-                <img src={pkg.img} alt={`${pkg.coupon} คูปอง`}
+                <img src={pkg.img} alt={`${pkg.coupon} คูปอง`} loading="lazy" decoding="async"
                   style={{ width: 80, height: 80, objectFit: 'contain', margin: '0 auto 6px', display: 'block' }}
                   onError={e => { e.target.style.display='none'; }} />
                 <div className="rov-coupon-amount">{pkg.coupon.toLocaleString()}</div>

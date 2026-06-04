@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { FiGrid, FiShoppingBag, FiFileText, FiMonitor, FiLogOut } from 'react-icons/fi';
+import { FiGrid, FiShoppingBag, FiFileText, FiMonitor, FiLogOut, FiChevronLeft } from 'react-icons/fi';
 import { INIT_ORDERS, INIT_NEWS } from './admin/adminShared';
 import AdminLogin    from './admin/AdminLogin';
 import Dashboard     from './admin/AdminDashboard';
@@ -58,7 +58,7 @@ export default function AdminPage({ onHome }) {
               style={{ display: 'flex', alignItems: 'center', gap: 8, width: '100%', padding: '9px 12px', borderRadius: 8, border: 'none', cursor: 'pointer', fontSize: 13, fontWeight: 600, background: 'transparent', color: '#64748b', transition: 'all 0.15s' }}
               onMouseEnter={e => { e.currentTarget.style.color = '#94a3b8'; e.currentTarget.style.background = 'rgba(255,255,255,0.06)'; }}
               onMouseLeave={e => { e.currentTarget.style.color = '#64748b'; e.currentTarget.style.background = 'transparent'; }}>
-              &#9664; กลับหน้าหลัก
+              <FiChevronLeft size={14} /> กลับหน้าหลัก
             </button>
           )}
           <button onClick={() => setAuthed(false)}

@@ -14,7 +14,7 @@ function ImagePickerInline({ src, position, onSrcChange, onPositionChange }) {
     <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
       {src && (
         <div style={{ width: '100%', height: 120, borderRadius: 10, overflow: 'hidden', background: '#0f172a', border: '1px solid #e2e8f0', position: 'relative' }}>
-          <img src={src} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: `center ${position}%` }} />
+          <img src={src} alt="" loading="lazy" decoding="async" style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: `center ${position}%` }} />
           <button onClick={() => onSrcChange('')}
             style={{ position: 'absolute', top: 6, right: 6, background: 'rgba(0,0,0,0.55)', border: 'none', borderRadius: 6, padding: '3px 6px', cursor: 'pointer', color: '#fff', display: 'flex' }}>
             <FiX size={12} />
@@ -119,7 +119,7 @@ export default function NewsManager({ news, setNews }) {
                 <div style={{ background: '#fff', borderRadius: 14, overflow: 'hidden', boxShadow: '0 1px 6px rgba(0,0,0,0.07)', display: 'flex' }}>
                   {n.image && (
                     <div style={{ width: 90, flexShrink: 0, background: '#0f172a', overflow: 'hidden' }}>
-                      <img src={n.image} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: `center ${n.imagePosition ?? 50}%` }} />
+                      <img src={n.image} alt="" loading="lazy" decoding="async" style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: `center ${n.imagePosition ?? 50}%` }} />
                     </div>
                   )}
                   <div style={{ flex: 1, padding: '14px 18px', minWidth: 0 }}>

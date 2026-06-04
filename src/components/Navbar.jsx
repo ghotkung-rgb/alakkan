@@ -24,8 +24,14 @@ export default function Navbar({ activeMenu, setActiveMenu, onLogin }) {
   }, []);
 
   useEffect(() => {
-    document.body.style.overflow = isOpen ? 'hidden' : '';
-    return () => { document.body.style.overflow = ''; };
+    const hw = document.querySelector('.home-wrap');
+    if (hw) hw.style.overflowY = isOpen ? 'hidden' : '';
+    else document.body.style.overflow = isOpen ? 'hidden' : '';
+    return () => {
+      const hw = document.querySelector('.home-wrap');
+      if (hw) hw.style.overflowY = '';
+      else document.body.style.overflow = '';
+    };
   }, [isOpen]);
 
   useEffect(() => () => clearTimeout(closeTimer.current), []);

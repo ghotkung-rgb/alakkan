@@ -709,7 +709,7 @@ export default function MailPassPage({ game, onBack, step, onStep }) {
                         </div>
                       )}
                       <div style={{ position: 'relative', width: '100%', aspectRatio: '1/1', overflow: 'hidden' }}>
-                        <img src={pkg.img} alt={`${pkg.amount}`}
+                        <img src={pkg.img} alt={`${pkg.amount}`} loading="lazy" decoding="async"
                           style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center top', display: 'block' }}
                           onError={e => { e.target.style.display = 'none'; }} />
                       </div>

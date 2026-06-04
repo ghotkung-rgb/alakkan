@@ -23,7 +23,7 @@ function ImagePickerField({ label, src, onChange }) {
       <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
         <div style={{ width: 56, height: 56, borderRadius: 9, background: '#e2e8f0', overflow: 'hidden', flexShrink: 0, border: '1px solid #e2e8f0', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
           {src
-            ? <img src={src} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} onError={e => { e.target.style.display = 'none'; }} />
+            ? <img src={src} alt="" loading="lazy" decoding="async" style={{ width: '100%', height: '100%', objectFit: 'cover' }} onError={e => { e.target.style.display = 'none'; }} />
             : <FiImage size={20} style={{ color: '#cbd5e1' }} />}
         </div>
         <div style={{ flex: 1, minWidth: 0 }}>
@@ -87,7 +87,7 @@ function GameCard({ game, display, hasOverride, isNew, isSelected, onEdit }) {
       <div className="ag-card-bottom">
         <div className="ag-card-icon-row">
           {display.icon
-            ? <img src={display.icon} alt="" className="ag-card-icon" onError={e => { e.target.style.display = 'none'; }} />
+            ? <img src={display.icon} alt="" className="ag-card-icon" loading="lazy" decoding="async" onError={e => { e.target.style.display = 'none'; }} />
             : <div className="ag-card-icon-ph"><FiImage size={13} /></div>}
           <span className="ag-card-name">{display.name}</span>
         </div>
@@ -109,7 +109,7 @@ function GameCard({ game, display, hasOverride, isNew, isSelected, onEdit }) {
   );
 }
 
-/* ─────────────────────── GameEditPanel ─────────────────────── */
+/* ─────────────────────── GameEditPanel (modal) ─────────────────────── */
 function GameEditPanel({ game, overrides, onSave, onCancel }) {
   const [name,    setName]    = useState(overrides?.name ?? game.name);
   const [iconSrc, setIconSrc] = useState(overrides?.icon ?? game.icon ?? '');
@@ -117,39 +117,49 @@ function GameEditPanel({ game, overrides, onSave, onCancel }) {
   const [tags,    setTags]    = useState(overrides?.tags ?? getGameTags(game));
 
   return (
-    <div style={{ background: '#fff', border: '2px solid rgba(0,209,255,0.28)', borderRadius: 14, padding: '22px 24px', marginTop: 8 }}>
-      <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 20 }}>
-        <FiEdit2 size={16} style={{ color: '#00d1ff' }} />
-        <span style={{ fontWeight: 800, fontSize: 15, color: '#1e293b' }}>แก้ไข — {game.name}</span>
-        <button onClick={onCancel}
-          style={{ marginLeft: 'auto', background: 'none', border: 'none', cursor: 'pointer', color: '#94a3b8', display: 'flex', padding: 4 }}>
-          <FiX size={18} />
-        </button>
-      </div>
-
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(220px, 1fr))', gap: 14 }}>
-        <div style={{ gridColumn: '1 / -1' }}>
-          <div style={{ fontSize: 12, color: '#64748b', fontWeight: 700, marginBottom: 5 }}>ชื่อเกม</div>
-          <input value={name} onChange={e => setName(e.target.value)} style={sInput} />
+    <div
+      style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.52)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 400, padding: 20 }}
+      onClick={onCancel}
+    >
+      <div
+        style={{ background: '#fff', borderRadius: 18, width: '100%', maxWidth: 540, boxShadow: '0 24px 60px rgba(0,0,0,0.28)', overflow: 'hidden' }}
+        onClick={e => e.stopPropagation()}
+      >
+        <div style={{ background: '#0f172a', padding: '18px 24px', display: 'flex', alignItems: 'center', gap: 10 }}>
+          <FiEdit2 size={15} style={{ color: '#00d1ff' }} />
+          <span style={{ fontWeight: 800, fontSize: 15, color: '#f1f5f9', flex: 1 }}>แก้ไข — {game.name}</span>
+          <button onClick={onCancel}
+            style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#64748b', display: 'flex', padding: 4 }}>
+            <FiX size={18} />
+          </button>
         </div>
-        <ImagePickerField label="Icon (รูปไอคอน)" src={iconSrc} onChange={setIconSrc} />
-        <ImagePickerField label="Background (รูปพื้นหลัง)" src={bgSrc} onChange={setBgSrc} />
-        <div style={{ gridColumn: '1 / -1' }}>
-          <TagToggles tags={tags} onChange={setTags} />
+
+        <div style={{ padding: '22px 24px' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(220px, 1fr))', gap: 14 }}>
+            <div style={{ gridColumn: '1 / -1' }}>
+              <div style={{ fontSize: 12, color: '#64748b', fontWeight: 700, marginBottom: 5 }}>ชื่อเกม</div>
+              <input value={name} onChange={e => setName(e.target.value)} style={sInput} autoFocus />
+            </div>
+            <ImagePickerField label="Icon (รูปไอคอน)" src={iconSrc} onChange={setIconSrc} />
+            <ImagePickerField label="Background (รูปพื้นหลัง)" src={bgSrc} onChange={setBgSrc} />
+            <div style={{ gridColumn: '1 / -1' }}>
+              <TagToggles tags={tags} onChange={setTags} />
+            </div>
+          </div>
+
+          <div style={{ fontSize: 11, color: '#f59e0b', display: 'flex', alignItems: 'center', gap: 6, marginTop: 16, marginBottom: 16 }}>
+            <FiAlertCircle size={11} /> รูปที่อัปโหลดจะแสดงเฉพาะ session นี้ — กด "แจ้งเดฟ" เพื่อส่งให้นักพัฒนาบันทึกถาวร
+          </div>
         </div>
-      </div>
 
-      <div style={{ fontSize: 11, color: '#f59e0b', display: 'flex', alignItems: 'center', gap: 6, marginTop: 16, marginBottom: 16 }}>
-        <FiAlertCircle size={11} /> รูปที่อัปโหลดจะแสดงเฉพาะ session นี้ — กด "แจ้งเดฟ" เพื่อส่งให้นักพัฒนาบันทึกถาวร
-      </div>
-
-      <div style={{ display: 'flex', gap: 8 }}>
-        <button onClick={() => onSave(game.id, { name, icon: iconSrc, bg: bgSrc, tags })} style={sBtnCyan}>
-          <FiCheck size={14} /> บันทึก
-        </button>
-        <button onClick={onCancel} style={{ ...sBtn, background: '#f1f5f9', color: '#475569' }}>
-          <FiX size={14} /> ยกเลิก
-        </button>
+        <div style={{ padding: '0 24px 22px', display: 'flex', gap: 8 }}>
+          <button onClick={() => onSave(game.id, { name, icon: iconSrc, bg: bgSrc, tags })} style={sBtnCyan}>
+            <FiCheck size={14} /> บันทึก
+          </button>
+          <button onClick={onCancel} style={{ ...sBtn, background: '#f1f5f9', color: '#475569' }}>
+            <FiX size={14} /> ยกเลิก
+          </button>
+        </div>
       </div>
     </div>
   );
@@ -290,7 +300,7 @@ export default function GamesManager() {
       <style>{`
         .ag-grid {
           display: grid;
-          grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+          grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
           gap: 12px;
         }
         .ag-card {
@@ -298,7 +308,7 @@ export default function GamesManager() {
           border-radius: 12px;
           overflow: hidden;
           cursor: pointer;
-          height: 170px;
+          height: 190px;
           background: #1e293b;
           border: 2px solid transparent;
           transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease;
@@ -475,7 +485,7 @@ export default function GamesManager() {
         )}
       </div>
 
-      {/* ── Edit panel (below grid) ── */}
+      {showNotify && <NotifyDevModal overrides={overrides} newGames={newGames} onClose={() => setShowNotify(false)} />}
       {editingGame && (
         <GameEditPanel
           game={editingGame}
@@ -484,8 +494,6 @@ export default function GamesManager() {
           onCancel={() => setEditing(null)}
         />
       )}
-
-      {showNotify && <NotifyDevModal overrides={overrides} newGames={newGames} onClose={() => setShowNotify(false)} />}
     </div>
   );
 }

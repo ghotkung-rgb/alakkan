@@ -38,7 +38,7 @@ export default function Footer() {
         <div className="footer-left">
           <div className="footer-logo">
             <div className="footer-logo-icon">
-              <img src="/images/ALASKAN_WEB_ASSET/PNG/alaskan_logo.png" alt="Alaskan Logo"
+              <img src="/images/ALASKAN_WEB_ASSET/PNG/alaskan_logo.png" alt="Alaskan Logo" loading="lazy" decoding="async"
                 style={{ width: '100%', height: '100%', objectFit: 'contain' }}
                 onError={e => { e.target.style.display = 'none'; }} />
             </div>
@@ -59,7 +59,7 @@ export default function Footer() {
               {SOCIAL_ICONS.map((ic) => (
                 <a href={ic.href} target="_blank" rel="noopener noreferrer" className="footer-icon-wrap" key={ic.alt}>
                   <div className="footer-icon-inner">
-                    <img src={ic.src} alt={ic.alt} />
+                    <img src={ic.src} alt={ic.alt} loading="lazy" decoding="async" />
                   </div>
                 </a>
               ))}
@@ -74,7 +74,7 @@ export default function Footer() {
           <a href="https://www.facebook.com/ALASKAN.ONLINE.SHOP" target="_blank" rel="noopener noreferrer" style={{ display: 'block', textDecoration: 'none' }}>
             <div className="footer-fanpage-card">
               <div className="footer-fanpage-img">
-                <img src="/images/ALASKAN_WEB_ASSET/BACKGROUND/home/Alaskan_page_cover_1_ai_edit.png" alt="fanpage"
+                <img src="/images/ALASKAN_WEB_ASSET/BACKGROUND/home/Alaskan_page_cover_1_ai_edit.png" alt="fanpage" loading="lazy" decoding="async"
                   style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover' }}
                   onError={e => { e.target.style.display = 'none'; }}
                 />

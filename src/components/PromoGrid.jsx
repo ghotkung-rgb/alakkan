@@ -28,14 +28,14 @@ export default function PromoGrid({ promos, onTopup, onMailPass }) {
             <div className={`promo-card${i === 0 ? ' featured' : ''}`} key={p.id}
               onClick={() => handlePromo(p)}
               style={{
-                opacity: seen ? 1 : 0,
-                transform: seen ? 'translateY(0)' : 'translateY(40px)',
-                transition: `opacity 0.5s ${i * 0.12}s ease, transform 0.5s ${i * 0.12}s ease`,
+                ...(seen
+                  ? { animation: `gameCardIn 0.5s ${i * 0.12}s ease both` }
+                  : { opacity: 0 }),
                 cursor: p.gameId ? 'pointer' : 'default',
               }}>
               {p.bg ? (
                 <>
-                  <img src={p.bg} alt={p.name}
+                  <img src={p.bg} alt={p.name} loading="lazy" decoding="async"
                     style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover' }}
                     onError={e => { e.target.style.display = 'none'; }} />
                   {p.tag && <div className={`promo-tag ${p.tag === 'ใหม่' ? 'new' : ''}`}>{p.tag}</div>}
@@ -47,7 +47,7 @@ export default function PromoGrid({ promos, onTopup, onMailPass }) {
                   }}>
                     <div style={{ flex: 1, minWidth: 0 }}>
                       <div style={{ display: 'flex', alignItems: 'center', gap: 7 }}>
-                        <img src={p.icon} alt=""
+                        <img src={p.icon} alt="" loading="lazy" decoding="async"
                           style={{ width: 36, height: 37, borderRadius: 8, objectFit: 'cover', flexShrink: 0, border: '1.5px solid rgba(255,255,255,0.18)', marginLeft: 10, marginTop: 29 }}
                           onError={e => { e.target.style.display = 'none'; }} />
                         <span style={{ color: '#fff', fontWeight: 700, fontSize: 13, lineHeight: 1.2, whiteSpace: 'nowrap' }}>{p.name}</span>
@@ -62,7 +62,7 @@ export default function PromoGrid({ promos, onTopup, onMailPass }) {
                 </>
               ) : (
                 <>
-                  <img src={p.img} alt={p.name}
+                  <img src={p.img} alt={p.name} loading="lazy" decoding="async"
                     style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover' }}
                     onError={e => { e.target.style.display = 'none'; }} />
                   <div className="game-overlay" />

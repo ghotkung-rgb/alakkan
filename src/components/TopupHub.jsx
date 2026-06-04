@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { FiChevronLeft } from 'react-icons/fi';
 import { GAMES } from '../config/games';
 import { FLAG_BASE, COUNTRY_NAMES_TH as COUNTRY_NAMES } from '../config/constants';
 
@@ -245,7 +246,7 @@ export default function TopupHub({ onSelectGame, onBack }) {
         {/* Header */}
         <div className="hub-header">
           <div className="hub-header-top">
-            <button className="hub-back-btn" onClick={onBack}>&#9664; กลับ</button>
+            <button className="hub-back-btn" onClick={onBack}><FiChevronLeft size={14} /> กลับ</button>
             <div>
               <div className="hub-title">บริการเติมเกม UID</div>
               <div className="hub-subtitle">
@@ -284,6 +285,7 @@ export default function TopupHub({ onSelectGame, onBack }) {
                     src={game.bg}
                     alt=""
                     className="hub-card-bg"
+                    loading="lazy" decoding="async"
                     onError={e => { e.target.style.display = 'none'; }}
                   />
                   <div className="hub-card-overlay" />
@@ -292,7 +294,7 @@ export default function TopupHub({ onSelectGame, onBack }) {
                   )}
                   {game.country && (
                     <div style={{ position: 'absolute', top: 14, left: 14, display: 'flex', alignItems: 'center', gap: 5, background: 'rgba(0,0,0,0.55)', borderRadius: 20, padding: '3px 8px 3px 3px', backdropFilter: 'blur(4px)', zIndex: 3 }}>
-                      <img src={`${FLAG_BASE}/${game.country}.png`} alt="" style={{ width: 20, height: 20, borderRadius: '50%', flexShrink: 0, objectFit: 'cover' }} onError={e => { e.target.style.display = 'none'; }} />
+                      <img src={`${FLAG_BASE}/${game.country}.png`} alt="" loading="lazy" decoding="async" style={{ width: 20, height: 20, borderRadius: '50%', flexShrink: 0, objectFit: 'cover' }} onError={e => { e.target.style.display = 'none'; }} />
                       <span style={{ fontSize: 10, color: '#fff', fontWeight: 700, whiteSpace: 'nowrap', marginLeft: 28 }}>{COUNTRY_NAMES[game.country] || game.country}</span>
                     </div>
                   )}
@@ -301,6 +303,7 @@ export default function TopupHub({ onSelectGame, onBack }) {
                       src={game.icon}
                       alt=""
                       className="hub-card-icon"
+                      loading="lazy" decoding="async"
                       onError={e => { e.target.style.display = 'none'; }}
                     />
                     <div className="hub-card-name">{game.name}</div>

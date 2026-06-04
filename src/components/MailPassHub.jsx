@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { MAILPASS_GAMES } from '../config/mailpassGames';
-import { FiLock } from 'react-icons/fi';
+import { FiLock, FiChevronLeft } from 'react-icons/fi';
 
 const TABS = ['ทั้งหมด', 'โปรโมชั่น', 'ขายดี'];
 
@@ -267,7 +267,7 @@ export default function MailPassHub({ onSelectGame, onBack }) {
         {/* Header */}
         <div className="mph-header">
           <div className="mph-header-top">
-            <button className="mph-back-btn" onClick={onBack}>&#9664; กลับ</button>
+            <button className="mph-back-btn" onClick={onBack}><FiChevronLeft size={14} /> กลับ</button>
             <div>
               <div className="mph-title">
                 บริการเติมเกม Mail/Pass

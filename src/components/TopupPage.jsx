@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { createOrder } from '../services/topupService';
 import { FiTool, FiAlertTriangle, FiMapPin, FiCheck, FiBook, FiChevronDown, FiX, FiShoppingCart } from 'react-icons/fi';
 import { FaAndroid, FaApple } from 'react-icons/fa';
+import { BsDiamondFill } from 'react-icons/bs';
 import { FLAG_BASE, COUNTRY_NAMES, PAYMENT_METHODS } from '../config/constants';
 
 function buildDefaultInfo(game) {
@@ -324,8 +325,8 @@ export default function TopupPage({ game, onBack, step, onStep }) {
         @media (max-width: 380px)  { .tp-pkg-grid { grid-template-columns: repeat(2, 1fr); } }
 
         @keyframes tp-pkg-pulse {
-          0%, 100% { filter: drop-shadow(0 2px 10px rgba(0,0,0,0.55)); }
-          50%       { filter: drop-shadow(0 2px 10px rgba(0,0,0,0.55)) drop-shadow(0 0 12px rgba(0,190,230,0.3)); }
+          0%, 100% { opacity: 0; }
+          50%       { opacity: 0.45; }
         }
         @keyframes tp-shimmer {
           0%   { transform: translateX(-120%) rotate(25deg); }
@@ -344,20 +345,20 @@ export default function TopupPage({ game, onBack, step, onStep }) {
           border: 2px solid rgba(100,140,200,0.25);
           display: flex; flex-direction: column;
           cursor: pointer; position: relative; text-align: center; overflow: hidden;
-          user-select: none; will-change: filter;
+          user-select: none;
           transition: transform 0.22s var(--ease-out-quart,cubic-bezier(0.25,1,0.5,1)),
                       filter 0.22s var(--ease-out-quart,cubic-bezier(0.25,1,0.5,1)),
                       border-color 0.22s var(--ease-out-quart,cubic-bezier(0.25,1,0.5,1));
-          animation: tp-pkg-pulse 3.5s ease-in-out infinite;
         }
         /* Top cyan edge line — same as game-card::before */
         .tp-pkg-card::before {
           content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; z-index: 11;
           background: linear-gradient(90deg, transparent 0%, #00d1ff 50%, transparent 100%);
           opacity: 0; transition: opacity 0.28s ease; pointer-events: none;
+          animation: tp-pkg-pulse 3.5s ease-in-out infinite;
         }
         .tp-pkg-card:hover::before,
-        .tp-pkg-card.selected::before { opacity: 1; }
+        .tp-pkg-card.selected::before { opacity: 1; animation: none; }
         /* Shimmer sweep */
         .tp-pkg-card::after {
           content: '';
@@ -371,6 +372,7 @@ export default function TopupPage({ game, onBack, step, onStep }) {
         .tp-pkg-card > * { position: relative; z-index: 2; }
         .tp-pkg-card:hover {
           transform: translateY(-6px); border-color: #00d1ff;
+          will-change: transform, filter;
           filter:
             drop-shadow(0 0 6px rgba(0,209,255,0.65))
             drop-shadow(0 0 20px rgba(0,209,255,0.35))
@@ -379,6 +381,7 @@ export default function TopupPage({ game, onBack, step, onStep }) {
         }
         .tp-pkg-card.selected {
           border-color: #00c8ef;
+          will-change: transform, filter;
           filter:
             drop-shadow(0 0 8px rgba(0,200,240,0.9))
             drop-shadow(0 0 22px rgba(0,200,240,0.55))
@@ -953,7 +956,7 @@ export default function TopupPage({ game, onBack, step, onStep }) {
 
         /* ── Reduced motion ── */
         @media (prefers-reduced-motion: reduce) {
-          .tp-pkg-card { animation: none; }
+          .tp-pkg-card, .tp-pkg-card::before, .tp-pkg-card::after { animation: none; }
           .tp-pkg-card, .tp-confirm-btn, .tp-next-btn, .tp-uid-input,
           .tp-home-btn, .tp-history-btn, .tp-pay-btn { transition-duration: 0.01ms; }
           .tp-pay-btn:active { transform: none; }
@@ -1207,7 +1210,7 @@ export default function TopupPage({ game, onBack, step, onStep }) {
                           <div className="tp-sum-detail-line">
                             <span>ราคาต้น</span>
                             <div className="tp-sum-detail-val">
-                              <span className="tp-sum-gem">&#9670;</span>
+                              <BsDiamondFill className="tp-sum-gem" />
                               {baseAmount.toLocaleString()}
                             </div>
                           </div>
@@ -1215,7 +1218,7 @@ export default function TopupPage({ game, onBack, step, onStep }) {
                             <div className="tp-sum-detail-line">
                               <span>+ โบนัสทั่วไป</span>
                               <div className="tp-sum-detail-val tp-sum-bonus">
-                                <span>&#9670;</span>
+                                <BsDiamondFill style={{ flexShrink: 0 }} />
                                 {bonusAmount.toLocaleString()}
                               </div>
                             </div>
@@ -1231,7 +1234,7 @@ export default function TopupPage({ game, onBack, step, onStep }) {
                     <div className="tp-sum-box-title">จำนวนทั้งหมด</div>
                     <div className="tp-sum-box-body-center">
                       <div className="tp-sum-total-big">
-                        <span className="tp-sum-gem" style={{ fontSize: 20 }}>&#9670;</span>
+                        <BsDiamondFill className="tp-sum-gem" size={20} />
                         {selectedPkg ? totalCoupons.toLocaleString() : '—'}
                       </div>
                     </div>
@@ -1280,7 +1283,7 @@ export default function TopupPage({ game, onBack, step, onStep }) {
 
                 {/* Header */}
                 <div className="tp-step2-header">
-                  <img src={game.icon} alt={game.name}
+                  <img src={game.icon} alt={game.name} loading="lazy" decoding="async"
                     style={{ width: 38, height: 38, borderRadius: 8, objectFit: 'cover', flexShrink: 0 }}
                     onError={e => { e.target.style.display = 'none'; }} />
                   <div>
@@ -1391,7 +1394,7 @@ export default function TopupPage({ game, onBack, step, onStep }) {
                       <div className="tp-order-detail-row">
                         <span>ชื่อสินค้า</span>
                         <div className="tp-order-detail-val">
-                          <span className="tp-sum-gem">&#9670;</span>
+                          <BsDiamondFill className="tp-sum-gem" />
                           {(baseAmount * quantity).toLocaleString()}
                         </div>
                       </div>
@@ -1399,7 +1402,7 @@ export default function TopupPage({ game, onBack, step, onStep }) {
                         <div className="tp-order-detail-row">
                           <span>โบนัสพิเศษ</span>
                           <div className="tp-order-detail-val" style={{ color: '#16a34a' }}>
-                            <span>&#9670;</span>
+                            <BsDiamondFill style={{ flexShrink: 0 }} />
                             {(bonusAmount * quantity).toLocaleString()}
                           </div>
                         </div>
@@ -1407,7 +1410,7 @@ export default function TopupPage({ game, onBack, step, onStep }) {
                       <div className="tp-order-detail-row">
                         <span>ทั้งหมด</span>
                         <div className="tp-order-detail-val">
-                          <span className="tp-sum-gem">&#9670;</span>
+                          <BsDiamondFill className="tp-sum-gem" />
                           {totalCoupons.toLocaleString()}
                         </div>
                       </div>

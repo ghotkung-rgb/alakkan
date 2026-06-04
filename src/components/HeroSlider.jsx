@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
-import { FiVolume2, FiVolumeX } from 'react-icons/fi';
+import { FiVolume2, FiVolumeX, FiChevronLeft, FiChevronRight } from 'react-icons/fi';
 
 const HERO_MASCOT_IMG = "/images/ALASKAN_WEB_ASSET/BACKGROUND/home/alaskan_mascot1.png";
 const HERO_GR_IMG = "/images/GR1.png";
@@ -37,11 +37,6 @@ const SLIDES = [
     ],
     thumb: '/images/Silde%20show/LAYER/ROV/HOME%20WEB%20SLIDESHOW_2ROV.png',
   },
-  { type: 'video', src: '/images/Silde%20show/PUBG1.mp4', src2: '/images/Silde%20show/PUBG2.mp4', thumb: '/images/GAMES BG/PUBGMOBILE_bg.png' },
-  // { type: 'promo', bg: '/images/PRO/rov_promotion_web1_ai.png', bgPos: 'center center', thumb: '/images/PRO/rov_promotion_web1_ai.png' },
-  { type: 'promo', bg: '/images/Silde%20show/PUBGE1.png', bgPos: 'center center', thumb: '/images/MAIL/FC_FOOBALL3.png' },
-  { type: 'promo', bg: '/images/Silde%20show/EFOOBALL.png', bgPos: 'center center', thumb: '/images/PRO/Alaskan_freefire_banner_web_ai.png' },
-  { type: 'promo', bg: '/images/Silde%20show/HEARTOPIA.png', bgPos: 'center center', thumb: '/images/PRO/Alaskan_freefire_banner_web2_ai.png' },
   { type: 'promo', bg: '/images/BG_UID/FF.png', bgPos: 'center center', thumb: '/images/GAMES ICON/FREEFIRE_iconapp.png' },
 ];
 
@@ -256,7 +251,7 @@ export default function HeroSlider() {
       )}
 
       <div className="hs-dots">
-        <button className="hs-nav-btn" onClick={goPrev}>&#9664;</button>
+        <button className="hs-nav-btn" onClick={goPrev}><FiChevronLeft size={16} /></button>
         {SLIDES.map((_, i) => (
           <div
             key={i}
@@ -272,7 +267,7 @@ export default function HeroSlider() {
             }}
           />
         ))}
-        <button className="hs-nav-btn" onClick={goNext}>&#9654;</button>
+        <button className="hs-nav-btn" onClick={goNext}><FiChevronRight size={16} /></button>
       </div>
     </div>
   );

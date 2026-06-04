@@ -491,7 +491,7 @@ export default function News() {
               onClick={() => window.open(featured.url, '_blank', 'noopener,noreferrer')}
             >
               {featured.img && (
-                <img className="news-featured-img" src={featured.img} alt={featured.title} />
+                <img className="news-featured-img" src={featured.img} alt={featured.title} loading="lazy" decoding="async" />
               )}
               <div
                 className="news-featured-gradient"
