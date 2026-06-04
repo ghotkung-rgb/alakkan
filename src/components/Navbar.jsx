@@ -2,7 +2,7 @@ import { useState, useEffect, useRef, useCallback } from 'react';
 import { FiMenu, FiX } from 'react-icons/fi';
 
 export default function Navbar({ activeMenu, setActiveMenu, onLogin }) {
-  const menuItems = ['HOME', 'บริการเติมเกม', 'เอเจน', 'ข่าวสาร', 'ติดต่อเรา'];
+  const menuItems = ['HOME', 'ข่าวสาร', 'ติดต่อเรา'];
   const [isOpen, setIsOpen] = useState(false);
   const [isClosing, setIsClosing] = useState(false);
   const closeTimer = useRef(null);
@@ -80,10 +80,15 @@ export default function Navbar({ activeMenu, setActiveMenu, onLogin }) {
           margin: 0 auto;
           padding: 0 36px;
           height: 70px;
+          display: grid;
+          grid-template-columns: 1fr auto 1fr;
+          align-items: center;
+        }
+        .nav-right {
           display: flex;
           align-items: center;
-          justify-content: space-between;
-          gap: 16px;
+          justify-content: flex-end;
+          gap: 12px;
         }
 
         /* ── Logo ── */
@@ -118,7 +123,6 @@ export default function Navbar({ activeMenu, setActiveMenu, onLogin }) {
           display: flex;
           align-items: stretch;
           height: 100%;
-          flex: 1;
           justify-content: center;
           gap: 2px;
         }
@@ -398,20 +402,20 @@ export default function Navbar({ activeMenu, setActiveMenu, onLogin }) {
             ))}
           </div>
 
-          {/* CTA — desktop */}
-          <button className="nav-cta" onClick={onLogin}>
-            ลงชื่อเข้าใช้
-          </button>
-
-          {/* HAMBURGER — mobile only */}
-          <button
-            className="nav-hamburger"
-            aria-label={isOpen ? 'ปิดเมนู' : 'เปิดเมนู'}
-            aria-expanded={isOpen}
-            onClick={() => isOpen ? closeDrawer() : openDrawer()}
-          >
-            {isOpen ? <FiX size={20} /> : <FiMenu size={20} />}
-          </button>
+          {/* CTA + Hamburger — right column */}
+          <div className="nav-right">
+            <button className="nav-cta" onClick={onLogin}>
+              ลงชื่อเข้าใช้
+            </button>
+            <button
+              className="nav-hamburger"
+              aria-label={isOpen ? 'ปิดเมนู' : 'เปิดเมนู'}
+              aria-expanded={isOpen}
+              onClick={() => isOpen ? closeDrawer() : openDrawer()}
+            >
+              {isOpen ? <FiX size={20} /> : <FiMenu size={20} />}
+            </button>
+          </div>
 
         </div>
       </nav>

@@ -3,7 +3,6 @@ import { FiTarget } from 'react-icons/fi';
 import Navbar from './components/Navbar';
 import Home from './components/Home';
 import TopupPage from './components/TopupPage';
-import TopupHub from './components/TopupHub';
 import MailPassHub from './components/MailPassHub';
 import MailPassPage from './components/MailPassPage';
 import News from './components/News';
@@ -126,7 +125,7 @@ export default function App() {
 
   const handleMenuChange = (menu) => navigate({ activeMenu: menu, topupGame: null, mailpassGame: null });
 
-  const KNOWN_MENUS = ['HOME', 'ข่าวสาร', 'บริการเติมเกม', 'บริการ Mail/Pass', 'ADMIN'];
+  const KNOWN_MENUS = ['HOME', 'ข่าวสาร', 'บริการ Mail/Pass', 'ADMIN'];
 
   return (
     <div className="relative w-full min-h-screen font-sans text-black select-none"
@@ -145,9 +144,7 @@ export default function App() {
           <>
             {activeMenu === 'HOME' && <Home onTopup={goTopup} onMailPass={goMailPass} />}
             {activeMenu === 'ข่าวสาร' && <News />}
-            {activeMenu === 'บริการเติมเกม' && (
-              <TopupHub onSelectGame={goTopup} onBack={() => handleMenuChange('HOME')} />
-            )}
+            {/* TopupHub ปิดใช้งานชั่วคราว */}
             {activeMenu === 'บริการ Mail/Pass' && (
               <MailPassHub onSelectGame={goMailPass} onBack={() => handleMenuChange('HOME')} />
             )}
