@@ -17,8 +17,6 @@ export default function Home({ onTopup, onMailPass }) {
   const uidSectionRef = useRef(null);
   const mailSectionRef = useRef(null);
 
-  useEffect(() => { wrapRef.current?.scrollTo({ top: 0, behavior: 'instant' }); }, []);
-
   return (
     <>
       <div className="home-wrap" ref={wrapRef}>

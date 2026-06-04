@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
+import { FiVolume2, FiVolumeX } from 'react-icons/fi';
 
 const HERO_MASCOT_IMG = "/images/ALASKAN_WEB_ASSET/BACKGROUND/home/alaskan_mascot1.png";
 const HERO_GR_IMG = "/images/GR1.png";
@@ -13,17 +14,28 @@ const bg1Opacity = 0.85;                         // ความโปร่ง�
 // แก้รูปสไลค์บนสุด
 const SLIDES = [
   // { type: 'brand', mascot: HERO_MASCOT_IMG, thumb: HERO_MASCOT_IMG },
-  { type: 'promo', bg: '/images/Silde%20show/HOME WEB SLIDESHOW_1Alaskan.png' },
+   { type: 'video', src: '/images/Silde%20show/0001.mp4', loop: false },
   {
     type: 'layer',
-    bg: '/images/Silde%20show/LAYER/HOME%20WEB%20SLIDESHOW_1Freefire-1bg.png',
+    bg: '/images/Silde%20show/LAYER/FF/HOME%20WEB%20SLIDESHOW_1Freefire-1bg.png',
     layers: [
-      { src: '/images/Silde%20show/LAYER/text.png', cls: 'hs-layer-text' },
-      { src: '/images/Silde%20show/LAYER/text2.png', cls: 'hs-layer-text2' },
-      { src: '/images/Silde%20show/LAYER/HOME%20WEB%20SLIDESHOW_1Freefire-3character.png', cls: 'hs-layer-char1' },
-      { src: '/images/Silde%20show/LAYER/HOME%20WEB%20SLIDESHOW_1Freefire-4character.png', cls: 'hs-layer-char2' },
+      { src: '/images/Silde%20show/LAYER/FF/text.png', cls: 'hs-layer-text' },
+      { src: '/images/Silde%20show/LAYER/FF/text2.png', cls: 'hs-layer-text2' },
+      { src: '/images/Silde%20show/LAYER/FF/HOME%20WEB%20SLIDESHOW_1Freefire-3character.png', cls: 'hs-layer-char1' },
+      { src: '/images/Silde%20show/LAYER/FF/HOME%20WEB%20SLIDESHOW_1Freefire-4character.png', cls: 'hs-layer-char2' },
     ],
     thumb: '/images/GAMES BG/FREEFIRE_bg.png',
+  },
+  {
+    type: 'layer',
+    bg: '/images/Silde%20show/LAYER/ROV/HOME%20WEB%20SLIDESHOW_2ROV-1bg.png',
+    layers: [
+      { src: '/images/Silde%20show/LAYER/ROV/HOME%20WEB%20SLIDESHOW_2ROV-2shape.png',   cls: 'hs-rov-shape' },
+      { src: '/images/Silde%20show/LAYER/ROV/HOME%20WEB%20SLIDESHOW_2ROV-2laville.png', cls: 'hs-rov-char' },
+      { src: '/images/Silde%20show/LAYER/ROV/HOME%20WEB%20SLIDESHOW_2ROV-2tagname.png', cls: 'hs-rov-tagname' },
+      { src: '/images/Silde%20show/LAYER/ROV/HOME%20WEB%20SLIDESHOW_2ROV-2text.png',    cls: 'hs-rov-text' },
+    ],
+    thumb: '/images/Silde%20show/LAYER/ROV/HOME%20WEB%20SLIDESHOW_2ROV.png',
   },
   { type: 'video', src: '/images/Silde%20show/PUBG1.mp4', src2: '/images/Silde%20show/PUBG2.mp4', thumb: '/images/GAMES BG/PUBGMOBILE_bg.png' },
   // { type: 'promo', bg: '/images/PRO/rov_promotion_web1_ai.png', bgPos: 'center center', thumb: '/images/PRO/rov_promotion_web1_ai.png' },
@@ -113,6 +125,7 @@ export default function HeroSlider() {
   const [cur, setCur] = useState(0);
   const [animKey, setAnimKey] = useState(0);
   const [dir, setDir] = useState('down');
+  const [videoMuted, setVideoMuted] = useState(true);
   const timerRef = useRef(null);
   const videoRefs = useRef([]);
 
@@ -127,6 +140,12 @@ export default function HeroSlider() {
 
   // auto-slide ปิดอยู่ — เลื่อน manual ด้วย thumbnail
   useEffect(() => () => clearInterval(timerRef.current), []);
+
+  // sync muted state imperatively — React's muted prop doesn't update after mount
+  useEffect(() => {
+    const v = videoRefs.current[cur];
+    if (v) v.muted = videoMuted;
+  }, [videoMuted, cur]);
 
   // pause วิดีโอที่ไม่ active, play วิดีโอที่ active (รองรับ split 2 ตัว)
   useEffect(() => {
@@ -185,7 +204,7 @@ export default function HeroSlider() {
             <video
               ref={el => { videoRefs.current[i] = el; }}
               src={s.src}
-              muted loop playsInline
+              muted loop={s.loop !== false} playsInline
               preload="none"
               style={{ position:'absolute', inset:0, width:'100%', height:'100%', objectFit:'cover' }}
             />
@@ -224,6 +243,16 @@ export default function HeroSlider() {
                   onError={e => { e.target.style.display = 'none'; }} />
           )}
         </div>
+      )}
+
+      {slide.type === 'video' && (
+        <button
+          className="hs-sound-btn"
+          onClick={() => setVideoMuted(m => !m)}
+          title={videoMuted ? 'เปิดเสียง' : 'ปิดเสียง'}
+        >
+          {videoMuted ? <FiVolumeX size={18} /> : <FiVolume2 size={18} />}
+        </button>
       )}
 
       <div className="hs-dots">

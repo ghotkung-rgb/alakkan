@@ -48,8 +48,6 @@ export default function MailPassPage({ game, onBack, step, onStep }) {
   const [selectedPayment, setSelectedPayment] = useState(null);
   const [showAllPayment, setShowAllPayment]   = useState(false);
 
-  useEffect(() => { window.scrollTo({ top: 0, behavior: 'instant' }); }, []);
-
   const togglePkg = (pkg) => {
     setSelectedPkgs(prev =>
       prev.some(p => p.id === pkg.id)

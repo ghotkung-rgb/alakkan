@@ -38,8 +38,6 @@ export default function App() {
 
   // ── apply nav state หลัง exit animation ──
   const applyNav = (s) => {
-    window.scrollTo(0, 0);
-    document.querySelector('.home-wrap')?.scrollTo(0, 0);
     setActiveMenu(s.activeMenu ?? 'HOME');
     setTopupGame(s.topupGame ?? null);
     setMailpassGame(s.mailpassGame ?? null);
