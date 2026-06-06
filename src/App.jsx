@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { FiTarget } from 'react-icons/fi';
 import Navbar from './components/Navbar';
 import Home from './components/Home';
@@ -34,6 +34,12 @@ export default function App() {
   const [viewKey, setViewKey]           = useState(0);
   const [exiting, setExiting]           = useState(false);
 
+  // ref สำหรับ event listeners ที่ mount ครั้งเดียว ให้อ่าน state ล่าสุดได้
+  const navStateRef = useRef({ activeMenu, topupGame, mailpassGame });
+  useEffect(() => {
+    navStateRef.current = { activeMenu, topupGame, mailpassGame };
+  }, [activeMenu, topupGame, mailpassGame]);
+
   // ── apply nav state หลัง exit animation ──
   const applyNav = (s) => {
     setActiveMenu(s.activeMenu ?? 'HOME');
@@ -43,6 +49,7 @@ export default function App() {
     setMailpassStep(s.mailpassStep ?? 1);
     setViewKey(k => k + 1);
     setExiting(false);
+    if ((s.activeMenu ?? 'HOME') !== 'HOME') window.scrollTo(0, 0);
   };
 
   // ── นำทาง + บันทึกลงประวัติเบราเซอร์ + อัป hash URL ──
@@ -100,6 +107,17 @@ export default function App() {
 
     const handlePopState = (e) => {
       const s = e.state || hashToState(window.location.hash);
+      const cur = navStateRef.current;
+      // ถ้าเปลี่ยนแค่ step ภายในหน้าเดิม — อย่า remount ทั้งหน้า
+      if (
+        s.activeMenu === cur.activeMenu &&
+        s.topupGame   === cur.topupGame &&
+        s.mailpassGame === cur.mailpassGame
+      ) {
+        setTopupStep(s.topupStep ?? 1);
+        setMailpassStep(s.mailpassStep ?? 1);
+        return;
+      }
       setExiting(true);
       setTimeout(() => applyNav(s), 160);
     };
@@ -113,7 +131,11 @@ export default function App() {
   useEffect(() => {
     const handleKey = (e) => {
       if (e.ctrlKey && e.shiftKey && e.key === 'A') {
-        setActiveMenu(m => m === 'ADMIN' ? 'HOME' : 'ADMIN');
+        const next = navStateRef.current.activeMenu === 'ADMIN' ? 'HOME' : 'ADMIN';
+        const nextState = { activeMenu: next, topupGame: null, mailpassGame: null, topupStep: 1, mailpassStep: 1 };
+        window.history.pushState(nextState, '', '#' + (next === 'ADMIN' ? 'admin' : 'home'));
+        setExiting(true);
+        setTimeout(() => applyNav(nextState), 160);
       }
     };
     window.addEventListener('keydown', handleKey);
@@ -137,9 +159,9 @@ export default function App() {
 
       <div key={viewKey} className={exiting ? 'page-exit' : 'page-enter'} style={{ flex: 1 }}>
         {showTopup ? (
-          <TopupPage key={topupGame} game={GAMES[topupGame]} onBack={backFromTopup} step={topupStep} onStep={navigateTopupStep} />
+          <TopupPage key={topupGame} game={GAMES[topupGame]} onBack={backFromTopup} step={topupStep} onStep={navigateTopupStep} onHome={() => navigate({ activeMenu: 'HOME', topupGame: null, mailpassGame: null })} />
         ) : showMailPass ? (
-          <MailPassPage game={MAILPASS_GAMES[mailpassGame]} onBack={backFromMailPass} step={mailpassStep} onStep={navigateMailpassStep} />
+          <MailPassPage game={MAILPASS_GAMES[mailpassGame]} onBack={backFromMailPass} step={mailpassStep} onStep={navigateMailpassStep} onHome={() => navigate({ activeMenu: 'HOME', topupGame: null, mailpassGame: null })} />
         ) : (
           <>
             {activeMenu === 'HOME' && <Home onTopup={goTopup} onMailPass={goMailPass} />}

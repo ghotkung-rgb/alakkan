@@ -36,7 +36,7 @@ function buildDefaultInfo(game) {
   };
 }
 
-export default function MailPassPage({ game, onBack, step, onStep }) {
+export default function MailPassPage({ game, onBack, step, onStep, onHome }) {
   const [selectedPkgs, setSelectedPkgs] = useState([]);
   const [email, setEmail]               = useState('');
   const [password, setPassword]         = useState('');
@@ -69,6 +69,13 @@ export default function MailPassPage({ game, onBack, step, onStep }) {
       ? `${totalAmount.toLocaleString()} ${game.currency}`
       : `${selectedPkgs.length} รายการ`;
 
+  // รีเซ็ต done เมื่อกด back — ป้องกัน success overlay ค้างหลัง navigate
+  useEffect(() => {
+    const reset = () => setDone(false);
+    window.addEventListener('popstate', reset);
+    return () => window.removeEventListener('popstate', reset);
+  }, []);
+
   const handleConfirm = async () => {
     setLoading(true);
     try {
@@ -80,6 +87,12 @@ export default function MailPassPage({ game, onBack, step, onStep }) {
       });
       setOrderId(result.orderId);
       setDone(true);
+      // ลบ step สุดท้ายออกจาก history — ป้องกัน back/forward กลับมา re-submit ได้
+      window.history.replaceState(
+        { activeMenu: 'HOME', topupGame: null, mailpassGame: game.id, topupStep: 1, mailpassStep: 1 },
+        '',
+        window.location.hash,
+      );
     } finally {
       setLoading(false);
     }
@@ -96,7 +109,7 @@ export default function MailPassPage({ game, onBack, step, onStep }) {
       <style>{`
         .mp-page {
           min-height: 100vh;
-          background: #f0f4f8;
+          background: #e8f4ff;
           color: #1e293b;
           font-family: 'Noto Sans Thai', sans-serif;
         }
@@ -114,7 +127,7 @@ export default function MailPassPage({ game, onBack, step, onStep }) {
         }
         .mp-hero-overlay {
           position: absolute; inset: 0;
-          background: linear-gradient(to bottom, rgba(240,244,248,0) 20%, #f0f4f8 100%);
+          background: linear-gradient(to bottom, rgba(232,244,255,0) 20%, #e8f4ff 100%);
         }
         .mp-hero-content {
           position: relative; z-index: 2;
@@ -535,7 +548,7 @@ export default function MailPassPage({ game, onBack, step, onStep }) {
         }
         .mp-success-box {
           display: flex; flex-direction: column; align-items: center;
-          background: #f0f4f8; border-radius: 20px;
+          background: #e8f4ff; border-radius: 20px;
           padding: 40px 28px 32px; width: 100%; max-width: 460px;
           max-height: 90vh; overflow-y: auto;
           text-align: center;
@@ -770,7 +783,7 @@ export default function MailPassPage({ game, onBack, step, onStep }) {
                       {totalPrice.toLocaleString()} บาท
                     </div>
                     <button
-                      onClick={() => onStep(1)}
+                      onClick={() => window.history.back()}
                       style={{ fontSize: 12, color: '#94a3b8', background: 'none', border: 'none', cursor: 'pointer', marginTop: 2, textDecoration: 'underline' }}
                     >เปลี่ยน</button>
                   </div>
@@ -1036,7 +1049,7 @@ export default function MailPassPage({ game, onBack, step, onStep }) {
               </div>
 
               <div className="mp-success-actions">
-                <button className="mp-home-btn" onClick={onBack}>กลับหน้าหลัก</button>
+                <button className="mp-home-btn" onClick={onHome || onBack}>กลับหน้าหลัก</button>
                 <button className="mp-history-btn" onClick={() => alert('ระบบประวัติออเดอร์กำลังพัฒนา')}>
                   ดูประวัติคำสั่งซื้อ →
                 </button>

@@ -133,8 +133,14 @@ export default function HeroSlider() {
     }, 6000);
   }, []);
 
-  // auto-slide ปิดอยู่ — เลื่อน manual ด้วย thumbnail
-  useEffect(() => () => clearInterval(timerRef.current), []);
+  useEffect(() => {
+    timerRef.current = setInterval(() => {
+      setCur(c => (c + 1) % SLIDES.length);
+      setDir('down');
+      setAnimKey(k => k + 1);
+    }, 15000);
+    return () => clearInterval(timerRef.current);
+  }, []);
 
   // sync muted state imperatively — React's muted prop doesn't update after mount
   useEffect(() => {
