@@ -1,4 +1,4 @@
-import { useState } from 'react';
+﻿import { useState } from 'react';
 import { MAILPASS_GAMES } from '../config/mailpassGames';
 import { FiLock, FiChevronLeft } from 'react-icons/fi';
 
@@ -19,7 +19,7 @@ export default function MailPassHub({ onSelectGame, onBack }) {
         .mph-page {
           background: #f0f4f8;
           min-height: 100vh;
-          font-family: 'Noto Sans Thai', sans-serif;
+          font-family: 'PSL Empire Pro', sans-serif;
         }
 
         /* ── Header ── */
@@ -47,7 +47,7 @@ export default function MailPassHub({ onSelectGame, onBack }) {
           font-weight: 700;
           cursor: pointer;
           color: #1e293b;
-          font-family: 'Noto Sans Thai', sans-serif;
+          font-family: 'PSL Empire Pro', sans-serif;
           transition: all 0.2s;
           white-space: nowrap;
           flex-shrink: 0;
@@ -116,7 +116,7 @@ export default function MailPassHub({ onSelectGame, onBack }) {
           cursor: pointer;
           border: none;
           white-space: nowrap;
-          font-family: 'Noto Sans Thai', sans-serif;
+          font-family: 'PSL Empire Pro', sans-serif;
           transition: all 0.18s;
           flex-shrink: 0;
         }
@@ -242,7 +242,7 @@ export default function MailPassHub({ onSelectGame, onBack }) {
           padding: 4px 12px;
           border-radius: 12px;
           color: #fff;
-          font-family: 'Noto Sans Thai', sans-serif;
+          font-family: 'PSL Empire Pro', sans-serif;
         }
         .mph-card-btn.active {
           background: #f59e0b;

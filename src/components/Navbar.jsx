@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef, useCallback } from 'react';
+﻿import { useState, useEffect, useRef, useCallback } from 'react';
 import { FiMenu, FiX } from 'react-icons/fi';
 
 export default function Navbar({ activeMenu, setActiveMenu, onLogin }) {
@@ -131,10 +131,10 @@ export default function Navbar({ activeMenu, setActiveMenu, onLogin }) {
           position: relative;
           height: 70px;
           padding: 0 18px;
-          font-size: 14.5px;
+          font-size: 17px;
           font-weight: 700;
           letter-spacing: 0.035em;
-          font-family: 'PSL Chocolate Extra Pro', 'Noto Sans Thai', sans-serif;
+          font-family: 'PSL Chocolate Extra Pro', 'PSL Empire Pro', sans-serif;
           border: none;
           background: none;
           cursor: pointer;
@@ -187,9 +187,9 @@ export default function Navbar({ activeMenu, setActiveMenu, onLogin }) {
           color: #0a1929;
           border: none;
           padding: 9px 26px;
-          font-size: 13.5px;
+          font-size: 16px;
           font-weight: 900;
-          font-family: 'PSL Chocolate Extra Pro', 'Noto Sans Thai', sans-serif;
+          font-family: 'PSL Chocolate Extra Pro', 'PSL Empire Pro', sans-serif;
           cursor: pointer;
           transition: filter 0.2s ease,
                       transform 0.2s cubic-bezier(0.25, 1, 0.5, 1),
@@ -298,7 +298,7 @@ export default function Navbar({ activeMenu, setActiveMenu, onLogin }) {
           cursor: pointer;
           font-size: 15px;
           font-weight: 700;
-          font-family: 'PSL Chocolate Extra Pro', 'Noto Sans Thai', sans-serif;
+          font-family: 'PSL Chocolate Extra Pro', 'PSL Empire Pro', sans-serif;
           color: rgba(255,255,255,0.75);
           text-align: left;
           letter-spacing: 0.03em;
@@ -321,7 +321,7 @@ export default function Navbar({ activeMenu, setActiveMenu, onLogin }) {
           border-radius: 10px;
           font-size: 14px;
           font-weight: 900;
-          font-family: 'PSL Chocolate Extra Pro', 'Noto Sans Thai', sans-serif;
+          font-family: 'PSL Chocolate Extra Pro', 'PSL Empire Pro', sans-serif;
           cursor: pointer;
           letter-spacing: 0.05em;
           filter: drop-shadow(0 2px 10px rgba(0,209,255,0.45));

@@ -1,4 +1,4 @@
-import { useState } from 'react';
+﻿import { useState } from 'react';
 
 const MODAL_CONTENT = {
   privacy: {
@@ -120,7 +120,7 @@ export default function Footer() {
             }}>
               <div style={{
                 fontSize: 20, fontWeight: 900, color: '#fff', letterSpacing: '0.02em',
-                fontFamily: "'PSL Kampanath Pro','Noto Sans Thai',sans-serif",
+                fontFamily: "'PSL Kampanath Pro','PSL Empire Pro',sans-serif",
               }}>{MODAL_CONTENT[modal].title}</div>
               <button onClick={() => setModal(null)} style={{
                 background: 'rgba(255,255,255,0.2)', border: 'none', color: '#fff',
@@ -133,11 +133,11 @@ export default function Footer() {
                 <div key={i} style={{ marginBottom: 18 }}>
                   <div style={{
                     fontSize: 15, fontWeight: 800, color: '#0f172a', marginBottom: 6,
-                    fontFamily: "'Noto Sans Thai',sans-serif",
+                    fontFamily: "'PSL Empire Pro',sans-serif",
                   }}>{sec.h}</div>
                   <div style={{
                     fontSize: 13, color: '#475569', lineHeight: 1.8,
-                    fontFamily: "'Noto Sans Thai',sans-serif",
+                    fontFamily: "'PSL Empire Pro',sans-serif",
                   }}>{sec.p}</div>
                 </div>
               ))}

@@ -30,8 +30,8 @@ export default function GameGrid({ games, expanded, onCollapse, onTopup }) {
   const catFontSize    = 10;
   const catTop         = -7;
   const catLeft        = -8.5;
-  const btnFontSize    = 8;
-  const btnPad         = '8px 11px';
+  const btnFontSize    = 11;
+  const btnPad         = '9px 14px';
   const barPadLeft     = 60;
   // ────────────────────────────────────────────────────
 
@@ -77,13 +77,13 @@ export default function GameGrid({ games, expanded, onCollapse, onTopup }) {
             <img src={game.icon} alt="" loading="lazy" decoding="async"
               style={{ width: 36, height: 37, borderRadius: 8, objectFit: 'cover', flexShrink: 0, border: '1.5px solid rgba(255,255,255,0.18)', marginLeft: iconMarginLeft, marginTop: iconMarginTop }}
               onError={e => { e.target.style.display = 'none'; }} />
-            <span style={{ color: '#fff', fontWeight: 700, fontSize: nameFontSize, lineHeight: 1.2, whiteSpace: 'nowrap', position: 'relative', top: nameTop, left: nameLeft }}>{displayName}</span>
+            <span style={{ color: '#fff', fontWeight: 700, fontSize: nameFontSize, lineHeight: 1.2, whiteSpace: 'nowrap', position: 'relative', top: nameTop, left: nameLeft, fontFamily: "'Noto Sans Thai', sans-serif" }}>{displayName}</span>
           </div>
-          {game.category && <div style={{ color: '#ffffff', fontSize: catFontSize, position: 'relative', top: catTop, left: catLeft }}>{game.category}</div>}
+          {game.category && <div style={{ color: '#ffffff', fontSize: catFontSize, position: 'relative', top: catTop, left: catLeft, fontFamily: "'Noto Sans Thai', sans-serif" }}>{game.category}</div>}
         </div>
         <button style={{
           background: '#00d1ff', color: '#ffffff', border: 'none', borderRadius: 20,
-          padding: btnPad, fontSize: btnFontSize, fontWeight: 700, cursor: 'pointer', flexShrink: 0, lineHeight: 1,
+          padding: btnPad, fontSize: btnFontSize, fontWeight: 700, cursor: 'pointer', flexShrink: 0, lineHeight: 1, fontFamily: "'Noto Sans Thai', sans-serif",
         }} onClick={() => onTopup && onTopup(game.id)}>เติมเกม</button>
       </div>
     </div>

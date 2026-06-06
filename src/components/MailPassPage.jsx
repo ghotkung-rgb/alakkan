@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+﻿import React, { useState, useEffect } from 'react';
 import { createOrder } from '../services/topupService';
 import { FiAlertTriangle, FiLock, FiBook, FiEye, FiEyeOff, FiCheck, FiChevronDown, FiChevronUp } from 'react-icons/fi';
 import { PAYMENT_METHODS } from '../config/constants';
@@ -111,7 +111,7 @@ export default function MailPassPage({ game, onBack, step, onStep, onHome }) {
           min-height: 100vh;
           background: #e8f4ff;
           color: #1e293b;
-          font-family: 'Noto Sans Thai', sans-serif;
+          font-family: 'PSL Empire Pro', sans-serif;
         }
 
         /* ── Hero ── */
@@ -277,7 +277,7 @@ export default function MailPassPage({ game, onBack, step, onStep, onHome }) {
           padding: 2px 8px; border-radius: 20px;
           letter-spacing: 0.05em; z-index: 4;
           white-space: nowrap;
-          font-family: 'Noto Sans Thai', sans-serif;
+          font-family: 'PSL Empire Pro', sans-serif;
         }
         .mp-pkg-badge.hot { background: linear-gradient(90deg, #fbbf24, #f59e0b); color: #78350f; }
         .mp-pkg-badge.rec { background: linear-gradient(90deg, #00d1ff, #00a3cc); color: #fff; }
@@ -312,7 +312,7 @@ export default function MailPassPage({ game, onBack, step, onStep, onHome }) {
           color: #1e293b; font-size: 15px; font-weight: 600;
           padding: 13px 16px;
           outline: none;
-          font-family: 'Noto Sans Thai', sans-serif;
+          font-family: 'PSL Empire Pro', sans-serif;
           transition: border-color 0.2s;
           margin-bottom: 12px;
         }
@@ -390,7 +390,7 @@ export default function MailPassPage({ game, onBack, step, onStep, onHome }) {
           color: #fff; border: none;
           padding: 16px 52px; font-size: 17px; font-weight: 900;
           border-radius: 12px; cursor: pointer;
-          font-family: 'Noto Sans Thai', sans-serif;
+          font-family: 'PSL Empire Pro', sans-serif;
           transition: opacity 0.2s, transform 0.15s;
           clip-path: polygon(12px 0%, 100% 0%, calc(100% - 12px) 100%, 0% 100%);
           white-space: nowrap;
@@ -595,7 +595,7 @@ export default function MailPassPage({ game, onBack, step, onStep, onHome }) {
           background: #f1f5f9; color: #1e293b; border: none;
           padding: 12px 28px; font-size: 14px; font-weight: 700;
           border-radius: 10px; cursor: pointer;
-          font-family: 'Noto Sans Thai', sans-serif;
+          font-family: 'PSL Empire Pro', sans-serif;
           transition: background 0.2s;
         }
         .mp-home-btn:hover { background: #e2e8f0; }
@@ -603,7 +603,7 @@ export default function MailPassPage({ game, onBack, step, onStep, onHome }) {
           background: linear-gradient(135deg, #00d1ff, #00a3cc);
           color: #fff; border: none; padding: 12px 28px;
           font-size: 14px; font-weight: 700; border-radius: 10px; cursor: pointer;
-          font-family: 'Noto Sans Thai', sans-serif;
+          font-family: 'PSL Empire Pro', sans-serif;
           filter: drop-shadow(0 3px 10px rgba(0,209,255,0.35));
           transition: opacity 0.2s;
         }

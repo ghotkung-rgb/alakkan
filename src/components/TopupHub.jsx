@@ -1,4 +1,4 @@
-import { useState } from 'react';
+﻿import { useState } from 'react';
 import { FiChevronLeft } from 'react-icons/fi';
 import { GAMES } from '../config/games';
 import { FLAG_BASE, COUNTRY_NAMES_TH as COUNTRY_NAMES } from '../config/constants';
@@ -20,7 +20,7 @@ export default function TopupHub({ onSelectGame, onBack }) {
         .hub-page {
           background: #f0f4f8;
           min-height: 100vh;
-          font-family: 'Noto Sans Thai', sans-serif;
+          font-family: 'PSL Empire Pro', sans-serif;
         }
 
         /* ── Header ── */
@@ -48,7 +48,7 @@ export default function TopupHub({ onSelectGame, onBack }) {
           font-weight: 700;
           cursor: pointer;
           color: #1e293b;
-          font-family: 'Noto Sans Thai', sans-serif;
+          font-family: 'PSL Empire Pro', sans-serif;
           transition: all 0.2s;
           white-space: nowrap;
           flex-shrink: 0;
@@ -93,7 +93,7 @@ export default function TopupHub({ onSelectGame, onBack }) {
           cursor: pointer;
           border: none;
           white-space: nowrap;
-          font-family: 'Noto Sans Thai', sans-serif;
+          font-family: 'PSL Empire Pro', sans-serif;
           transition: all 0.18s;
           flex-shrink: 0;
         }
@@ -221,7 +221,7 @@ export default function TopupHub({ onSelectGame, onBack }) {
           padding: 4px 12px;
           border-radius: 12px;
           color: #fff;
-          font-family: 'Noto Sans Thai', sans-serif;
+          font-family: 'PSL Empire Pro', sans-serif;
         }
         .hub-card-btn.active {
           background: #00d1ff;

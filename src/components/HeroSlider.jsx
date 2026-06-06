@@ -138,7 +138,7 @@ export default function HeroSlider() {
       setCur(c => (c + 1) % SLIDES.length);
       setDir('down');
       setAnimKey(k => k + 1);
-    }, 15000);
+    }, 12000);
     return () => clearInterval(timerRef.current);
   }, []);
 

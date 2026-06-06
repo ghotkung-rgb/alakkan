@@ -1,4 +1,4 @@
-@import "tailwindcss";
+﻿@import "tailwindcss";
 
 @font-face {
   font-family: 'PSL Kampanath Pro';
@@ -23,6 +23,11 @@
 @font-face {
   font-family: 'Ethnocentric';
   src: url('/fonts/Ethnocentric-Regular.otf') format('opentype');
+  font-weight: normal; font-style: normal; font-display: swap;
+}
+@font-face {
+  font-family: 'PSL Empire Pro';
+  src: url('/fonts/PSL050PRO.OTF') format('opentype');
   font-weight: normal; font-style: normal; font-display: swap;
 }
 
@@ -70,7 +75,7 @@
   .home-wrap {
     position:relative; width:100%; height:100%; overflow-y:auto;
     background:#f0f4f8;
-    font-family:'Noto Sans Thai', sans-serif;
+    font-family:'PSL Empire Pro', sans-serif;
     color:#1e293b;
     scrollbar-width:thin;
     scrollbar-color:#00d1ff #e2e8f0;
@@ -182,13 +187,13 @@
   }
   .hs-game-cat {
     font-size:14px; color:rgba(255,255,255,0.72);
-    font-family:'Noto Sans Thai',sans-serif; margin:0 0 28px;
+    font-family:'PSL Empire Pro',sans-serif; margin:0 0 28px;
   }
   .hs-topup-btn {
     background:#00d1ff; color:#fff; border:none;
     padding:13px 36px; font-size:15px; font-weight:700;
     border-radius:8px; cursor:pointer;
-    font-family:'Noto Sans Thai',sans-serif;
+    font-family:'PSL Empire Pro',sans-serif;
     transition: background 0.15s var(--ease-out-quart),
                 transform 0.15s var(--ease-out-quart),
                 filter 0.15s var(--ease-out-quart);
@@ -446,12 +451,14 @@
     position:absolute; bottom:0; left:0; right:0;
     padding:8px 10px 10px; font-size:12px; font-weight:700;
     text-align:center; line-height:1.4; color:#fff;
+    font-family:'Noto Sans Thai', sans-serif;
   }
   .promo-tag {
     position:absolute; top:8px; right:8px;
     background:#f2d000; color:#1a1a1a;
     font-size:10px; font-weight:900;
     padding:3px 8px; border-radius:4px; letter-spacing:0.08em;
+    font-family:'Noto Sans Thai', sans-serif;
   }
   .promo-tag.new { background:#ef4444; color:#fff; }
 
@@ -513,6 +520,7 @@
     position:absolute; bottom:0; left:0; right:0;
     padding:10px 10px 12px; font-size:11px; font-weight:700;
     text-align:center; line-height:1.4; color:#fff;
+    font-family:'Noto Sans Thai', sans-serif;
   }
   .new-badge {
     position:absolute; top:8px; left:8px;
@@ -554,8 +562,8 @@
     padding:48px 32px 56px; text-align:center;
   }
   .quality-title {
-    font-size:26px; font-weight:900; color:#0f172a;
-    font-family:'PSL Kampanath Pro', 'Noto Sans Thai', sans-serif;
+    font-size:32px; font-weight:900; color:#0f172a;
+    font-family:'PSL Kampanath Pro', 'PSL Empire Pro', sans-serif;
     margin-bottom:32px; letter-spacing:0.04em;
   }
   .quality-grid {
@@ -578,18 +586,18 @@
   .quality-card { transition: transform 0.22s var(--ease-out-quart), box-shadow 0.22s var(--ease-out-quart); }
   .quality-card:hover { transform:translateY(-4px); box-shadow:0 10px 30px rgba(0,209,255,0.2); }
   .quality-stat {
-    font-size:48px; font-weight:900; color:#0f172a; line-height:1;
-    font-family:'Good Times Rg','Noto Sans Thai',sans-serif;
+    font-size:58px; font-weight:900; color:#0f172a; line-height:1;
+    font-family:'Good Times Rg','PSL Empire Pro',sans-serif;
     letter-spacing:0.04em; margin-bottom:12px;
   }
   .quality-card-title {
-    font-size:14px; font-weight:700; color:#1e293b;
+    font-size:17px; font-weight:700; color:#1e293b;
     margin-bottom:12px; line-height:1.5;
-    font-family:'Noto Sans Thai', sans-serif;
+    font-family:'PSL Empire Pro', sans-serif;
   }
   .quality-card-desc {
-    font-size:12px; color:#475569; line-height:1.8;
-    font-family:'Noto Sans Thai', sans-serif;
+    font-size:18px; color:#475569; line-height:1.8;
+    font-family:'PSL Empire Pro', sans-serif;
   }
 
   /* ─── Admin Popup ─── */
@@ -603,7 +611,7 @@
     box-shadow:0 8px 32px rgba(24,119,242,0.55),0 2px 8px rgba(0,0,0,0.15);
     animation:popupBounce 3s ease-in-out infinite, popupPulse 2s ease-in-out infinite;
     transition:opacity 0.2s, transform 0.2s;
-    font-family:'PSL Khemarat Pro', 'Noto Sans Thai', sans-serif;
+    font-family:'PSL Khemarat Pro', 'PSL Empire Pro', sans-serif;
   }
   .admin-popup:hover { opacity:0.92; transform:translateY(-3px); }
   .admin-popup-icon { width:32px; height:32px; flex-shrink:0; object-fit:contain; filter:brightness(0) invert(1); }
@@ -611,7 +619,7 @@
     font-size:18px; font-weight:900;
     letter-spacing:0.04em; white-space:nowrap;
     text-shadow:0 1px 4px rgba(0,0,0,0.2);
-    font-family:'PSL Khemarat Pro', 'Noto Sans Thai', sans-serif;
+    font-family:'PSL Khemarat Pro', 'PSL Empire Pro', sans-serif;
   }
 
   /* ─── Footer ─── */
@@ -633,17 +641,17 @@
     font-size:22px; font-weight:900; color:#00d1ff; letter-spacing:1px;
   }
   .footer-logo-sub {
-    font-size:10px; color:#94a3b8; letter-spacing:1px;
+    font-size:12px; color:#94a3b8; letter-spacing:1px;
     font-family:'Ethnocentric', sans-serif;
   }
   .footer-desc {
-    font-size:12px; color:#64748b; line-height:1.9;
-    font-family:'Noto Sans Thai', sans-serif; margin-bottom:20px;
+    font-size:18px; color:#64748b; line-height:1.9;
+    font-family:'PSL Empire Pro', sans-serif; margin-bottom:20px;
   }
   .footer-contact { display:flex; align-items:center; gap:10px; flex-wrap:wrap; }
   .footer-contact-label {
-    font-size:12px; color:#475569; font-weight:600;
-    font-family:'Noto Sans Thai', sans-serif; cursor:pointer;
+    font-size:15px; color:#475569; font-weight:600;
+    font-family:'PSL Empire Pro', sans-serif; cursor:pointer;
     transition:color 0.2s;
   }
   .footer-contact-label:hover { color:#00d1ff; }
@@ -663,7 +671,7 @@
   .footer-icon-inner img { width:100%; height:100%; object-fit:contain; filter:brightness(0) invert(1); }
   .footer-right { width:220px; flex-shrink:0; }
   .footer-fanpage-title {
-    font-size:16px; margin-bottom:10px;
+    font-size:19px; margin-bottom:10px;
     font-family:'Barlow Condensed', sans-serif; letter-spacing:1px;
   }
   .footer-fanpage-card {
@@ -679,8 +687,8 @@
   /* ─── Copyright bar ─── */
   .copyright-bar {
     background:#fff; padding:14px 32px;
-    font-size:13px; letter-spacing:0.04em;
-    font-family:'PSL Chocolate Extra Pro', 'Noto Sans Thai', sans-serif;
+    font-size:15px; letter-spacing:0.04em;
+    font-family:'PSL Chocolate Extra Pro', 'PSL Empire Pro', sans-serif;
     border-top:1px solid #f1f5f9;
     display:flex; justify-content:center; align-items:center;
   }

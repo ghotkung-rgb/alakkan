@@ -2,7 +2,6 @@ import { useState, useEffect, useRef, useCallback } from 'react';
 import { createOrder } from '../services/topupService';
 import { FiTool, FiCheck } from 'react-icons/fi';
 import { FaAndroid, FaApple } from 'react-icons/fa';
-import { BsDiamondFill } from 'react-icons/bs';
 import TopupStep2Modal from './TopupStep2Modal';
 import TopupSuccess from './TopupSuccess';
 import TopupHowto from './TopupHowto';
@@ -314,7 +313,7 @@ export default function TopupPage({ game, onBack, step, onStep, onHome }) {
                         <div className="tp-sum-detail-line">
                           <span>ราคาต้น</span>
                           <div className="tp-sum-detail-val">
-                            <BsDiamondFill className="tp-sum-gem" />
+                            <img src={selectedPkg?.img || game.icon} alt="" style={{ width: 34, height: 34, objectFit: 'contain', flexShrink: 0 }} onError={e => { e.target.style.display = 'none'; }} />
                             {baseAmount.toLocaleString()}
                           </div>
                         </div>
@@ -322,7 +321,7 @@ export default function TopupPage({ game, onBack, step, onStep, onHome }) {
                           <div className="tp-sum-detail-line">
                             <span>+ โบนัสทั่วไป</span>
                             <div className="tp-sum-detail-val tp-sum-bonus">
-                              <BsDiamondFill style={{ flexShrink: 0 }} />
+                              <img src={selectedPkg?.img || game.icon} alt="" style={{ width: 34, height: 34, objectFit: 'contain', flexShrink: 0 }} onError={e => { e.target.style.display = 'none'; }} />
                               {bonusAmount.toLocaleString()}
                             </div>
                           </div>
@@ -333,7 +332,7 @@ export default function TopupPage({ game, onBack, step, onStep, onHome }) {
                       <div className="tp-sum-box-title">จำนวนทั้งหมด</div>
                       <div className="tp-sum-box-body-center">
                         <div className="tp-sum-total-big">
-                          <BsDiamondFill className="tp-sum-gem" size={20} />
+                          <img src={selectedPkg?.img || game.icon} alt="" style={{ width: 48, height: 48, objectFit: 'contain', flexShrink: 0 }} onError={e => { e.target.style.display = 'none'; }} />
                           {totalCoupons.toLocaleString()}
                         </div>
                       </div>

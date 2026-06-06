@@ -1,4 +1,4 @@
-import { useState } from 'react';
+﻿import { useState } from 'react';
 import { FaFire } from 'react-icons/fa';
 
 const NEWS = [
@@ -126,7 +126,7 @@ export default function News() {
         .news-page {
           min-height: 100vh;
           background: #f0f4f8;
-          font-family: 'Noto Sans Thai', sans-serif;
+          font-family: 'PSL Empire Pro', sans-serif;
         }
 
         /* ── Header ── */
@@ -305,7 +305,7 @@ export default function News() {
           margin-left: auto;
         }
         .news-featured-title {
-          font-family: 'PSL Chocolate Extra Pro', 'Noto Sans Thai', sans-serif;
+          font-family: 'PSL Chocolate Extra Pro', 'PSL Empire Pro', sans-serif;
           font-size: clamp(18px, 2.2vw, 26px);
           font-weight: 800; color: #fff;
           line-height: 1.4; margin: 0 0 12px;
@@ -414,7 +414,7 @@ export default function News() {
           margin-bottom: 10px; flex-wrap: wrap;
         }
         .news-grid-card-title {
-          font-family: 'PSL Chocolate Extra Pro', 'Noto Sans Thai', sans-serif;
+          font-family: 'PSL Chocolate Extra Pro', 'PSL Empire Pro', sans-serif;
           font-size: 15px; font-weight: 800; color: #fff;
           line-height: 1.45; margin: 0 0 8px;
           letter-spacing: 0.01em;

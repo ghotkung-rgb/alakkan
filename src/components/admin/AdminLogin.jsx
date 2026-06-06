@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react';
+﻿import { useState, useEffect, useRef } from 'react';
 import { FiEye, FiEyeOff, FiArrowLeft, FiUser } from 'react-icons/fi';
 import { ADMIN_USER, ADMIN_PASSWORD } from './adminShared';
 
@@ -62,7 +62,7 @@ export default function AdminLogin({ onAuth, onHome }) {
           align-items: center;
           justify-content: center;
           overflow: hidden;
-          font-family: 'Noto Sans Thai', sans-serif;
+          font-family: 'PSL Empire Pro', sans-serif;
         }
 
         /* ── Background atmosphere ── */
@@ -162,7 +162,7 @@ export default function AdminLogin({ onAuth, onHome }) {
           display: block;
         }
         .al-logo-title {
-          font-family: 'PSL Chocolate Extra Pro', 'Noto Sans Thai', sans-serif;
+          font-family: 'PSL Chocolate Extra Pro', 'PSL Empire Pro', sans-serif;
           font-size: 19px;
           font-weight: 700;
           color: #f1f5f9;
@@ -206,7 +206,7 @@ export default function AdminLogin({ onAuth, onHome }) {
           background: rgba(255,255,255,0.04);
           border: 1px solid rgba(255,255,255,0.09);
           color: #e2e8f0;
-          font-family: 'Noto Sans Thai', sans-serif;
+          font-family: 'PSL Empire Pro', sans-serif;
           font-size: 14.5px;
           outline: none;
           clip-path: polygon(
@@ -281,7 +281,7 @@ export default function AdminLogin({ onAuth, onHome }) {
           background: #00d1ff;
           color: #061522;
           border: none;
-          font-family: 'PSL Chocolate Extra Pro', 'Noto Sans Thai', sans-serif;
+          font-family: 'PSL Chocolate Extra Pro', 'PSL Empire Pro', sans-serif;
           font-size: 15px;
           font-weight: 900;
           letter-spacing: 0.06em;
@@ -331,7 +331,7 @@ export default function AdminLogin({ onAuth, onHome }) {
           background: none;
           border: none;
           color: rgba(255,255,255,0.26);
-          font-family: 'Noto Sans Thai', sans-serif;
+          font-family: 'PSL Empire Pro', sans-serif;
           font-size: 12.5px;
           font-weight: 600;
           cursor: pointer;
