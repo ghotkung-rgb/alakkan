@@ -11,6 +11,7 @@ export default function TopupStep2Modal({
   showOrderDetails, setShowOrderDetails,
   accountComplete, handleConfirm, loading,
   totalPrice, totalCoupons, baseAmount, bonusAmount, pkgForStep2,
+  isItem, itemDisplayName,
   onShowHowto,
 }) {
   return (
@@ -143,36 +144,54 @@ export default function TopupStep2Modal({
                   onError={e => { e.target.style.display = 'none'; }}
                 />
                 <div>
-                  <div className="tp-order-pkg-big">
-                    {baseAmount.toLocaleString()}
-                    {bonusAmount > 0 && (
-                      <span style={{ color: '#16a34a' }}>+{bonusAmount.toLocaleString()}</span>
-                    )}
-                  </div>
-                  <div className="tp-order-pkg-sub">ทั้งหมด {totalCoupons.toLocaleString()} {game.currency}</div>
+                  {isItem ? (
+                    <>
+                      <div className="tp-order-pkg-big" style={{ fontSize: 16, lineHeight: 1.4 }}>{itemDisplayName}</div>
+                      <div className="tp-order-pkg-sub">ไอเทม × {quantity}</div>
+                    </>
+                  ) : (
+                    <>
+                      <div className="tp-order-pkg-big">
+                        {baseAmount.toLocaleString()}
+                        {bonusAmount > 0 && (
+                          <span style={{ color: '#16a34a' }}>+{bonusAmount.toLocaleString()}</span>
+                        )}
+                      </div>
+                      <div className="tp-order-pkg-sub">ทั้งหมด {totalCoupons.toLocaleString()} {game.currency}</div>
+                    </>
+                  )}
                 </div>
               </div>
 
-              <div className="tp-order-detail-row">
-                <span>ชื่อสินค้า</span>
-                <div className="tp-order-detail-val">
-                  {(baseAmount * quantity).toLocaleString()}
-                </div>
-              </div>
-              {bonusAmount > 0 && (
+              {isItem ? (
                 <div className="tp-order-detail-row">
-                  <span>โบนัสพิเศษ</span>
-                  <div className="tp-order-detail-val" style={{ color: '#16a34a' }}>
-                    {(bonusAmount * quantity).toLocaleString()}
+                  <span>ไอเทม</span>
+                  <div className="tp-order-detail-val">{itemDisplayName}</div>
+                </div>
+              ) : (
+                <>
+                  <div className="tp-order-detail-row">
+                    <span>ชื่อสินค้า</span>
+                    <div className="tp-order-detail-val">
+                      {(baseAmount * quantity).toLocaleString()}
+                    </div>
                   </div>
-                </div>
+                  {bonusAmount > 0 && (
+                    <div className="tp-order-detail-row">
+                      <span>โบนัสพิเศษ</span>
+                      <div className="tp-order-detail-val" style={{ color: '#16a34a' }}>
+                        {(bonusAmount * quantity).toLocaleString()}
+                      </div>
+                    </div>
+                  )}
+                  <div className="tp-order-detail-row">
+                    <span>ทั้งหมด</span>
+                    <div className="tp-order-detail-val">
+                      {totalCoupons.toLocaleString()}
+                    </div>
+                  </div>
+                </>
               )}
-              <div className="tp-order-detail-row">
-                <span>ทั้งหมด</span>
-                <div className="tp-order-detail-val">
-                  {totalCoupons.toLocaleString()}
-                </div>
-              </div>
 
               <button className="tp-order-toggle-btn" onClick={() => setShowOrderDetails(p => !p)}>
                 {showOrderDetails ? 'ซ่อนรายละเอียด' : 'แสดงรายละเอียดเพิ่ม'}

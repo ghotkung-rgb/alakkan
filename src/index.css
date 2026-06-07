@@ -91,7 +91,7 @@
   /* ─── Hero ─── */
   .hero-bg {
     position:relative; width:100%;
-    background:linear-gradient(180deg,#e8f4ff 0%,#f0f8ff 50%,#f0f4f8 100%);
+    background:#ffffff;
     overflow:hidden;
   }
   .hero-bg::before {
@@ -366,7 +366,7 @@
     font-size:15px; font-weight:900; color:#fff;
     border:none; padding:10px 36px;
     background:#00d1ff; cursor:pointer; letter-spacing:0.12em;
-    font-family:'Barlow Condensed', 'PSL Chocolate Extra Pro', sans-serif;
+    font-family:'PSL Empire Pro', sans-serif;
     text-transform:uppercase;
     clip-path:polygon(20px 0%,100% 0%,100% calc(100% - 20px),calc(100% - 20px) 100%,0% 100%,0% 20px);
     transition: background 0.15s var(--ease-out-quart),
@@ -381,7 +381,7 @@
     font-size:15px; font-weight:900; color:#fff;
     border:none; padding:10px 36px;
     background:#475569; cursor:pointer; letter-spacing:0.12em;
-    font-family:'Barlow Condensed', 'PSL Chocolate Extra Pro', sans-serif;
+    font-family:'PSL Empire Pro', sans-serif;
     text-transform:uppercase;
     clip-path:polygon(20px 0%,100% 0%,100% calc(100% - 20px),calc(100% - 20px) 100%,0% 100%,0% 20px);
     transition: background 0.15s var(--ease-out-quart), transform 0.15s var(--ease-out-quart);
@@ -449,16 +449,16 @@
   }
   .promo-card .game-name {
     position:absolute; bottom:0; left:0; right:0;
-    padding:8px 10px 10px; font-size:12px; font-weight:700;
+    padding:8px 10px 10px; font-size:14px; font-weight:700;
     text-align:center; line-height:1.4; color:#fff;
-    font-family:'Noto Sans Thai', sans-serif;
+    font-family:'PSL Empire Pro', sans-serif;
   }
   .promo-tag {
     position:absolute; top:8px; right:8px;
     background:#f2d000; color:#1a1a1a;
-    font-size:10px; font-weight:900;
+    font-size:12px; font-weight:900;
     padding:3px 8px; border-radius:4px; letter-spacing:0.08em;
-    font-family:'Noto Sans Thai', sans-serif;
+    font-family:'PSL Empire Pro', sans-serif;
   }
   .promo-tag.new { background:#ef4444; color:#fff; }
 
@@ -518,9 +518,9 @@
   }
   .game-name {
     position:absolute; bottom:0; left:0; right:0;
-    padding:10px 10px 12px; font-size:11px; font-weight:700;
+    padding:10px 10px 12px; font-size:14px; font-weight:700;
     text-align:center; line-height:1.4; color:#fff;
-    font-family:'Noto Sans Thai', sans-serif;
+    font-family:'PSL Empire Pro', sans-serif;
   }
   .new-badge {
     position:absolute; top:8px; left:8px;
@@ -563,7 +563,7 @@
   }
   .quality-title {
     font-size:32px; font-weight:900; color:#0f172a;
-    font-family:'PSL Kampanath Pro', 'PSL Empire Pro', sans-serif;
+    font-family:'PSL Empire Pro', sans-serif;
     margin-bottom:32px; letter-spacing:0.04em;
   }
   .quality-grid {
@@ -672,7 +672,7 @@
   .footer-right { width:220px; flex-shrink:0; }
   .footer-fanpage-title {
     font-size:19px; margin-bottom:10px;
-    font-family:'Barlow Condensed', sans-serif; letter-spacing:1px;
+    font-family:'PSL Empire Pro', sans-serif; letter-spacing:1px;
   }
   .footer-fanpage-card {
     border-radius:10px; overflow:hidden;

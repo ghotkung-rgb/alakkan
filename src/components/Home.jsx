@@ -89,20 +89,6 @@ export default function Home({ onTopup, onMailPass }) {
             <span style={{ color: '#00d1ff' }}>POPULAR</span>
             <span style={{ color: '#1e293b' }}>PACKAGE</span>
           </div>
-          {POPULAR_PACKAGES.map((pkg) => (
-            <div className="popular-banner" key={pkg.id}>
-              <div className="popular-banner-inner">
-                <img
-                  src={pkg.img}
-                  alt={`package-${pkg.id}`}
-                  onError={e => {
-                    e.target.style.display = 'none';
-                    e.target.parentElement.style.background = 'linear-gradient(135deg,#00b4d8,#00a3cc)';
-                  }}
-                />
-              </div>
-            </div>
-          ))}
         </div>
 
         <div className="divider" />

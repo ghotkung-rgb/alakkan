@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { createOrder } from '../services/topupService';
 import { FiTool, FiCheck } from 'react-icons/fi';
-import { FaAndroid, FaApple } from 'react-icons/fa';
+import { FaGooglePlay, FaApple } from 'react-icons/fa';
 import TopupStep2Modal from './TopupStep2Modal';
 import TopupSuccess from './TopupSuccess';
 import TopupHowto from './TopupHowto';
@@ -62,6 +62,21 @@ export default function TopupPage({ game, onBack, step, onStep, onHome }) {
     window.addEventListener('popstate', reset);
     return () => window.removeEventListener('popstate', reset);
   }, []);
+
+  // restore accountValues จาก sessionStorage เมื่อกลับมาหน้าเดิม
+  useEffect(() => {
+    const saved = sessionStorage.getItem(`topup_account_${game.name}`);
+    if (saved) {
+      try { setAccountValues(JSON.parse(saved)); } catch {}
+    }
+  }, [game.name]);
+
+  // บันทึก accountValues ลง sessionStorage เมื่อมีการเปลี่ยนแปลง
+  useEffect(() => {
+    if (Object.keys(accountValues).length > 0) {
+      sessionStorage.setItem(`topup_account_${game.name}`, JSON.stringify(accountValues));
+    }
+  }, [accountValues, game.name]);
 
   useEffect(() => {
     if (step === 2) {
@@ -149,6 +164,9 @@ export default function TopupPage({ game, onBack, step, onStep, onHome }) {
     label: quantity > 1 ? `${pkgLabel} × ${quantity}` : pkgLabel,
   } : null;
 
+  const isItem          = selectedPkg ? (!selectedPkg.amount || selectedPkg.amount === 0) : false;
+  const itemDisplayName = selectedPkg?.label || '';
+
   const handleConfirm = async () => {
     setLoading(true);
     try {
@@ -227,12 +245,11 @@ export default function TopupPage({ game, onBack, step, onStep, onHome }) {
           <div className="tp-game-bar">
             <img src={game.icon} alt={game.name} className="tp-game-bar-icon"
               onError={e => { e.target.style.display = 'none'; }} />
-            <div>
-              <div className="tp-game-bar-name">
-                เติมเกม <span style={{ color: '#00d1ff' }}>{game.name}</span>
-              </div>
+            <div style={{ position: 'relative', paddingTop: '40px' }}>
+              <div className="tp-game-bar-label">เติมเกม</div>
+              <div className="tp-game-bar-name">{game.name}</div>
               <div>
-                <span className="tp-game-bar-plat"><FaAndroid size={11} /> Android</span>
+                <span className="tp-game-bar-plat"><FaGooglePlay size={11} /> Play Store</span>
                 <span className="tp-game-bar-plat"><FaApple size={11} /> iOS</span>
               </div>
             </div>
@@ -295,7 +312,7 @@ export default function TopupPage({ game, onBack, step, onStep, onHome }) {
                             : <strong>{pkg.label || ''}</strong>
                           }
                         </div>
-                        <span className="tp-pkg-price-box">{pkg.price.toLocaleString()} บาท</span>
+                        <span className="tp-pkg-price-box">{pkg.price.toLocaleString()} THB</span>
                       </div>
                     );
                   })}
@@ -307,59 +324,75 @@ export default function TopupPage({ game, onBack, step, onStep, onHome }) {
               <div className="tp-sum-wrap">
                 <div className="tp-sum-card">
                   <div className="tp-sum-boxes">
+
+                    {/* Box 1: รายละเอียด */}
                     <div className="tp-sum-box">
                       <div className="tp-sum-box-title">รายละเอียด</div>
                       <div className="tp-sum-box-body">
-                        <div className="tp-sum-detail-line">
-                          <span>ราคาต้น</span>
-                          <div className="tp-sum-detail-val">
-                            <img src={selectedPkg?.img || game.icon} alt="" style={{ width: 34, height: 34, objectFit: 'contain', flexShrink: 0 }} onError={e => { e.target.style.display = 'none'; }} />
-                            {baseAmount.toLocaleString()}
+                        {isItem ? (
+                          <div className="tp-sum-item-name">
+                            <img src={selectedPkg?.img || game.icon} alt="" style={{ width: 28, height: 28, objectFit: 'contain', flexShrink: 0 }} onError={e => { e.target.style.display = 'none'; }} />
+                            <span>{itemDisplayName}</span>
                           </div>
-                        </div>
-                        {bonusAmount > 0 && (
-                          <div className="tp-sum-detail-line">
-                            <span>+ โบนัสทั่วไป</span>
-                            <div className="tp-sum-detail-val tp-sum-bonus">
-                              <img src={selectedPkg?.img || game.icon} alt="" style={{ width: 34, height: 34, objectFit: 'contain', flexShrink: 0 }} onError={e => { e.target.style.display = 'none'; }} />
-                              {bonusAmount.toLocaleString()}
+                        ) : (
+                          <>
+                            <div className="tp-sum-detail-line">
+                              <span>ราคาต้น</span>
+                              <div className="tp-sum-detail-val">
+                                <img src={selectedPkg?.img || game.icon} alt="" style={{ width: 24, height: 24, objectFit: 'contain', flexShrink: 0 }} onError={e => { e.target.style.display = 'none'; }} />
+                                {baseAmount.toLocaleString()}
+                              </div>
                             </div>
-                          </div>
+                            {bonusAmount > 0 && (
+                              <div className="tp-sum-detail-line">
+                                <span>+ โบนัสทั่วไป</span>
+                                <div className="tp-sum-detail-val tp-sum-bonus">
+                                  <img src={selectedPkg?.img || game.icon} alt="" style={{ width: 24, height: 24, objectFit: 'contain', flexShrink: 0 }} onError={e => { e.target.style.display = 'none'; }} />
+                                  {bonusAmount.toLocaleString()}
+                                </div>
+                              </div>
+                            )}
+                          </>
                         )}
                       </div>
                     </div>
+
+                    {/* Box 2: จำนวนทั้งหมด + qty */}
                     <div className="tp-sum-box">
-                      <div className="tp-sum-box-title">จำนวนทั้งหมด</div>
+                      <div className="tp-sum-box-title">{isItem ? 'ไอเทม' : 'จำนวนทั้งหมด'}</div>
                       <div className="tp-sum-box-body-center">
-                        <div className="tp-sum-total-big">
-                          <img src={selectedPkg?.img || game.icon} alt="" style={{ width: 48, height: 48, objectFit: 'contain', flexShrink: 0 }} onError={e => { e.target.style.display = 'none'; }} />
-                          {totalCoupons.toLocaleString()}
+                        {isItem ? (
+                          <img src={selectedPkg?.img || game.icon} alt="" style={{ width: 36, height: 36, objectFit: 'contain' }} onError={e => { e.target.style.display = 'none'; }} />
+                        ) : (
+                          <div className="tp-sum-total-big">
+                            <img src={selectedPkg?.img || game.icon} alt="" style={{ width: 28, height: 28, objectFit: 'contain', flexShrink: 0 }} onError={e => { e.target.style.display = 'none'; }} />
+                            {totalCoupons.toLocaleString()}
+                          </div>
+                        )}
+                        <div className="tp-sum-qty-row">
+                          <span className="tp-sum-qty-label">จำนวน</span>
+                          <div className="tp-qty-wrap">
+                            <button className="tp-qty-btn" onClick={() => setQuantity(q => Math.max(1, q - 1))} disabled={quantity <= 1}>−</button>
+                            <span className="tp-qty-num">{quantity}</span>
+                            <button className="tp-qty-btn" onClick={() => setQuantity(q => Math.min(10, q + 1))}>+</button>
+                          </div>
                         </div>
                       </div>
                     </div>
+
+                    {/* Box 3: ราคารวม + confirm */}
                     <div className="tp-sum-box">
                       <div className="tp-sum-box-title">ราคารวม</div>
                       <div className="tp-sum-box-body-center">
-                        <div className="tp-sum-price-big">฿ {totalPrice.toLocaleString()}</div>
+                        <div className="tp-sum-price-big">
+                          {totalPrice.toLocaleString()} <span className="tp-sum-thb">THB</span>
+                        </div>
+                        <button className="tp-confirm-btn" onClick={() => onStep(2)}>ยืนยันชำระเงิน</button>
                       </div>
                     </div>
+
                   </div>
-                  <div className="tp-sum-actions">
-                    <div className="tp-sum-left-actions">
-                      <div className="tp-sum-pkg-icon">
-                        <img src={selectedPkg?.img || game.icon} alt=""
-                          onError={e => { e.target.style.display = 'none'; }} />
-                      </div>
-                      <div className="tp-qty-wrap">
-                        <button className="tp-qty-btn" onClick={() => setQuantity(q => Math.max(1, q - 1))} disabled={quantity <= 1}>−</button>
-                        <span className="tp-qty-num">{quantity}</span>
-                        <button className="tp-qty-btn" onClick={() => setQuantity(q => Math.min(10, q + 1))}>+</button>
-                      </div>
-                    </div>
-                    <button className="tp-confirm-btn" onClick={() => onStep(2)}>
-                      ทำการชำระเงิน ฿{totalPrice.toLocaleString()}
-                    </button>
-                  </div>
+                  <div className="tp-sum-note">* โปรดตรวจสอบแพ็กเกจที่ต้องการให้ถูกต้อง ก่อนทำรายการชำระเงิน</div>
                 </div>
               </div>
             )}
@@ -389,6 +422,8 @@ export default function TopupPage({ game, onBack, step, onStep, onHome }) {
               baseAmount={baseAmount}
               bonusAmount={bonusAmount}
               pkgForStep2={pkgForStep2}
+              isItem={isItem}
+              itemDisplayName={itemDisplayName}
               onShowHowto={() => setShowHowto(true)}
             />
           )}

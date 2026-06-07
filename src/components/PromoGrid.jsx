@@ -14,6 +14,16 @@ export default function PromoGrid({ promos, onTopup, onMailPass }) {
     return () => observer.disconnect();
   }, []);
 
+  // ── ค่าปรับได้ (sync กับ GameGrid) ─────────────────────
+  const iconMarginLeft = 10;
+  const iconMarginTop  = 48;
+  const nameTop        =  10;
+  const nameFontSize   = 22;
+  const catFontSize    = 17;
+  const btnFontSize    = 14;
+  const btnPad         = '10px 18px';
+  // ────────────────────────────────────────────────────────
+
   const handlePromo = (p) => {
     if (!p.gameId) return;
     if (p.type === 'mailpass') onMailPass?.(p.gameId);
@@ -48,15 +58,15 @@ export default function PromoGrid({ promos, onTopup, onMailPass }) {
                     <div style={{ flex: 1, minWidth: 0 }}>
                       <div style={{ display: 'flex', alignItems: 'center', gap: 7 }}>
                         <img src={p.icon} alt="" loading="lazy" decoding="async"
-                          style={{ width: 36, height: 37, borderRadius: 8, objectFit: 'cover', flexShrink: 0, border: '1.5px solid rgba(255,255,255,0.18)', marginLeft: 10, marginTop: 29 }}
+                          style={{ width: 36, height: 37, borderRadius: 8, objectFit: 'cover', flexShrink: 0, border: '1.5px solid rgba(255,255,255,0.18)', marginLeft: iconMarginLeft, marginTop: iconMarginTop }}
                           onError={e => { e.target.style.display = 'none'; }} />
-                        <span style={{ color: '#fff', fontWeight: 700, fontSize: 13, lineHeight: 1.2, whiteSpace: 'nowrap' }}>{p.name}</span>
+                        <span style={{ color: '#fff', fontWeight: 700, fontSize: nameFontSize, lineHeight: 1.2, whiteSpace: 'nowrap', position: 'relative', top: nameTop, fontFamily: "'PSL Empire Pro', sans-serif" }}>{p.name}</span>
                       </div>
-                      {p.category && <div style={{ color: '#ffffff', fontSize: 11, marginTop: 2 }}>{p.category}</div>}
+                      {p.category && <div style={{ color: '#ffffff', fontSize: catFontSize, marginTop: 2, fontFamily: "'PSL Empire Pro', sans-serif" }}>{p.category}</div>}
                     </div>
                     <button style={{
                       background: '#00d1ff', color: '#ffffff', border: 'none', borderRadius: 20,
-                      padding: '5px 11px', fontSize: 10, fontWeight: 700, cursor: 'pointer', flexShrink: 0, lineHeight: 1,
+                      padding: btnPad, fontSize: btnFontSize, fontWeight: 700, cursor: 'pointer', flexShrink: 0, lineHeight: 1, fontFamily: "'PSL Empire Pro', sans-serif",
                     }} onClick={(e) => { e.stopPropagation(); handlePromo(p); }}>เติมเกม</button>
                   </div>
                 </>

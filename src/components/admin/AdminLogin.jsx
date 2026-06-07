@@ -462,7 +462,7 @@ export default function AdminLogin({ onAuth, onHome }) {
 
           <div className="al-dev">
             DEV MODE — ยังไม่มีฐานข้อมูล<br />
-            ว่างทั้งสองช่อง = ข้ามได้ &nbsp;|&nbsp; ID: alaskan / PW: ADMIN2025
+            ว่างทั้งสองช่อง = ข้ามได้ &nbsp;|&nbsp; credentials อยู่ใน .env
           </div>
         </div>
       </div>

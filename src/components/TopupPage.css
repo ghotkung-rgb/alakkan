@@ -43,8 +43,8 @@
 /* ── Game info bar ── */
 .tp-game-bar {
   background: transparent;
-  padding: 16px 24px; display: flex; align-items: center; gap: 16px;
-  margin-top: -88px; position: relative; z-index: 5;
+  padding: 16px 24px; display: flex; align-items: flex-end; gap: 16px;
+  margin-top: -130px; position: relative; z-index: 5;
   max-width: 1300px; margin-left: auto; margin-right: auto;
 }
 .tp-game-bar-icon {
@@ -52,15 +52,22 @@
   border: 2px solid rgba(0,209,255,0.45); object-fit: cover; flex-shrink: 0;
   box-shadow: 0 4px 18px rgba(0,209,255,0.22);
 }
+.tp-game-bar-label {
+  position: absolute; top: 20px; left: 0;
+  font-family: 'PSL Kampanath Pro', sans-serif;
+  font-size: 28px; font-weight: 700; color: #1e293b;
+  letter-spacing: 0.05em; line-height: 1;
+}
 .tp-game-bar-name {
   font-family: 'PSL Kampanath Pro', sans-serif;
-  font-size: 38px; font-weight: 900; color: #0f172a;
-  letter-spacing: 0.04em; line-height: 1.15;
+  font-size: 58px; font-weight: 900; color: #00d1ff;
+  letter-spacing: 0.04em; line-height: 1.1;
 }
 .tp-game-bar-plat {
-  display: inline-flex; align-items: center; gap: 4px;
-  background: #f1f5f9; border-radius: 6px; padding: 4px 10px;
-  font-size: 13px; color: #475569; font-weight: 700;
+  display: inline-flex; align-items: center; gap: 6px;
+  background: #f1f5f9; border-radius: 8px; padding: 7px 16px;
+  font-size: 17px; color: #475569; font-weight: 700;
+  font-family: 'PSL Empire Pro', sans-serif;
   margin-right: 6px; margin-top: 6px;
 }
 .tp-howto-trigger-btn {
@@ -79,22 +86,22 @@
   padding: 0 32px; display: flex; align-items: center; justify-content: center;
 }
 .tp-step-item {
-  display: flex; align-items: center; gap: 9px; padding: 12px 0;
-  font-size: 17px; font-weight: 700; color: #94a3b8;
+  display: flex; align-items: center; gap: 12px; padding: 16px 0;
+  font-size: 26px; font-weight: 700; color: #94a3b8;
 }
 .tp-step-item.active { color: #0f172a; }
 .tp-step-item.done   { color: #00d1ff; }
 .tp-step-num {
-  width: 28px; height: 28px; border-radius: 50%;
+  width: 44px; height: 44px; border-radius: 50%;
   display: flex; align-items: center; justify-content: center;
-  font-size: 13px; font-weight: 900;
+  font-size: 18px; font-weight: 900;
   background: #e2e8f0; color: #64748b; flex-shrink: 0; transition: background 0.2s;
 }
 .tp-step-item.active .tp-step-num,
 .tp-step-item.done   .tp-step-num { background: #00d1ff; color: #fff; }
 .tp-step-line {
-  width: 120px; flex-shrink: 0;
-  height: 1.5px; background: #e2e8f0; margin: 0 14px;
+  width: 240px; flex-shrink: 0;
+  height: 1.5px; background: #e2e8f0; margin: 0 28px;
 }
 
 /* ── Body ── */
@@ -107,7 +114,7 @@
 /* ── Section header ── */
 .tp-section-header {
   display: flex; align-items: center; justify-content: space-between;
-  padding: 28px 0 16px;
+  padding: 10px 0 14px;
 }
 .tp-section-title {
   font-family: 'PSL Empire Pro', sans-serif;
@@ -137,6 +144,18 @@
   0%, 100% { opacity: 0; }
   50%       { opacity: 0.45; }
 }
+@keyframes tp-neon-glow {
+  0%, 100% {
+    filter: drop-shadow(0 0 6px #00d1ff)
+            drop-shadow(0 0 22px rgba(0,209,255,0.5))
+            drop-shadow(0 0 50px rgba(0,209,255,0.18));
+  }
+  50% {
+    filter: drop-shadow(0 0 10px #00d1ff)
+            drop-shadow(0 0 36px rgba(0,209,255,0.72))
+            drop-shadow(0 0 70px rgba(0,209,255,0.32));
+  }
+}
 @keyframes tp-shimmer {
   0%   { transform: translateX(-120%) rotate(25deg); }
   100% { transform: translateX(400%) rotate(25deg); }
@@ -149,70 +168,61 @@
 
 /* ── Package card ── */
 .tp-pkg-card {
-  clip-path: polygon(16px 0%, 100% 0%, 100% calc(100% - 16px), calc(100% - 16px) 100%, 0% 100%, 0% 16px);
-  background: linear-gradient(160deg, #1a2844 0%, #0e1a30 100%);
-  border: 2px solid rgba(100,140,200,0.25);
-  display: flex; flex-direction: column;
-  cursor: pointer; position: relative; text-align: center; overflow: hidden;
+  background-image: url('/images/TOP/pack.png');
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
+  clip-path: polygon(12px 0%, 100% 0%, 100% calc(100% - 12px), calc(100% - 12px) 100%, 0% 100%, 0% 12px);
+  aspect-ratio: 375/470;
+  display: block;
+  cursor: pointer; position: relative; overflow: hidden;
   user-select: none;
-  transition: transform 0.22s var(--ease-out-quart,cubic-bezier(0.25,1,0.5,1)),
-              filter 0.22s var(--ease-out-quart,cubic-bezier(0.25,1,0.5,1)),
-              border-color 0.22s var(--ease-out-quart,cubic-bezier(0.25,1,0.5,1));
+  transition: transform 0.22s var(--ease-out-quart, cubic-bezier(0.25,1,0.5,1)),
+              filter 0.4s var(--ease-out-quart, cubic-bezier(0.25,1,0.5,1));
 }
-.tp-pkg-card::before {
-  content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; z-index: 11;
-  background: linear-gradient(90deg, transparent 0%, #00d1ff 50%, transparent 100%);
-  opacity: 0; transition: opacity 0.28s ease; pointer-events: none;
-  animation: tp-pkg-pulse 3.5s ease-in-out infinite;
-}
-.tp-pkg-card:hover::before,
-.tp-pkg-card.selected::before { opacity: 1; animation: none; }
+.tp-pkg-card::before { display: none; }
 .tp-pkg-card::after {
   content: '';
   position: absolute; top: -60%; left: -20%;
   width: 22%; height: 220%;
-  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.06), transparent);
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.55), transparent);
   transform: rotate(25deg);
   animation: tp-shimmer 5s ease-in-out infinite;
-  pointer-events: none; z-index: 3;
+  pointer-events: none; z-index: 1;
 }
 .tp-pkg-card > * { position: relative; z-index: 2; }
 .tp-pkg-card:hover {
-  transform: translateY(-6px); border-color: #00d1ff;
-  will-change: transform, filter;
-  filter:
-    drop-shadow(0 0 6px rgba(0,209,255,0.65))
-    drop-shadow(0 0 20px rgba(0,209,255,0.35))
-    drop-shadow(0 14px 36px rgba(0,0,0,0.28));
-  animation: none;
+  transform: translateY(-6px);
+  will-change: transform;
 }
 .tp-pkg-card.selected {
-  border-color: #00c8ef;
   will-change: transform, filter;
   filter:
-    drop-shadow(0 0 8px rgba(0,200,240,0.9))
-    drop-shadow(0 0 22px rgba(0,200,240,0.55))
-    drop-shadow(0 10px 28px rgba(0,0,0,0.45));
+    drop-shadow(0 0 14px #00d1ff)
+    drop-shadow(0 0 40px rgba(0,209,255,0.8))
+    drop-shadow(0 0 85px rgba(0,209,255,0.42));
   transform: scale(1.03);
-  animation: none;
+  animation: tp-neon-glow 2.5s ease-in-out infinite;
 }
 
-/* Image */
+/* Image — absolute, fills upper 70% of card */
 .tp-pkg-img-wrap {
-  flex: 1; padding: 14px 12px 6px;
+  position: absolute;
+  top: 8%; left: 8%; right: 8%; bottom: 24%;
+  padding: 0;
   display: flex; align-items: center; justify-content: center;
+  z-index: 2;
 }
 .tp-pkg-img-wrap img {
-  width: 80%; aspect-ratio: 1/1; object-fit: contain; display: block;
-  filter: drop-shadow(0 0 10px rgba(0,190,240,0.55)) drop-shadow(0 2px 6px rgba(0,0,0,0.5));
+  width: 72%; aspect-ratio: 1/1; object-fit: contain; display: block;
+  filter: drop-shadow(0 0 8px rgba(0,190,240,0.35)) drop-shadow(0 2px 6px rgba(0,0,0,0.15));
   transition: filter 0.22s, transform 0.22s;
 }
 .tp-pkg-card:hover .tp-pkg-img-wrap img {
-  filter: drop-shadow(0 0 18px rgba(0,190,240,0.85)) drop-shadow(0 2px 8px rgba(0,0,0,0.5));
+  filter: drop-shadow(0 0 16px rgba(0,190,240,0.65)) drop-shadow(0 2px 8px rgba(0,0,0,0.2));
   transform: scale(1.06) translateY(-2px);
 }
 .tp-pkg-card.selected .tp-pkg-img-wrap img {
-  filter: drop-shadow(0 0 22px rgba(0,210,255,0.95)) drop-shadow(0 0 10px rgba(0,210,255,0.65)) drop-shadow(0 2px 6px rgba(0,0,0,0.4));
+  filter: drop-shadow(0 0 20px rgba(0,210,255,0.85)) drop-shadow(0 0 10px rgba(0,210,255,0.5)) drop-shadow(0 2px 6px rgba(0,0,0,0.15));
   transform: scale(1.06) translateY(-2px);
 }
 
@@ -239,36 +249,41 @@
   filter: drop-shadow(0 0 6px rgba(0,200,255,0.7));
 }
 
-/* Amount label */
+/* Amount label — just above the cyan bar */
 .tp-pkg-amount-label {
-  padding: 0 10px 8px;
-  font-size: clamp(11px, 1vw, 13px); font-weight: 400;
-  color: #fff; text-align: center; line-height: 1.4;
-  font-family: 'Noto Sans Thai', sans-serif;
+  position: absolute;
+  left: 4px; right: 4px; bottom: 25%;
+  padding: 0 6px 2px;
+  font-size: clamp(20px, 2vw, 28px); font-weight: 700;
+  color: #1e293b; text-align: center; line-height: 1.2;
+  font-family: 'PSL Empire Pro', sans-serif;
+  z-index: 2;
 }
 .tp-pkg-amount-label strong {
-  font-weight: 900; color: #fff; font-size: 1.15em;
+  font-weight: 900; color: #0f172a; font-size: 1.25em;
   transition: color 0.2s;
 }
-.tp-pkg-currency { color: #00d1ff; transition: color 0.2s; }
+.tp-pkg-currency { color: #0284c7; font-weight: 900; transition: color 0.2s; }
 .tp-pkg-card.selected .tp-pkg-amount-label strong { color: #00d1ff; }
-.tp-pkg-card.selected .tp-pkg-currency { color: rgba(180,235,255,0.85); }
+.tp-pkg-card.selected .tp-pkg-currency { color: #0096ba; }
 
-/* Price box */
+/* Price box — sits inside the cyan bar of pack.png */
 .tp-pkg-price-box {
+  position: absolute;
+  left: 0; right: 0; bottom: 5%; height: 21%;
   box-sizing: border-box;
-  width: calc(100% - 24px);
-  margin: 0 12px 5px;
-  clip-path: polygon(6px 0%, 100% 0%, 100% calc(100% - 6px), calc(100% - 6px) 100%, 0% 100%, 0% 6px);
-  background: rgba(255,255,255,0.13);
-  padding: 4px 6px;
-  font-size: clamp(12px, 1.1vw, 15px); font-weight: 900;
-  color: #00d1ff; text-align: center; letter-spacing: 0.02em;
-  font-family: 'Noto Sans Thai', sans-serif;
-  transition: background 0.2s, color 0.2s;
+  padding: 0 6px;
+  background: transparent;
+  clip-path: none; margin: 0; width: 100%;
+  font-size: clamp(24px, 2.2vw, 34px); font-weight: 900;
+  color: #fff; text-align: center; letter-spacing: 0.05em;
+  font-family: 'PSL Kampanath Pro', sans-serif;
+  display: flex; align-items: center; justify-content: center;
+  z-index: 2;
+  transition: none;
 }
 .tp-pkg-card.selected .tp-pkg-price-box {
-  background: linear-gradient(90deg, #00c4e8, #0096ba);
+  background: transparent;
   color: #fff;
 }
 
@@ -279,96 +294,110 @@
 }
 .tp-sum-wrap {
   position: fixed; bottom: 0; left: 0; right: 0; z-index: 50;
-  padding: 12px 24px 0;
+  background: #e8f4ff;
+  border-top: 2px solid #c8dff5;
   display: flex; justify-content: center;
-  animation: tp-sum-enter 0.3s cubic-bezier(0.34, 1.15, 0.64, 1) both;
+  padding: 16px 20px 12px;
   pointer-events: none;
+  animation: tp-sum-enter 0.3s cubic-bezier(0.34, 1.15, 0.64, 1) both;
 }
-.tp-sum-wrap > .tp-sum-card { pointer-events: auto; }
 .tp-sum-wrap > .tp-sum-card {
-  width: 100%; max-width: 760px;
+  pointer-events: auto;
+  width: 100%; max-width: 960px;
 }
 .tp-sum-card {
-  background: #fff; border: 1.5px solid #e2e8f0;
-  border-radius: 16px 16px 0 0; padding: 10px 10px 14px;
-  box-shadow: 0 8px 32px rgba(0,0,0,0.12);
+  background: #fff;
+  clip-path: polygon(20px 0%, 100% 0%, 100% calc(100% - 20px), calc(100% - 20px) 100%, 0% 100%, 0% 20px);
+  border: 2px solid #fff;
+  filter: drop-shadow(0 -6px 28px rgba(0,0,0,0.18)) drop-shadow(0 2px 8px rgba(0,0,0,0.10));
 }
-.tp-sum-boxes { display: flex; gap: 10px; margin-bottom: 10px; }
+
+/* 3 box layout */
+.tp-sum-boxes { display: flex; gap: 5px; padding: 3px 5px 1px; }
 .tp-sum-box {
   flex: 1; background: #f8fafc;
-  border: 1.5px solid #e2e8f0; border-radius: 12px;
-  min-width: 0; display: flex; flex-direction: column;
-  overflow: hidden;
+  border-radius: 7px;
+  min-width: 0; display: flex; flex-direction: column; overflow: hidden;
 }
 .tp-sum-box-title {
-  font-size: 17px; font-weight: 700; color: #64748b; text-align: center;
-  padding: 8px 12px; border-bottom: 1px solid #e2e8f0;
-  font-family: 'PSL Empire Pro', sans-serif;
+  font-size: 22px; font-weight: 700; color: #00d1ff; text-align: center;
+  padding: 0px 8px 1px;
+  font-family: 'PSL Empire Pro', sans-serif; letter-spacing: 0.04em;
 }
 .tp-sum-box-body {
-  flex: 1; padding: 10px 14px;
-  display: flex; flex-direction: column; justify-content: center;
+  flex: 1; padding: 1px 14px 2px;
+  display: flex; flex-direction: column; justify-content: center; gap: 1px;
 }
 .tp-sum-box-body-center {
-  flex: 1; padding: 10px 14px;
-  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  flex: 1; padding: 0px 12px 1px;
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 0px;
 }
 .tp-sum-detail-line {
-  display: flex; align-items: center; justify-content: space-between;
-  font-size: 18px; color: #475569; line-height: 1.8;
+  display: flex; align-items: center; justify-content: space-between; gap: 8px;
+  font-size: 28px; color: #64748b;
   font-family: 'PSL Empire Pro', sans-serif;
 }
 .tp-sum-detail-val {
-  display: flex; align-items: center; gap: 4px;
-  font-weight: 700; color: #1e293b; font-size: 20px;
+  display: flex; align-items: center; gap: 6px;
+  font-weight: 900; color: #1e293b; font-size: 26px;
   font-family: 'PSL Empire Pro', sans-serif;
-}
-.tp-sum-gem { color: #3b82f6; }
-.tp-sum-pkg-icon {
-  width: 18px; height: 18px; object-fit: contain; flex-shrink: 0;
-  mix-blend-mode: multiply;
 }
 .tp-sum-bonus { color: #16a34a; }
-.tp-sum-empty { font-size: 12px; color: #94a3b8; font-style: italic; }
+.tp-sum-item-name {
+  display: flex; align-items: center; gap: 10px;
+  font-family: 'PSL Empire Pro', sans-serif;
+  font-size: 16px; font-weight: 700; color: #1e293b; line-height: 1.4;
+}
 .tp-sum-total-big {
   font-family: 'PSL Empire Pro', sans-serif;
-  font-size: 36px; font-weight: 900; color: #1e293b;
+  font-size: 32px; font-weight: 900; color: #1e293b;
   display: flex; align-items: center; gap: 8px; line-height: 1;
+}
+.tp-sum-qty-row { display: flex; align-items: center; gap: 10px; }
+.tp-sum-qty-label {
+  font-size: 20px; color: #64748b; font-weight: 600;
+  font-family: 'PSL Empire Pro', sans-serif; white-space: nowrap;
 }
 .tp-sum-price-big {
   font-family: 'PSL Empire Pro', sans-serif;
-  font-size: 36px; font-weight: 900; color: #ef4444; letter-spacing: 0.02em;
+  font-size: 38px; font-weight: 900; color: #1e293b;
+  display: flex; align-items: baseline; gap: 6px;
 }
-.tp-sum-actions {
-  display: flex; align-items: center;
-  justify-content: space-between; gap: 10px;
+.tp-sum-thb {
+  font-size: 20px; color: #00d1ff; font-weight: 700;
+  font-family: 'PSL Empire Pro', sans-serif;
 }
-.tp-sum-left-actions { display: flex; align-items: center; gap: 8px; }
-.tp-sum-pkg-icon {
-  width: 40px; height: 40px; border-radius: 9px;
-  background: #f1f5f9; border: 1.5px solid #e2e8f0;
-  display: flex; align-items: center; justify-content: center;
-  overflow: hidden; flex-shrink: 0;
+.tp-sum-note {
+  font-size: 10px; color: #94a3b8;
+  padding: 1px 10px 3px;
+  font-family: 'Noto Sans Thai', sans-serif;
 }
-.tp-sum-pkg-icon img { width: 100%; height: 100%; object-fit: contain; }
+
+/* Qty controls */
 .tp-qty-wrap {
   display: flex; align-items: center; flex-shrink: 0;
   border: 1.5px solid #e2e8f0; border-radius: 9px; overflow: hidden;
 }
 .tp-qty-btn {
-  width: 36px; height: 40px; background: #f1f5f9; border: none;
-  font-size: 18px; font-weight: 700; color: #475569; cursor: pointer;
+  width: 36px; height: 36px; background: #f1f5f9; border: none;
+  font-size: 20px; font-weight: 700; color: #475569; cursor: pointer;
   display: flex; align-items: center; justify-content: center; line-height: 1;
   transition: background 0.12s;
 }
-.tp-qty-btn:hover:not(:disabled) { background: #dbeafe; color: #1d4ed8; }
+.tp-qty-btn:hover:not(:disabled) { background: #e0f2fe; color: #0369a1; }
 .tp-qty-btn:disabled { opacity: 0.35; cursor: not-allowed; }
-.tp-qty-num { font-size: 22px; font-weight: 900; color: #1e293b; min-width: 38px; text-align: center; padding: 0 4px; font-family: 'PSL Empire Pro', sans-serif; }
+.tp-qty-num {
+  font-size: 18px; font-weight: 900; color: #1e293b;
+  min-width: 34px; text-align: center; padding: 0 4px;
+  font-family: 'PSL Empire Pro', sans-serif;
+}
+
+/* Confirm button */
 .tp-confirm-btn {
-  flex: 0 0 220px;
-  background: linear-gradient(90deg, #00c4e8, #0096c7);
-  color: #fff; border: none; border-radius: 10px;
-  padding: 11px 20px; font-size: 22px; font-weight: 900;
+  width: 100%;
+  background: #00d1ff;
+  color: #fff; border: none; border-radius: 8px;
+  padding: 12px 14px; font-size: 22px; font-weight: 900;
   cursor: pointer; white-space: nowrap;
   font-family: 'PSL Empire Pro', sans-serif;
   transition: opacity 0.18s, transform 0.12s;
@@ -376,17 +405,6 @@
 }
 .tp-confirm-btn:disabled { opacity: 0.25; cursor: not-allowed; filter: none; }
 .tp-confirm-btn:not(:disabled):hover { opacity: 0.88; transform: translateY(-1px); }
-
-/* ── White card box ── */
-.tp-card {
-  background: #fff; border: 1.5px solid #e2e8f0;
-  border-radius: 16px; padding: 24px 28px;
-  margin-bottom: 20px; box-shadow: 0 2px 12px rgba(0,0,0,0.05);
-}
-.tp-card-label {
-  font-size: 12px; font-weight: 700; color: #00d1ff;
-  letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 12px;
-}
 
 /* ── UID inputs ── */
 .tp-uid-input {
@@ -727,7 +745,7 @@
 
 /* ── Reduced motion ── */
 @media (prefers-reduced-motion: reduce) {
-  .tp-pkg-card, .tp-pkg-card::before, .tp-pkg-card::after { animation: none; }
+  .tp-pkg-card, .tp-pkg-card::before, .tp-pkg-card::after { animation: none; filter: none; }
   .tp-pkg-card, .tp-confirm-btn, .tp-uid-input,
   .tp-home-btn, .tp-history-btn { transition-duration: 0.01ms; }
   .tp-howto-overlay { animation: none; }

@@ -25,6 +25,14 @@ dist-ssr
 *.psd
 *.ai
 
+# Environment variables — อย่า commit ลง git
+.env
+.env.local
+.env.*.local
+
+# Image compression manifest
+.compress-manifest.json
+
 # Large image assets (stored separately, not tracked in git)
 public/images/ALASKAN_WEB_ASSET/
 public/images/1-bg.png

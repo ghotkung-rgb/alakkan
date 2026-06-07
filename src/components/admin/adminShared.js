@@ -1,8 +1,8 @@
 import { FiTrendingUp, FiZap, FiTag } from 'react-icons/fi';
 
-// TODO [SEC]: อย่า hardcode credentials ใน source — ย้ายไป .env หรือ backend auth (Phase 2)
-export const ADMIN_USER     = 'alaskan';
-export const ADMIN_PASSWORD = 'ADMIN2025';
+// credentials อ่านจาก .env (VITE_ADMIN_USER / VITE_ADMIN_PASS) — Phase 2: เปลี่ยนเป็น backend JWT
+export const ADMIN_USER     = import.meta.env.VITE_ADMIN_USER;
+export const ADMIN_PASSWORD = import.meta.env.VITE_ADMIN_PASS;
 
 // TODO [BACKEND]: แทนด้วย GET /api/orders, GET /api/news — Phase 1: Google Sheets
 export const INIT_ORDERS = [

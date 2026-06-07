@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import { FiTarget } from 'react-icons/fi';
+import ErrorBoundary from './components/ErrorBoundary';
 import Navbar from './components/Navbar';
 import Home from './components/Home';
 import TopupPage from './components/TopupPage';
@@ -150,8 +151,9 @@ export default function App() {
   const KNOWN_MENUS = ['HOME', 'ข่าวสาร', 'บริการ Mail/Pass', 'ADMIN'];
 
   return (
+    <ErrorBoundary>
     <div className="relative w-full min-h-screen font-sans text-black select-none"
-         style={{ background: '#e8f4ff', display: 'flex', flexDirection: 'column' }}>
+         style={{ background: '#ffffff', display: 'flex', flexDirection: 'column' }}>
 
       {activeMenu !== 'ADMIN' && (
         <Navbar activeMenu={activeMenu} setActiveMenu={handleMenuChange} onLogin={() => handleMenuChange('ADMIN')} />
@@ -181,5 +183,6 @@ export default function App() {
       </div>
 
     </div>
+    </ErrorBoundary>
   );
 }
