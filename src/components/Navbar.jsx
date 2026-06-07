@@ -103,9 +103,8 @@ export default function Navbar({ activeMenu, setActiveMenu, onLogin }) {
         .nav-logo-wrap:hover {
           transform: scale(1.05);
           filter:
-            drop-shadow(0 0 8px rgba(0,209,255,1.00))
-            drop-shadow(0 0 24px rgba(0,209,255,0.85))
-            drop-shadow(0 0 60px rgba(0,209,255,0.55));
+            drop-shadow(0 0 5px rgba(0,209,255,0.6))
+            drop-shadow(0 0 14px rgba(0,209,255,0.35));
         }
         .nav-logo-wrap:active { transform: scale(0.98); }
         .nav-logo-img {
@@ -113,17 +112,16 @@ export default function Navbar({ activeMenu, setActiveMenu, onLogin }) {
           width: auto;
           object-fit: contain;
           filter:
-            drop-shadow(0 0 6px rgba(0,209,255,0.90))
-            drop-shadow(0 0 18px rgba(0,209,255,0.60))
-            drop-shadow(0 0 44px rgba(0,209,255,0.35));
+            drop-shadow(0 0 4px rgba(0,209,255,0.5))
+            drop-shadow(0 0 10px rgba(0,209,255,0.25));
           display: block;
         }
         .nav-logo-asset1 {
           height: 26px;
           margin-left: 8px;
           filter:
-            drop-shadow(0 0 5px rgba(0,209,255,0.80))
-            drop-shadow(0 0 14px rgba(0,209,255,0.45));
+            drop-shadow(0 0 3px rgba(0,209,255,0.45))
+            drop-shadow(0 0 8px rgba(0,209,255,0.2));
         }
 
         /* ── Menu ── */

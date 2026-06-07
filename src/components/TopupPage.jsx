@@ -291,28 +291,30 @@ export default function TopupPage({ game, onBack, step, onStep, onHome }) {
                     return (
                       <div
                         key={pkg.id}
-                        className={`tp-pkg-card${isSelected ? ' selected' : ''}`}
+                        className={`tp-pkg-card-wrap${isSelected ? ' selected' : ''}`}
                         onClick={() => selectPkg(pkg)}
                       >
-                        {pkg.badge && (
-                          <div className={`tp-pkg-badge ${pkg.badge === 'แนะนำ' ? 'rec' : 'hot'}`}>
-                            {pkg.badge}
+                        <div className="tp-pkg-card">
+                          {pkg.badge && (
+                            <div className={`tp-pkg-badge ${pkg.badge === 'แนะนำ' ? 'rec' : 'hot'}`}>
+                              {pkg.badge}
+                            </div>
+                          )}
+                          <div className="tp-pkg-img-wrap">
+                            <img
+                              src={pkg.img || game.icon}
+                              alt={`${pkg.amount}`}
+                              onError={e => { e.target.style.display = 'none'; }}
+                            />
                           </div>
-                        )}
-                        <div className="tp-pkg-img-wrap">
-                          <img
-                            src={pkg.img || game.icon}
-                            alt={`${pkg.amount}`}
-                            onError={e => { e.target.style.display = 'none'; }}
-                          />
+                          <div className="tp-pkg-amount-label">
+                            {pkg.amount > 0
+                              ? <><strong>{pkg.amount.toLocaleString()}</strong> <span className="tp-pkg-currency">{game.currency}</span></>
+                              : <strong>{pkg.label || ''}</strong>
+                            }
+                          </div>
+                          <span className="tp-pkg-price-box">{pkg.price.toLocaleString()} THB</span>
                         </div>
-                        <div className="tp-pkg-amount-label">
-                          {pkg.amount > 0
-                            ? <><strong>{pkg.amount.toLocaleString()}</strong> <span className="tp-pkg-currency">{game.currency}</span></>
-                            : <strong>{pkg.label || ''}</strong>
-                          }
-                        </div>
-                        <span className="tp-pkg-price-box">{pkg.price.toLocaleString()} THB</span>
                       </div>
                     );
                   })}

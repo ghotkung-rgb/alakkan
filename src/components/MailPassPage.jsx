@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { createOrder } from '../services/topupService';
-import { FiAlertTriangle, FiLock, FiBook, FiEye, FiEyeOff, FiCheck, FiChevronDown, FiChevronUp, FiX, FiUser } from 'react-icons/fi';
+import { FiAlertTriangle, FiLock, FiBook, FiEye, FiEyeOff, FiCheck, FiChevronDown, FiChevronUp, FiX, FiUser, FiTool } from 'react-icons/fi';
 import { BsWallet2 } from 'react-icons/bs';
+import { FaGooglePlay, FaApple } from 'react-icons/fa';
 import { PAYMENT_METHODS } from '../config/constants';
 import './MailPassPage.css';
 
@@ -168,10 +169,18 @@ export default function MailPassPage({ game, onBack, step, onStep, onHome }) {
       {(!game.packages || game.packages.length === 0) && (
         <div className="mp-page">
           <HeroBanner />
-          <div style={{ maxWidth: 1400, margin: '0 auto', padding: '24px 24px 80px' }}>
-            <img src={game.promoBg || game.bg} alt={game.name} className="mp-promo-img"
-              style={{ aspectRatio: PROMO_ASPECT, boxShadow: '0 8px 40px rgba(0,0,0,0.14)' }}
-              onError={e => { e.target.style.display = 'none'; }} />
+          <div style={{ display: 'flex', justifyContent: 'center', padding: '56px 24px 80px' }}>
+            <div style={{ textAlign: 'center', maxWidth: 360 }}>
+              <div style={{ marginBottom: 18, color: '#94a3b8' }}><FiTool size={52} /></div>
+              <div style={{ fontFamily: "'PSL Kampanath Pro', sans-serif", fontSize: 24, fontWeight: 900, color: '#1e293b', letterSpacing: '0.04em', marginBottom: 10 }}>กำลังเปิดให้บริการ</div>
+              <div style={{ fontSize: 18, fontWeight: 700, color: '#475569', lineHeight: 2, marginBottom: 28 }}>
+                สินค้าจะมาในเร็วๆ นี้<br />ติดตามได้ที่เฟส <strong style={{ color: '#1e293b' }}>ALASKAN ONLINE SHOP</strong> ของเรา
+              </div>
+              <a href="https://www.facebook.com/ALASKAN.ONLINE.SHOP" target="_blank" rel="noopener noreferrer"
+                style={{ display: 'inline-flex', alignItems: 'center', gap: 8, background: '#1877f2', color: '#fff', textDecoration: 'none', padding: '11px 28px', borderRadius: 10, fontSize: 14, fontWeight: 700, filter: 'drop-shadow(0 4px 12px rgba(24,119,242,0.4))' }}>
+                ติดตาม Facebook Page
+              </a>
+            </div>
           </div>
         </div>
       )}
@@ -186,12 +195,15 @@ export default function MailPassPage({ game, onBack, step, onStep, onHome }) {
           <div className="mp-game-bar">
             <img src={game.icon} alt={game.name} className="mp-game-bar-icon"
               onError={e => { e.target.style.display = 'none'; }} />
-            <div>
-              <div className="mp-game-bar-name">
-                เติมเกม <span style={{ color: '#00d1ff' }}>{game.name}</span>
+            <div style={{ position: 'relative', paddingTop: '40px' }}>
+              <div className="mp-game-bar-label">เติมเกม</div>
+              <div className="mp-game-bar-name">{game.name}</div>
+              <div>
+                <span className="mp-game-bar-plat"><FaGooglePlay size={11} /> Play Store</span>
+                <span className="mp-game-bar-plat"><FaApple size={11} /> iOS</span>
               </div>
-              <span className="mp-game-badge" style={{ display: 'inline-block', marginTop: 6 }}>Mail / Pass</span>
             </div>
+            <div style={{ flex: 1 }} />
           </div>
 
           {/* Step tabs */}
@@ -204,6 +216,11 @@ export default function MailPassPage({ game, onBack, step, onStep, onHome }) {
             <div className={`mp-step-item${step === 2 ? ' active' : ''}`}>
               <div className="mp-step-num">2</div>
               <span>กรอก Email</span>
+            </div>
+            <div className="mp-step-line" />
+            <div className={`mp-step-item${step === 2 ? ' active' : ''}`}>
+              <div className="mp-step-num">3</div>
+              <span>ยืนยัน</span>
             </div>
           </div>
 
@@ -224,56 +241,32 @@ export default function MailPassPage({ game, onBack, step, onStep, onHome }) {
                   const isSelected = selectedPkgs.some(p => p.id === pkg.id);
                   return (
                     <div key={pkg.id}
-                      className={`mp-pkg-card${isSelected ? ' selected' : ''}`}
+                      className={`mp-pkg-card-wrap${isSelected ? ' selected' : ''}`}
                       onClick={() => togglePkg(pkg)}>
-                      {isSelected && <div className="mp-pkg-check"><FiCheck size={12} /></div>}
-                      {pkg.badge && (
-                        <div className={`mp-pkg-badge ${pkg.badge === 'แนะนำ' ? 'rec' : 'hot'}`}>
-                          {pkg.badge}
+                      <div className="mp-pkg-card">
+                        {isSelected && <div className="mp-pkg-check"><FiCheck size={12} /></div>}
+                        {pkg.badge && (
+                          <div className={`mp-pkg-badge ${pkg.badge === 'แนะนำ' ? 'rec' : 'hot'}`}>
+                            {pkg.badge}
+                          </div>
+                        )}
+                        <div className="mp-pkg-img-wrap">
+                          <img src={pkg.img || game.icon} alt={`${pkg.amount}`} loading="lazy" decoding="async"
+                            onError={e => { e.target.style.display = 'none'; }} />
                         </div>
-                      )}
-                      <div className="mp-pkg-img-wrap">
-                        <img src={pkg.img} alt={`${pkg.amount}`} loading="lazy" decoding="async"
-                          onError={e => { e.target.style.display = 'none'; }} />
-                      </div>
-                      {(pkg.label || pkg.amount > 0) && (
-                        <div className="mp-coupon-label">
-                          {pkg.label || `${pkg.amount.toLocaleString()} ${game.currency}`}
+                        <div className="mp-pkg-amount-label">
+                          {pkg.amount > 0
+                            ? <><strong>{pkg.amount.toLocaleString()}</strong> <span className="mp-pkg-currency">{game.currency}</span></>
+                            : <strong>{pkg.label || ''}</strong>
+                          }
                         </div>
-                      )}
-                      <div className="mp-pkg-price-box">
-                        {pkg.price.toLocaleString()} บาท
+                        <span className="mp-pkg-price-box">{pkg.price.toLocaleString()} THB</span>
                       </div>
                     </div>
                   );
                 })}
               </div>
 
-              {/* Info box */}
-              {(() => {
-                const info = game.info || buildDefaultInfo(game);
-                return (
-                  <div className="mp-info-box">
-                    <div className="mp-info-title">{info.title}</div>
-                    {info.taglines && info.taglines.map((t, i) => (
-                      <div key={i} className="mp-info-sub">{t}</div>
-                    ))}
-                    {info.sections && info.sections.map((sec, si) => (
-                      <div key={si} className="mp-info-section">
-                        <div className="mp-info-section-title">{sec.heading}</div>
-                        <ul className="mp-info-list">
-                          {sec.items.map((item, ii) => (
-                            <li key={ii}>
-                              <span className="mp-info-bullet">{sec.ordered ? `${ii + 1}.` : '—'}</span>
-                              <span>{item}</span>
-                            </li>
-                          ))}
-                        </ul>
-                      </div>
-                    ))}
-                  </div>
-                );
-              })()}
             </div>
           )}
 
@@ -282,39 +275,60 @@ export default function MailPassPage({ game, onBack, step, onStep, onHome }) {
             <div className="mp-sum-wrap">
               <div className="mp-sum-card">
                 <div className="mp-sum-boxes">
+
+                  {/* Box 1: รายละเอียด */}
                   <div className="mp-sum-box">
-                    <div className="mp-sum-box-title">แพ็กเกจ</div>
-                    <div className="mp-sum-box-body-center">
-                      <div className="mp-sum-total-big">{selectedPkgs.length}</div>
-                      <div style={{ fontSize: 12, color: '#94a3b8', marginTop: 2 }}>รายการ</div>
+                    <div className="mp-sum-box-title">รายละเอียด</div>
+                    <div className="mp-sum-box-body">
+                      <div className="mp-sum-item-name">
+                        <img src={selectedPkgs[0]?.img || game.icon} alt=""
+                          style={{ width: 28, height: 28, objectFit: 'contain', flexShrink: 0 }}
+                          onError={e => { e.target.style.display = 'none'; }} />
+                        <span>
+                          {selectedPkgs.length === 1
+                            ? (selectedPkgs[0].label || `${selectedPkgs[0].amount?.toLocaleString()} ${game.currency}`)
+                            : `${selectedPkgs.length} แพ็กเกจที่เลือก`}
+                        </span>
+                      </div>
                     </div>
                   </div>
+
+                  {/* Box 2: จำนวนทั้งหมด */}
                   <div className="mp-sum-box">
-                    <div className="mp-sum-box-title">{totalAmount > 0 ? game.currency : 'รายการที่เลือก'}</div>
+                    <div className="mp-sum-box-title">{totalAmount > 0 ? game.currency : 'แพ็กเกจ'}</div>
                     <div className="mp-sum-box-body-center">
                       {totalAmount > 0 ? (
-                        <div className="mp-sum-total-big">{totalAmount.toLocaleString()}</div>
-                      ) : (
-                        <div style={{ fontFamily: "'PSL Empire Pro', sans-serif", fontSize: 18, fontWeight: 900, color: '#1e293b', textAlign: 'center', lineHeight: 1.3 }}>
-                          {selectedPkgs.length === 1
-                            ? (selectedPkgs[0].label || `${selectedPkgs[0].amount} ${game.currency}`)
-                            : `${selectedPkgs.length} รายการ`}
+                        <div className="mp-sum-total-big">
+                          <img src={selectedPkgs[0]?.img || game.icon} alt=""
+                            style={{ width: 28, height: 28, objectFit: 'contain', flexShrink: 0 }}
+                            onError={e => { e.target.style.display = 'none'; }} />
+                          {totalAmount.toLocaleString()}
                         </div>
+                      ) : (
+                        <div className="mp-sum-total-big">{selectedPkgs.length}</div>
                       )}
+                      <div className="mp-sum-qty-row">
+                        <span className="mp-sum-qty-label">จำนวน</span>
+                        <span className="mp-qty-num">{selectedPkgs.length}</span>
+                      </div>
                     </div>
                   </div>
+
+                  {/* Box 3: ราคารวม + confirm */}
                   <div className="mp-sum-box">
                     <div className="mp-sum-box-title">ราคารวม</div>
                     <div className="mp-sum-box-body-center">
-                      <div className="mp-sum-price-big">฿ {totalPrice.toLocaleString()}</div>
+                      <div className="mp-sum-price-big">
+                        {totalPrice.toLocaleString()} <span className="mp-sum-thb">บาท</span>
+                      </div>
+                      <button className="mp-confirm-btn" onClick={() => onStep(2)}>
+                        ยืนยันชำระเงิน
+                      </button>
                     </div>
                   </div>
+
                 </div>
-                <div className="mp-sum-actions">
-                  <button className="mp-confirm-btn" onClick={() => onStep(2)}>
-                    ทำการชำระเงิน ฿{totalPrice.toLocaleString()}
-                  </button>
-                </div>
+                <div className="mp-sum-note">* โปรดตรวจสอบแพ็กเกจที่ต้องการให้ถูกต้อง ก่อนทำรายการชำระเงิน</div>
               </div>
             </div>
           )}
@@ -350,6 +364,11 @@ export default function MailPassPage({ game, onBack, step, onStep, onHome }) {
                   <div className="mp-modal-step active">
                     <div className="mp-modal-step-num">2</div>
                     <span>กรอก Email</span>
+                  </div>
+                  <div className="mp-modal-step-line" />
+                  <div className="mp-modal-step active">
+                    <div className="mp-modal-step-num">3</div>
+                    <span>ยืนยัน</span>
                   </div>
                 </div>
 
