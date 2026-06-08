@@ -300,15 +300,15 @@ export default function GamesManager() {
       <style>{`
         .ag-grid {
           display: grid;
-          grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-          gap: 12px;
+          grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+          gap: 14px;
         }
         .ag-card {
           position: relative;
-          border-radius: 12px;
+          border-radius: 14px;
           overflow: hidden;
           cursor: pointer;
-          height: 190px;
+          height: 200px;
           background: #1e293b;
           border: 2px solid transparent;
           transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease;

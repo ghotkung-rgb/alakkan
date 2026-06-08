@@ -100,6 +100,28 @@
   height: 1.5px; background: #e2e8f0; margin: 0 28px;
 }
 
+/* ── Tablet / iPad responsive ── */
+@media (max-width: 1024px) {
+  .mp-step-line { width: 140px; margin: 0 16px; }
+  .mp-game-bar-name { font-size: 44px; }
+}
+@media (max-width: 820px) {
+  .mp-game-bar { margin-top: -90px; }
+  .mp-game-bar-icon { width: 72px; height: 72px; border-radius: 14px; }
+  .mp-game-bar-label { font-size: 20px; }
+  .mp-game-bar-name { font-size: 32px; }
+  .mp-game-bar-plat { font-size: 13px; padding: 5px 10px; }
+  .mp-step-line { width: 48px; margin: 0 10px; }
+  .mp-step-item { font-size: 18px; gap: 8px; }
+  .mp-step-num { width: 34px; height: 34px; font-size: 14px; }
+  .mp-body { padding: 0 16px 220px; }
+  .mp-sum-box-title { font-size: 15px; }
+  .mp-sum-price-big { font-size: 28px; }
+  .mp-confirm-btn { font-size: 18px; }
+  .mp-sum-qty-label, .mp-qty-num { font-size: 15px; }
+  .mp-section-title, .mp-section-tag { font-size: 20px !important; }
+}
+
 /* ── Body ── */
 .mp-body {
   max-width: 1300px; margin: 0 auto;
