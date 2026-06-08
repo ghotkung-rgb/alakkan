@@ -168,7 +168,6 @@ export default function App() {
           <>
             {activeMenu === 'HOME' && <Home onTopup={goTopup} onMailPass={goMailPass} />}
             {activeMenu === 'ข่าวสาร' && <News />}
-            {/* TopupHub ปิดใช้งานชั่วคราว */}
             {activeMenu === 'บริการ Mail/Pass' && (
               <MailPassHub onSelectGame={goMailPass} onBack={() => handleMenuChange('HOME')} />
             )}
