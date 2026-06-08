@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { createOrder } from '../services/topupService';
-import { FiAlertTriangle, FiLock, FiBook, FiEye, FiEyeOff, FiCheck, FiChevronDown, FiChevronUp, FiX, FiUser, FiTool } from 'react-icons/fi';
+import { FiAlertTriangle, FiLock, FiBook, FiEye, FiEyeOff, FiCheck, FiX, FiUser, FiTool } from 'react-icons/fi';
 import { BsWallet2 } from 'react-icons/bs';
 import { FaGooglePlay, FaApple } from 'react-icons/fa';
 import { PAYMENT_METHODS } from '../config/constants';
@@ -41,11 +41,12 @@ export default function MailPassPage({ game, onBack, step, onStep, onHome }) {
   const [selectedPkgs, setSelectedPkgs] = useState([]);
   const [email, setEmail]               = useState('');
   const [password, setPassword]         = useState('');
+  const [fieldValues, setFieldValues]   = useState({});
   const [showPw, setShowPw]             = useState(false);
+  const [showHowtoPopup, setShowHowtoPopup] = useState(false);
   const [loading, setLoading]           = useState(false);
   const [orderId, setOrderId]           = useState(null);
   const [done, setDone]                 = useState(false);
-  const [showHowto, setShowHowto]       = useState(false);
   const [selectedPayment, setSelectedPayment] = useState(null);
 
   // scroll lock while modal open
@@ -66,22 +67,24 @@ export default function MailPassPage({ game, onBack, step, onStep, onHome }) {
 
   const togglePkg = (pkg) => {
     setSelectedPkgs(prev =>
-      prev.some(p => p.id === pkg.id)
-        ? prev.filter(p => p.id !== pkg.id)
-        : [...prev, pkg]
+      prev.some(p => p.id === pkg.id) ? [] : [pkg]
     );
   };
 
   const totalPrice  = selectedPkgs.reduce((sum, p) => sum + p.price, 0);
   const totalAmount = selectedPkgs.reduce((sum, p) => sum + (p.amount || 0), 0);
 
-  const canConfirm = email.trim() && password.trim() && selectedPayment;
+  const canConfirm = game.accountFields
+    ? game.accountFields.filter(f => f.required).every(f => (fieldValues[f.key] || '').trim()) && selectedPayment
+    : email.trim() && password.trim() && selectedPayment;
 
   const handleConfirm = async () => {
     setLoading(true);
     try {
       const result = await createOrder({
-        gameId: game.id, uid: email,
+        gameId: game.id,
+        uid: game.accountFields ? (fieldValues['idLogin'] || '') : email,
+        accountData: game.accountFields ? fieldValues : { email, password },
         packages: selectedPkgs.map(p => ({ id: p.id, amount: p.amount, price: p.price, label: p.label })),
         totalPrice,
         paymentMethod: selectedPayment,
@@ -100,66 +103,32 @@ export default function MailPassPage({ game, onBack, step, onStep, onHome }) {
 
   const PROMO_ASPECT = game.promoAspect || '21 / 7';
 
-  const HeroBanner = () => game.promoBg ? (
-    <div style={{ position: 'relative' }}>
-      <img src={game.promoBg} alt={game.name}
-        style={{ display: 'block', width: '100%', aspectRatio: PROMO_ASPECT }}
-        onError={e => { e.target.style.display = 'none'; }} />
-      <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, height: '50%', background: 'linear-gradient(to bottom, transparent, #e8f4ff)', pointerEvents: 'none' }} />
-    </div>
-  ) : (
-    <div className="mp-hero">
-      <div className="mp-hero-bg" style={{ backgroundImage: `url('${game.promoBg || game.bg}')` }} />
-      <div className="mp-hero-overlay" />
-      <div className="mp-hero-content">
-        <img src={game.icon} alt={game.name} className="mp-icon"
+  const HeroBanner = () => {
+    const bannerSrc = game.promoBg || game.bg;
+    return (
+      <div style={{ position: 'relative' }}>
+        <img src={bannerSrc} alt={game.name}
+          style={{ display: 'block', width: '100%', aspectRatio: PROMO_ASPECT, objectFit: 'cover', objectPosition: 'center top' }}
           onError={e => { e.target.style.display = 'none'; }} />
-        <div>
-          <div className="mp-game-name">{game.name}</div>
-          <div className="mp-game-sub">{game.subtitle}</div>
-        </div>
+        <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, height: '50%', background: 'linear-gradient(to bottom, transparent, #ffffff)', pointerEvents: 'none' }} />
       </div>
-    </div>
-  );
+    );
+  };
 
   const HowtoBlock = () => {
     const info  = game.info || buildDefaultInfo(game);
     const steps = info.sections?.find(s => s.ordered)?.items ?? [];
-    if (game.howtoImage) {
-      return (
-        <button className="mp-howto-btn"
-          onClick={() => window.open(game.howtoImage, '_blank', 'noopener,noreferrer')}>
-          <FiBook size={16} />
-          <span>ดูวิธีการเติมเกม</span>
-          <span style={{ marginLeft: 'auto', color: '#00d1ff', fontSize: 14 }}>→</span>
-        </button>
-      );
-    }
-    if (steps.length === 0) return null;
+    const handleClick = () => {
+      if (game.howtoImage) {
+        window.open(game.howtoImage, '_blank', 'noopener,noreferrer');
+      } else {
+        setShowHowtoPopup(true);
+      }
+    };
     return (
-      <div>
-        <button className="mp-howto-btn"
-          style={{ borderRadius: showHowto ? '10px 10px 0 0' : 10 }}
-          onClick={() => setShowHowto(v => !v)}>
-          <FiBook size={16} />
-          <span>ดูวิธีการเติมเกม</span>
-          <span style={{ marginLeft: 'auto', color: '#00d1ff' }}>
-            {showHowto ? <FiChevronUp size={14} /> : <FiChevronDown size={14} />}
-          </span>
-        </button>
-        {showHowto && (
-          <div style={{
-            background: '#fffbeb', border: '1.5px solid #fde68a', borderTop: 'none',
-            borderRadius: '0 0 10px 10px', padding: '12px 16px',
-          }}>
-            <ol style={{ margin: 0, paddingLeft: 20, display: 'flex', flexDirection: 'column', gap: 6 }}>
-              {steps.map((s, i) => (
-                <li key={i} style={{ fontSize: 13, color: '#78350f', lineHeight: 1.6 }}>{s}</li>
-              ))}
-            </ol>
-          </div>
-        )}
-      </div>
+      <button className="mp-howto-btn" style={{ marginTop: 10 }} onClick={handleClick}>
+        <FiBook size={14} /> ดูวิธีการเติมเกม
+      </button>
     );
   };
 
@@ -215,12 +184,12 @@ export default function MailPassPage({ game, onBack, step, onStep, onHome }) {
             <div className="mp-step-line" />
             <div className={`mp-step-item${step === 2 ? ' active' : ''}`}>
               <div className="mp-step-num">2</div>
-              <span>กรอก Email</span>
+              <span>{game.accountFields ? 'กรอกข้อมูล' : 'กรอก Email'}</span>
             </div>
             <div className="mp-step-line" />
-            <div className={`mp-step-item${step === 2 ? ' active' : ''}`}>
+            <div className="mp-step-item">
               <div className="mp-step-num">3</div>
-              <span>ยืนยัน</span>
+              <span>ยืนยันออเดอร์</span>
             </div>
           </div>
 
@@ -244,7 +213,6 @@ export default function MailPassPage({ game, onBack, step, onStep, onHome }) {
                       className={`mp-pkg-card-wrap${isSelected ? ' selected' : ''}`}
                       onClick={() => togglePkg(pkg)}>
                       <div className="mp-pkg-card">
-                        {isSelected && <div className="mp-pkg-check"><FiCheck size={12} /></div>}
                         {pkg.badge && (
                           <div className={`mp-pkg-badge ${pkg.badge === 'แนะนำ' ? 'rec' : 'hot'}`}>
                             {pkg.badge}
@@ -254,7 +222,7 @@ export default function MailPassPage({ game, onBack, step, onStep, onHome }) {
                           <img src={pkg.img || game.icon} alt={`${pkg.amount}`} loading="lazy" decoding="async"
                             onError={e => { e.target.style.display = 'none'; }} />
                         </div>
-                        <div className="mp-pkg-amount-label">
+                        <div className={`mp-pkg-amount-label${pkg.amount === 0 ? ' is-label' : ''}`}>
                           {pkg.amount > 0
                             ? <><strong>{pkg.amount.toLocaleString()}</strong> <span className="mp-pkg-currency">{game.currency}</span></>
                             : <strong>{pkg.label || ''}</strong>
@@ -347,7 +315,10 @@ export default function MailPassPage({ game, onBack, step, onStep, onHome }) {
                     <div className="mp-step2-header-name">
                       เติมเกม <span style={{ color: '#00d1ff' }}>{game.name}</span>
                     </div>
-                    <span className="mp-game-badge" style={{ display: 'inline-block', marginTop: 4 }}>Mail / Pass</span>
+                    <div style={{ marginTop: 4 }}>
+                      <span className="mp-game-bar-plat"><FaGooglePlay size={11} /> Play Store</span>
+                      <span className="mp-game-bar-plat"><FaApple size={11} /> iOS</span>
+                    </div>
                   </div>
                   <button className="mp-step2-close" onClick={() => window.history.back()} aria-label="ปิด">
                     <FiX size={16} />
@@ -363,12 +334,12 @@ export default function MailPassPage({ game, onBack, step, onStep, onHome }) {
                   <div className="mp-modal-step-line" />
                   <div className="mp-modal-step active">
                     <div className="mp-modal-step-num">2</div>
-                    <span>กรอก Email</span>
+                    <span>{game.accountFields ? 'กรอกข้อมูล' : 'กรอก Email'}</span>
                   </div>
                   <div className="mp-modal-step-line" />
-                  <div className="mp-modal-step active">
+                  <div className="mp-modal-step">
                     <div className="mp-modal-step-num">3</div>
-                    <span>ยืนยัน</span>
+                    <span>ยืนยันออเดอร์</span>
                   </div>
                 </div>
 
@@ -387,14 +358,6 @@ export default function MailPassPage({ game, onBack, step, onStep, onHome }) {
                   {/* Left */}
                   <div className="mp-step2-left">
 
-                    <div className="mp-security-box">
-                      <strong style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 4 }}>
-                        <FiAlertTriangle size={15} /> ข้อควรระวัง — บริการ Mail/Pass
-                      </strong>
-                      บริการนี้ต้องการ Email และ Password ของบัญชีเกม เราจะใช้ข้อมูลเพื่อเข้าเติมเท่านั้น
-                      และ<strong>ไม่เก็บรหัสผ่านไว้ในระบบ</strong> แนะนำให้เปลี่ยนรหัสผ่านใหม่หลังเติมเสร็จทุกครั้ง
-                    </div>
-
                     <div className="mp-step2-section">
                       <div className="mp-step2-section-title">
                         <div className="mp-step2-section-icon">
@@ -402,21 +365,66 @@ export default function MailPassPage({ game, onBack, step, onStep, onHome }) {
                         </div>
                         กรุณากรอกข้อมูลบัญชีเกม
                       </div>
-                      <input className="mp-input" type="email"
-                        placeholder="Email ของบัญชีเกม"
-                        value={email} onChange={e => setEmail(e.target.value)}
-                        autoFocus autoComplete="username" />
-                      <div className="mp-pw-wrap">
-                        <input className="mp-input"
-                          type={showPw ? 'text' : 'password'}
-                          placeholder="Password ของบัญชีเกม"
-                          value={password} onChange={e => setPassword(e.target.value)}
-                          autoComplete="current-password" />
-                        <button type="button" className="mp-pw-toggle"
-                          onClick={() => setShowPw(v => !v)} tabIndex={-1}>
-                          {showPw ? <FiEyeOff size={18} /> : <FiEye size={18} />}
-                        </button>
+                      <div className="mp-security-box" style={{ marginBottom: 14 }}>
+                        <strong style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 4 }}>
+                          <FiAlertTriangle size={15} /> ข้อควรระวัง — บริการ Mail/Pass
+                        </strong>
+                        บริการนี้ต้องการ Email และ Password ของบัญชีเกม เราจะใช้ข้อมูลเพื่อเข้าเติมเท่านั้น
+                        และ<strong>ไม่เก็บรหัสผ่านไว้ในระบบ</strong> แนะนำให้เปลี่ยนรหัสผ่านใหม่หลังเติมเสร็จทุกครั้ง
                       </div>
+                      {game.accountFields ? (
+                        game.accountFields.map(field => (
+                          <div key={field.key} className="mp-account-field">
+                            <div className="mp-field-label">
+                              {field.label}
+                              {field.required && <span className="mp-field-req"> *</span>}
+                              {field.labelHint && <span className="mp-field-label-hint">({field.labelHint})</span>}
+                            </div>
+                            <div className="mp-uid-field">
+                              {field.type === 'password'
+                                ? <FiLock size={14} className="mp-uid-input-icon" />
+                                : <FiUser size={14} className="mp-uid-input-icon" />}
+                              <input
+                                className={`mp-uid-input${field.type === 'password' ? ' pw' : ''}`}
+                                type={field.type === 'password' ? (showPw ? 'text' : 'password') : field.type}
+                                placeholder={field.placeholder}
+                                value={fieldValues[field.key] || ''}
+                                onChange={e => setFieldValues(prev => ({ ...prev, [field.key]: e.target.value }))}
+                                autoComplete={field.type === 'password' ? 'current-password' : 'off'}
+                              />
+                              {field.type === 'password' && (
+                                <button type="button" className="mp-uid-pw-toggle"
+                                  onClick={() => setShowPw(v => !v)} tabIndex={-1}>
+                                  {showPw ? <FiEyeOff size={16} /> : <FiEye size={16} />}
+                                </button>
+                              )}
+                            </div>
+                            {field.hint && <div className="mp-field-hint">{field.hint}</div>}
+                          </div>
+                        ))
+                      ) : (
+                        <>
+                          <div className="mp-uid-field">
+                            <FiUser size={14} className="mp-uid-input-icon" />
+                            <input className="mp-uid-input" type="email"
+                              placeholder="Email ของบัญชีเกม"
+                              value={email} onChange={e => setEmail(e.target.value)}
+                              autoFocus autoComplete="username" />
+                          </div>
+                          <div className="mp-uid-field">
+                            <FiLock size={14} className="mp-uid-input-icon" />
+                            <input className={`mp-uid-input pw`}
+                              type={showPw ? 'text' : 'password'}
+                              placeholder="Password ของบัญชีเกม"
+                              value={password} onChange={e => setPassword(e.target.value)}
+                              autoComplete="current-password" />
+                            <button type="button" className="mp-uid-pw-toggle"
+                              onClick={() => setShowPw(v => !v)} tabIndex={-1}>
+                              {showPw ? <FiEyeOff size={16} /> : <FiEye size={16} />}
+                            </button>
+                          </div>
+                        </>
+                      )}
                       <div className="mp-hint">
                         <FiLock size={14} style={{ flexShrink: 0 }} />
                         ข้อมูลของคุณจะถูกส่งผ่านช่องทางที่เข้ารหัส และลบออกทันทีหลังเติมเสร็จ
@@ -510,6 +518,35 @@ export default function MailPassPage({ game, onBack, step, onStep, onHome }) {
             </div>
           )}
 
+          {/* ── Howto popup ── */}
+          {showHowtoPopup && (
+            <div style={{ position: 'fixed', inset: 0, zIndex: 300, background: 'rgba(15,23,42,0.55)', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 24 }}>
+              <div style={{ background: '#fff', borderRadius: 14, padding: '24px 28px', maxWidth: 420, width: '100%', boxShadow: '0 24px 64px rgba(0,0,0,0.22)' }}>
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 16 }}>
+                  <div style={{ fontFamily: "'PSL Kampanath Pro', sans-serif", fontSize: 20, fontWeight: 900, color: '#475569' }}>วิธีเติมเกม</div>
+                  <button style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#64748b', padding: 4 }} onClick={() => setShowHowtoPopup(false)}>
+                    <FiX size={18} />
+                  </button>
+                </div>
+                {(() => {
+                  const info = game.info || buildDefaultInfo(game);
+                  const steps = info.sections?.find(s => s.ordered)?.items ?? [];
+                  return steps.length > 0 ? (
+                    <ol style={{ margin: 0, paddingLeft: 20, display: 'flex', flexDirection: 'column', gap: 10 }}>
+                      {steps.map((s, i) => (
+                        <li key={i} style={{ fontSize: 13, color: '#475569', lineHeight: 1.7 }}>{s}</li>
+                      ))}
+                    </ol>
+                  ) : (
+                    <div style={{ textAlign: 'center', padding: '20px 0', color: '#64748b', fontSize: 15, fontWeight: 700 }}>
+                      วิธีการเติมจะมาเร็วๆ นี้
+                    </div>
+                  );
+                })()}
+              </div>
+            </div>
+          )}
+
           {/* ── Success ── */}
           {done && (
             <div className="mp-success-wrap">
@@ -534,10 +571,19 @@ export default function MailPassPage({ game, onBack, step, onStep, onHome }) {
                       </span>
                     </div>
                   ))}
-                  <div className="mp-summary-row">
-                    <span className="mp-summary-key">Email</span>
-                    <span className="mp-summary-val" style={{ fontFamily: 'monospace', fontSize: 13 }}>{email}</span>
-                  </div>
+                  {game.accountFields ? (
+                    game.accountFields.filter(f => f.type !== 'password' && fieldValues[f.key]).map(f => (
+                      <div key={f.key} className="mp-summary-row">
+                        <span className="mp-summary-key">{f.label}</span>
+                        <span className="mp-summary-val" style={{ fontFamily: 'monospace', fontSize: 13 }}>{fieldValues[f.key]}</span>
+                      </div>
+                    ))
+                  ) : (
+                    <div className="mp-summary-row">
+                      <span className="mp-summary-key">Email</span>
+                      <span className="mp-summary-val" style={{ fontFamily: 'monospace', fontSize: 13 }}>{email}</span>
+                    </div>
+                  )}
                   <div className="mp-summary-row" style={{ border: 'none', paddingTop: 14 }}>
                     <span className="mp-summary-key">ยอดชำระรวม</span>
                     <span className="mp-summary-val accent" style={{ fontSize: 20 }}>{totalPrice.toLocaleString()} บาท</span>

@@ -4,7 +4,20 @@ import { FiTrendingUp, FiZap, FiTag } from 'react-icons/fi';
 export const ADMIN_USER     = import.meta.env.VITE_ADMIN_USER;
 export const ADMIN_PASSWORD = import.meta.env.VITE_ADMIN_PASS;
 
-// TODO [BACKEND]: แทนด้วย GET /api/orders, GET /api/news — Phase 1: Google Sheets
+// ══════════════════════════════════════════════════════════════
+//  [BACKEND] ข้อมูล mock ด้านล่าง ใช้ระหว่างพัฒนาเท่านั้น
+//
+//  วิธีเปลี่ยนเป็นข้อมูลจริง:
+//  ใน AdminPage.jsx เพิ่ม useEffect แบบนี้:
+//
+//  useEffect(() => {
+//    fetch('/api/orders').then(r => r.json()).then(setOrders);
+//    fetch('/api/news').then(r => r.json()).then(setNews);
+//  }, []);
+//
+//  แล้วลบ INIT_ORDERS และ INIT_NEWS ออก (หรือเก็บไว้เป็น fallback)
+//  โครงสร้าง object ดูได้จาก mock ด้านล่างนี้เป็นตัวอย่าง
+// ══════════════════════════════════════════════════════════════
 export const INIT_ORDERS = [
   { id: 'ORD-001', game: 'ROV',         type: 'UID',       pkg: '555 คูปอง',      price: 435,  uid: '112233445',      status: 'pending',    date: '2026-05-31 10:23' },
   { id: 'ORD-002', game: 'Free Fire',   type: 'UID',       pkg: '530 ไดมอนด์',   price: 299,  uid: '998877665',      status: 'completed',  date: '2026-05-31 09:15' },

@@ -19,13 +19,17 @@
 //    { orderId: string, status: 'pending' }
 //
 export async function createOrder({ gameId, uid, packages, totalPrice }) {
-  // TODO: เปลี่ยนเป็น fetch จริงเมื่อ backend พร้อม
+  // ══════════════════════════════════════════════════════════════
+  //  [BACKEND] ขั้นตอนที่ต้องทำ:
+  //  1. ลบ 2 บรรทัดล่างสุด (console.log + return mock) ออก
+  //  2. uncomment โค้ด fetch ด้านล่างนี้
+  // ══════════════════════════════════════════════════════════════
   // return await fetch('/api/orders', {
   //   method: 'POST',
   //   headers: { 'Content-Type': 'application/json' },
   //   body: JSON.stringify({ gameId, uid, packages, totalPrice }),
   // }).then(r => r.json());
-  // ─── ↑ บรรทัดบนนี้ uncomment แล้วลบโค้ด mock ด้านล่างออกได้เลย ───
+  // ── ต้อง return: { orderId: string, status: 'pending' } ──
 
   console.log('[topupService] createOrder (mock)', { gameId, uid, packages, totalPrice });
   return { orderId: 'MOCK-' + Date.now(), status: 'pending' };

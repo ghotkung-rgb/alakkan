@@ -7,8 +7,18 @@ function ImagePickerInline({ src, position, onSrcChange, onPositionChange }) {
   const handleFile = (e) => {
     const file = e.target.files[0];
     if (!file) return;
-    onSrcChange(URL.createObjectURL(file));
-    // TODO: POST /api/upload FormData({ file }) → { url }
+    onSrcChange(URL.createObjectURL(file)); // ← blob URL ชั่วคราว ใช้แสดง preview เท่านั้น
+    // ══════════════════════════════════════════════════════════
+    //  [BACKEND] แทนบรรทัดบนด้วยโค้ดนี้:
+    //
+    //  const data = new FormData();
+    //  data.append('file', file);
+    //  const res = await fetch('/api/upload', { method: 'POST', body: data });
+    //  const { url } = await res.json();  // server ต้อง return { url: string }
+    //  onSrcChange(url);                  // ← ใช้ URL จริงจาก server
+    //
+    //  อย่าลืมเปลี่ยน handleFile เป็น async ด้วย
+    // ══════════════════════════════════════════════════════════
   };
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
@@ -88,10 +98,28 @@ export default function NewsManager({ news, setNews }) {
   const handleSave = (form) => {
     if (editing === 'new') {
       setNews(prev => [{ ...form, id: Date.now() }, ...prev]);
-      // TODO: POST /api/news  { ...form }
+      // ══════════════════════════════════════════════════════
+      //  [BACKEND] เพิ่มหลัง setNews:
+      //
+      //  const res = await fetch('/api/news', {
+      //    method: 'POST',
+      //    headers: { 'Content-Type': 'application/json' },
+      //    body: JSON.stringify(form),
+      //  });
+      //  const created = await res.json(); // server return { id, ...form }
+      //  setNews(prev => [created, ...prev]); // ← ใช้ id จาก server แทน Date.now()
+      // ══════════════════════════════════════════════════════
     } else {
       setNews(prev => prev.map(n => n.id === editing ? { ...form, id: editing } : n));
-      // TODO: PUT /api/news/:editing  { ...form }
+      // ══════════════════════════════════════════════════════
+      //  [BACKEND] เพิ่มหลัง setNews:
+      //
+      //  await fetch(`/api/news/${editing}`, {
+      //    method: 'PUT',
+      //    headers: { 'Content-Type': 'application/json' },
+      //    body: JSON.stringify(form),
+      //  });
+      // ══════════════════════════════════════════════════════
     }
     setEditing(null);
   };

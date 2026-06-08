@@ -1,12 +1,11 @@
 import { useState, useEffect, useRef } from 'react';
-import { FiTarget } from 'react-icons/fi';
+import { FiTarget, FiBell } from 'react-icons/fi';
 import ErrorBoundary from './components/ErrorBoundary';
 import Navbar from './components/Navbar';
 import Home from './components/Home';
 import TopupPage from './components/TopupPage';
 import MailPassHub from './components/MailPassHub';
 import MailPassPage from './components/MailPassPage';
-import News from './components/News';
 import AdminPage from './components/AdminPage';
 import { GAMES } from './config/games';
 import { MAILPASS_GAMES } from './config/mailpassGames';
@@ -50,13 +49,15 @@ export default function App() {
     setMailpassStep(s.mailpassStep ?? 1);
     setViewKey(k => k + 1);
     setExiting(false);
-    if ((s.activeMenu ?? 'HOME') !== 'HOME') window.scrollTo(0, 0);
+    window.scrollTo(0, 0);
   };
 
   // ── นำทาง + บันทึกลงประวัติเบราเซอร์ + อัป hash URL ──
   const navigate = (next) => {
     const view = { activeMenu, topupGame, mailpassGame, topupStep: 1, mailpassStep: 1, ...next };
-    window.history.pushState(view, '', '#' + stateToHash(view));
+    const newHash = '#' + stateToHash(view);
+    if (newHash === window.location.hash) return; // already here — ไม่ push ซ้ำ
+    window.history.pushState(view, '', newHash);
     setExiting(true);
     setTimeout(() => applyNav(view), 160);
   };
@@ -146,6 +147,14 @@ export default function App() {
   const showTopup    = topupGame    && GAMES[topupGame];
   const showMailPass = mailpassGame && MAILPASS_GAMES[mailpassGame];
 
+  useEffect(() => {
+    if (showTopup)         document.title = `เติม ${GAMES[topupGame].name} | ALASKAN SHOP`;
+    else if (showMailPass) document.title = `เติม ${MAILPASS_GAMES[mailpassGame].name} | ALASKAN SHOP`;
+    else if (activeMenu === 'ข่าวสาร')          document.title = 'ข่าวสาร | ALASKAN SHOP';
+    else if (activeMenu === 'บริการ Mail/Pass')  document.title = 'Mail/Pass | ALASKAN SHOP';
+    else                   document.title = 'ALASKAN SHOP';
+  }, [activeMenu, topupGame, mailpassGame, showTopup, showMailPass]);
+
   const handleMenuChange = (menu) => navigate({ activeMenu: menu, topupGame: null, mailpassGame: null });
 
   const KNOWN_MENUS = ['HOME', 'ข่าวสาร', 'บริการ Mail/Pass', 'ADMIN'];
@@ -167,7 +176,26 @@ export default function App() {
         ) : (
           <>
             {activeMenu === 'HOME' && <Home onTopup={goTopup} onMailPass={goMailPass} />}
-            {activeMenu === 'ข่าวสาร' && <News />}
+            {activeMenu === 'ข่าวสาร' && (
+              <div style={{ minHeight: '100vh', background: '#f0f4f8', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '80px 24px', fontFamily: "'PSL Empire Pro', sans-serif" }}>
+                <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', maxWidth: 560, width: '100%' }}>
+                  {/* icon */}
+                  <div style={{ width: 140, height: 140, borderRadius: 36, background: '#e2eff8', border: '2px solid #b8d8ee', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#0099bb', marginBottom: 40 }}>
+                    <FiBell size={60} />
+                  </div>
+                  {/* title */}
+                  <div style={{ fontSize: 52, fontWeight: 900, color: '#0f172a', letterSpacing: '0.01em', marginBottom: 16 }}>ข่าวสาร</div>
+                  {/* badge */}
+                  <div style={{ background: '#00d1ff', color: '#0a2540', fontSize: 13, fontWeight: 800, padding: '6px 24px', borderRadius: 20, letterSpacing: '0.12em', marginBottom: 36 }}>เร็วๆ นี้</div>
+                  {/* divider */}
+                  <div style={{ width: 56, height: 2.5, background: '#b8d8ee', borderRadius: 2, marginBottom: 36 }} />
+                  {/* description */}
+                  <div style={{ fontSize: 26, color: '#475569', textAlign: 'center', lineHeight: 2 }}>
+                    กำลังเตรียมระบบข่าวสารและโปรโมชั่น<br />จะเปิดให้บริการเร็วๆ นี้
+                  </div>
+                </div>
+              </div>
+            )}
             {activeMenu === 'บริการ Mail/Pass' && (
               <MailPassHub onSelectGame={goMailPass} onBack={() => handleMenuChange('HOME')} />
             )}

@@ -87,11 +87,9 @@ export default function TopupStep2Modal({
                   )}
                 </div>
               ))}
-              {game.howtoImage && (
-                <button className="tp-howto-trigger-btn" style={{ marginTop: 10 }} onClick={onShowHowto}>
-                  <FiBook size={14} /> วิธีเติมเกม
-                </button>
-              )}
+              <button className="tp-howto-trigger-btn" style={{ marginTop: 10 }} onClick={onShowHowto}>
+                <FiBook size={14} /> วิธีเติมเกม
+              </button>
             </div>
 
             <div className="tp-step2-section">

@@ -79,7 +79,7 @@ export default function Home({ onTopup, onMailPass }) {
                 <button className="see-more-btn" onClick={() => setMailExpanded(true)}>ดูเกมอื่นๆ</button>
               )}
             </div>
-            <GameGrid games={GAMES_MailPass} expanded={mailExpanded} onCollapse={() => { setMailExpanded(false); setTimeout(() => mailSectionRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' }), 50); }} onTopup={onMailPass} />
+            <GameGrid games={GAMES_MailPass} expanded={mailExpanded} onCollapse={() => { setMailExpanded(false); setTimeout(() => mailSectionRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' }), 50); }} onTopup={onMailPass} urlPrefix="mailpass" />
           </div>
         </div>
 

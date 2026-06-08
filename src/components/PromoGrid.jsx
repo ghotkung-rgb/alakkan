@@ -34,14 +34,20 @@ export default function PromoGrid({ promos, onTopup, onMailPass }) {
     <div ref={ref} style={{ position: 'relative' }}>
       <div style={{ overflow: 'hidden', margin: '0' }}>
         <div ref={scrollRef} className="promo-grid" style={{ overflow: 'hidden', padding: '60px', margin: '-60px' }}>
-          {promos.map((p, i) => (
-            <div className={`promo-card${i === 0 ? ' featured' : ''}`} key={p.id}
-              onClick={() => handlePromo(p)}
+          {promos.map((p, i) => {
+            const promoHref = p.gameId
+              ? `#${p.type === 'mailpass' ? 'mailpass' : 'topup'}/${encodeURIComponent(p.gameId)}`
+              : undefined;
+            return (
+            <a className={`promo-card${i === 0 ? ' featured' : ''}`} key={p.id}
+              href={promoHref}
+              onClick={(e) => { if (promoHref) e.preventDefault(); handlePromo(p); }}
               style={{
                 ...(seen
                   ? { animation: `gameCardIn 0.5s ${i * 0.12}s ease both` }
                   : { opacity: 0 }),
                 cursor: p.gameId ? 'pointer' : 'default',
+                display: 'block', textDecoration: 'none', color: 'inherit',
               }}>
               {p.bg ? (
                 <>
@@ -80,8 +86,9 @@ export default function PromoGrid({ promos, onTopup, onMailPass }) {
                   <div className="game-name">{p.name}</div>
                 </>
               )}
-            </div>
-          ))}
+            </a>
+            );
+          })}
         </div>
       </div>
     </div>

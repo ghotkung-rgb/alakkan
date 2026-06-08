@@ -93,7 +93,17 @@ export default function Orders({ orders, setOrders }) {
 
   const handleStatusChange = (id, newStatus) => {
     setOrders(prev => prev.map(o => o.id === id ? { ...o, status: newStatus } : o));
-    // TODO: PUT /api/orders/:id  { status: newStatus }
+    // ══════════════════════════════════════════════════════════
+    //  [BACKEND] เพิ่มบรรทัดนี้หลัง setOrders ด้านบน:
+    //
+    //  await fetch(`/api/orders/${id}`, {
+    //    method: 'PUT',
+    //    headers: { 'Content-Type': 'application/json' },
+    //    body: JSON.stringify({ status: newStatus }),
+    //  });
+    //
+    //  อย่าลืมเปลี่ยน handleStatusChange เป็น async ด้วย
+    // ══════════════════════════════════════════════════════════
   };
 
   const filtered = useMemo(() => orders

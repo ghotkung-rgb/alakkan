@@ -30,6 +30,11 @@
   src: url('/fonts/PSL050PRO.OTF') format('opentype');
   font-weight: normal; font-style: normal; font-display: swap;
 }
+@font-face {
+  font-family: 'PSL Khemarat W24 Pro';
+  src: url('/fonts/PSL436PRO.OTF') format('opentype');
+  font-weight: normal; font-style: normal; font-display: swap;
+}
 
 
 /* ─── Scrollbar ─── */
@@ -691,6 +696,48 @@
     font-family:'PSL Chocolate Extra Pro', 'PSL Empire Pro', sans-serif;
     border-top:1px solid #f1f5f9;
     display:flex; justify-content:center; align-items:center;
+  }
+
+  /* ── Home tablet responsive (1024px / 820px) ── */
+  @media (max-width: 1024px) {
+    .games-grid-expanded {
+      grid-template-columns: repeat(4, 220px);
+    }
+    .games-grid-expanded .game-card { width: 220px; height: 258px; }
+    .promo-card.featured { width: 448px; }
+    .footer-section { padding: 28px 24px; gap: 24px; }
+    .footer-right { width: 180px; }
+  }
+
+  @media (max-width: 820px) {
+    .section { padding: 16px 16px; }
+    /* games preview row → scrollable horizontal */
+    .games-grid {
+      overflow-x: auto;
+      justify-content: flex-start;
+      padding: 0 16px 8px;
+      -webkit-overflow-scrolling: touch;
+    }
+    /* promo row → scrollable horizontal */
+    .promo-grid {
+      overflow-x: auto;
+      justify-content: flex-start;
+      padding: 0 16px 8px;
+      -webkit-overflow-scrolling: touch;
+    }
+    .games-grid-expanded {
+      grid-template-columns: repeat(3, 210px);
+    }
+    .games-grid .game-card,
+    .games-grid-expanded .game-card { width: 210px; height: 246px; }
+    .promo-card { width: 210px; height: 246px; }
+    .promo-card.featured { width: 428px; }
+    .popular-section { padding: 16px 16px 8px; }
+    .quality-section { padding: 32px 20px 40px; }
+    .quality-stat { font-size: 44px; }
+    .footer-section { flex-direction: column; padding: 24px 20px; gap: 20px; }
+    .footer-right { width: 100%; }
+    .copyright-bar { padding: 14px 16px; font-size: 13px; }
   }
 }
 

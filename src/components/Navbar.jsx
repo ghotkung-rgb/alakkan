@@ -135,6 +135,8 @@ export default function Navbar({ activeMenu, setActiveMenu, onLogin }) {
 
         .nav-btn {
           position: relative;
+          display: flex;
+          align-items: center;
           height: 70px;
           padding: 0 18px;
           font-size: 17px;
@@ -296,6 +298,8 @@ export default function Navbar({ activeMenu, setActiveMenu, onLogin }) {
           gap: 2px;
         }
         .nav-drawer-item {
+          display: flex;
+          align-items: center;
           width: 100%;
           padding: 14px 16px;
           border: none;
@@ -309,6 +313,7 @@ export default function Navbar({ activeMenu, setActiveMenu, onLogin }) {
           text-align: left;
           letter-spacing: 0.03em;
           transition: background 0.15s, color 0.15s;
+          text-decoration: none;
         }
         .nav-drawer-item:hover, .nav-drawer-item.active {
           background: rgba(0,209,255,0.10);
@@ -381,7 +386,9 @@ export default function Navbar({ activeMenu, setActiveMenu, onLogin }) {
         <div className="nav-inner">
 
           {/* LOGO */}
-          <div className="nav-logo-wrap" onClick={() => { setIsOpen(false); setActiveMenu('HOME'); }}>
+          <a className="nav-logo-wrap" href="#home"
+            onClick={(e) => { e.preventDefault(); setIsOpen(false); setActiveMenu('HOME'); }}
+            style={{ textDecoration: 'none' }}>
             <img
               src="/images/ALASKAN_WEB_ASSET/LOGO%203D/ALASKAN_3D_LOGO_2000.png"
               alt="ALASKAN TOPUP"
@@ -392,20 +399,26 @@ export default function Navbar({ activeMenu, setActiveMenu, onLogin }) {
               alt=""
               className="nav-logo-img nav-logo-asset1"
             />
-          </div>
+          </a>
 
           {/* MENU — desktop */}
           <div className="nav-menu">
-            {menuItems.map(item => (
-              <button
-                key={item}
-                aria-current={activeMenu === item ? 'page' : undefined}
-                className={`nav-btn ${activeMenu === item ? 'active' : ''}`}
-                onClick={() => handleNav(item)}
-              >
-                {item}
-              </button>
-            ))}
+            {menuItems.map(item => {
+              const href = item === 'HOME' ? '#home' : item === 'ข่าวสาร' ? '#news' : undefined;
+              const Tag = href ? 'a' : 'button';
+              return (
+                <Tag
+                  key={item}
+                  href={href}
+                  aria-current={activeMenu === item ? 'page' : undefined}
+                  className={`nav-btn ${activeMenu === item ? 'active' : ''}`}
+                  onClick={(e) => { if (href) e.preventDefault(); handleNav(item); }}
+                  style={href ? { textDecoration: 'none' } : undefined}
+                >
+                  {item}
+                </Tag>
+              );
+            })}
           </div>
 
           {/* CTA + Hamburger — right column */}
@@ -448,15 +461,21 @@ export default function Navbar({ activeMenu, setActiveMenu, onLogin }) {
             </button>
           </div>
           <div className="nav-drawer-items">
-            {menuItems.map(item => (
-              <button
-                key={item}
-                className={`nav-drawer-item${activeMenu === item ? ' active' : ''}`}
-                onClick={() => handleNav(item)}
-              >
-                {item}
-              </button>
-            ))}
+            {menuItems.map(item => {
+              const href = item === 'HOME' ? '#home' : item === 'ข่าวสาร' ? '#news' : undefined;
+              const Tag = href ? 'a' : 'button';
+              return (
+                <Tag
+                  key={item}
+                  href={href}
+                  className={`nav-drawer-item${activeMenu === item ? ' active' : ''}`}
+                  onClick={(e) => { if (href) e.preventDefault(); handleNav(item); }}
+                  style={href ? { textDecoration: 'none' } : undefined}
+                >
+                  {item}
+                </Tag>
+              );
+            })}
           </div>
           <button className="nav-drawer-cta" onClick={() => { closeDrawer(); setTimeout(() => onLogin?.(), CLOSE_DURATION); }}>
             ลงชื่อเข้าใช้

@@ -203,13 +203,6 @@ export default function TopupPage({ game, onBack, step, onStep, onHome }) {
     <div className="tp-hero">
       <div className="tp-hero-bg" style={{ backgroundImage: `url('${game.bg}')` }} />
       <div className="tp-hero-overlay" />
-      <div className="tp-hero-content">
-        <img src={game.icon} alt={game.name} className="tp-icon" onError={e => { e.target.style.display = 'none'; }} />
-        <div>
-          <div className="tp-game-name">{game.name}</div>
-          <div className="tp-game-sub">{game.subtitle}</div>
-        </div>
-      </div>
     </div>
   );
 
@@ -222,9 +215,9 @@ export default function TopupPage({ game, onBack, step, onStep, onHome }) {
           <div style={{ display: 'flex', justifyContent: 'center', padding: '56px 24px 80px' }}>
             <div style={{ textAlign: 'center', maxWidth: 360 }}>
               <div style={{ marginBottom: 18, color: '#94a3b8' }}><FiTool size={52} /></div>
-              <div style={{ fontFamily: "'PSL Kampanath Pro', sans-serif", fontSize: 24, fontWeight: 900, color: '#1e293b', letterSpacing: '0.04em', marginBottom: 10 }}>กำลังเปิดให้บริการ</div>
+              <div style={{ fontFamily: "'PSL Kampanath Pro', sans-serif", fontSize: 24, fontWeight: 900, color: '#475569', letterSpacing: '0.04em', marginBottom: 10 }}>กำลังเปิดให้บริการ</div>
               <div style={{ fontSize: 18, fontWeight: 700, color: '#475569', lineHeight: 2, marginBottom: 28 }}>
-                สินค้าจะมาในเร็วๆ นี้<br />ติดตามได้ที่เฟส <strong style={{ color: '#1e293b' }}>ALASKAN ONLINE SHOP</strong> ของเรา
+                สินค้าจะมาในเร็วๆ นี้<br />ติดตามได้ที่เฟส <strong style={{ color: '#475569' }}>ALASKAN ONLINE SHOP</strong> ของเรา
               </div>
               <a href="https://www.facebook.com/ALASKAN.ONLINE.SHOP" target="_blank" rel="noopener noreferrer"
                 style={{ display: 'inline-flex', alignItems: 'center', gap: 8, background: '#1877f2', color: '#fff', textDecoration: 'none', padding: '11px 28px', borderRadius: 10, fontSize: 14, fontWeight: 700, filter: 'drop-shadow(0 4px 12px rgba(24,119,242,0.4))' }}>
@@ -282,7 +275,7 @@ export default function TopupPage({ game, onBack, step, onStep, onHome }) {
                 <div className="tp-section-title">กรุณาเลือกแพ็คที่ต้องการ</div>
                 <div className="tp-section-tag">
                   <span style={{ color: '#00d1ff' }}>UID</span>
-                  <span style={{ color: '#0f172a' }}>TOP-UP</span>
+                  <span style={{ color: '#475569' }}>TOP-UP</span>
                 </div>
               </div>
               <div className="tp-pkg-grid">
@@ -307,9 +300,13 @@ export default function TopupPage({ game, onBack, step, onStep, onHome }) {
                               onError={e => { e.target.style.display = 'none'; }}
                             />
                           </div>
-                          <div className="tp-pkg-amount-label">
+                          <div className={`tp-pkg-amount-label${pkg.amount > 0 ? '' : ' tp-pkg-amount-label--item'}`}>
                             {pkg.amount > 0
-                              ? <><strong>{pkg.amount.toLocaleString()}</strong> <span className="tp-pkg-currency">{game.currency}</span></>
+                              ? (() => {
+                                  const pkgBonus = pkg.bonus ? parseInt(String(pkg.bonus).replace(/[^0-9]/g, '')) || 0 : 0;
+                                  const cardTotal = pkg.amount + pkgBonus;
+                                  return <><strong>{cardTotal.toLocaleString()}</strong> <span className="tp-pkg-currency">{game.currency}</span></>;
+                                })()
                               : <strong>{pkg.label || ''}</strong>
                             }
                           </div>
@@ -334,7 +331,12 @@ export default function TopupPage({ game, onBack, step, onStep, onHome }) {
                         {isItem ? (
                           <div className="tp-sum-item-name">
                             <img src={selectedPkg?.img || game.icon} alt="" style={{ width: 28, height: 28, objectFit: 'contain', flexShrink: 0 }} onError={e => { e.target.style.display = 'none'; }} />
-                            <span>{itemDisplayName}</span>
+                            <span>
+                              {itemDisplayName}
+                              {selectedPkg?.detail && (
+                                <span style={{ fontSize: 11, color: '#64748b', fontWeight: 400, marginLeft: 6 }}>{selectedPkg.detail}</span>
+                              )}
+                            </span>
                           </div>
                         ) : (
                           <>

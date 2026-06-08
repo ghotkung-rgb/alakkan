@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from 'react';
 import { COUNTRY_NAMES, FLAG_BASE } from '../config/constants';
 import { FILTER_TABS, PAGE_SIZE } from '../config/homeData';
 
-export default function GameGrid({ games, expanded, onCollapse, onTopup }) {
+export default function GameGrid({ games, expanded, onCollapse, onTopup, urlPrefix = 'topup' }) {
   const ref = useRef(null);
   const [seen, setSeen] = useState(false);
   const [visibleCount, setVisibleCount] = useState(PAGE_SIZE);
@@ -41,9 +41,12 @@ export default function GameGrid({ games, expanded, onCollapse, onTopup }) {
       ? (game.id === 'Mobile Legends' ? 'Mobile Legends TH' : game.id)
       : game.name;
 
+    const href = `#${urlPrefix}/${encodeURIComponent(game.id)}`;
     return (
-    <div className="game-card" key={`${game.id}-${i}`} style={{ ...animStyle, cursor: 'pointer' }}
-      onClick={() => onTopup && onTopup(game.id)}>
+    <a className="game-card" key={`${game.id}-${i}`}
+      href={href}
+      style={{ ...animStyle, cursor: 'pointer', display: 'block', textDecoration: 'none', color: 'inherit' }}
+      onClick={(e) => { e.preventDefault(); onTopup && onTopup(game.id); }}>
       <img src={game.bg} alt={displayName} loading="lazy" decoding="async"
         style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center top' }}
         onError={e => { e.target.style.display = 'none'; }} />
@@ -84,9 +87,9 @@ export default function GameGrid({ games, expanded, onCollapse, onTopup }) {
         <button style={{
           background: '#00d1ff', color: '#ffffff', border: 'none', borderRadius: 20,
           padding: btnPad, fontSize: btnFontSize, fontWeight: 700, cursor: 'pointer', flexShrink: 0, lineHeight: 1, fontFamily: "'PSL Empire Pro', sans-serif",
-        }} onClick={() => onTopup && onTopup(game.id)}>เติมเกม</button>
+        }} onClick={(e) => { e.stopPropagation(); onTopup && onTopup(game.id); }}>เติมเกม</button>
       </div>
-    </div>
+    </a>
     );
   };
 

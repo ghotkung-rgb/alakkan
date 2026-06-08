@@ -1,13 +1,32 @@
 <!doctype html>
-<html lang="en">
+<html lang="th">
   <head>
     <meta charset="UTF-8" />
     <link rel="icon" type="image/png" href="/images/ALASKAN_WEB_ASSET/LOGO%203D/ALASKAN_3D_LOGO_2000.png?v=2" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>ALASKAN SHOP — TopUp Game Online</title>
+    <title>ALASKAN SHOP</title>
+    <meta name="description" content="ร้านเติมเกมออนไลน์ บริการเติมเกมทุกชนิด UID และ Mail/Pass รวดเร็ว ปลอดภัย" />
+    <meta property="og:type"        content="website" />
+    <meta property="og:title"       content="ALASKAN SHOP" />
+    <meta property="og:description" content="ร้านเติมเกมออนไลน์ บริการเติมเกมทุกชนิด UID และ Mail/Pass รวดเร็ว ปลอดภัย" />
+    <meta property="og:image"       content="https://alakkan.vercel.app/images/ALASKAN_WEB_ASSET/LOGO%203D/ALASKAN_3D_LOGO_2000.png" />
+    <meta property="og:url"         content="https://alakkan.vercel.app" />
+    <meta name="twitter:card"       content="summary_large_image" />
+    <meta name="twitter:title"      content="ALASKAN SHOP" />
+    <meta name="twitter:description" content="ร้านเติมเกมออนไลน์ บริการเติมเกมทุกชนิด UID และ Mail/Pass รวดเร็ว ปลอดภัย" />
+    <meta name="twitter:image"      content="https://alakkan.vercel.app/images/ALASKAN_WEB_ASSET/LOGO%203D/ALASKAN_3D_LOGO_2000.png" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Thai:wght@400;600;700;900&family=Barlow+Condensed:ital,wght@0,900;1,900&display=swap" rel="stylesheet" />
+    <!-- non-blocking: ไม่ block render, โหลด font หลัง paint แรก -->
+    <link rel="preload" as="style"
+      href="https://fonts.googleapis.com/css2?family=Noto+Sans+Thai:wght@400;600;700;900&display=swap"
+      onload="this.onload=null;this.rel='stylesheet'" />
+    <noscript>
+      <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Thai:wght@400;600;700;900&display=swap" rel="stylesheet" />
+    </noscript>
+    <!-- preload 2 fonts ที่ใช้บน fold แรก (Navbar + header) -->
+    <link rel="preload" href="/fonts/PSL050PRO.OTF"  as="font" type="font/otf" crossorigin />
+    <link rel="preload" href="/fonts/PSL180pro.ttf"  as="font" type="font/truetype" crossorigin />
   </head>
   <body>
     <div id="root"></div>

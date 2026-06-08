@@ -1,39 +1,10 @@
 .mp-page {
   min-height: 100vh;
   background: #ffffff;
-  color: #1e293b;
+  color: #475569;
   font-family: 'PSL Empire Pro', sans-serif;
 }
 
-/* ── Hero fallback ── */
-.mp-hero {
-  position: relative; height: 220px; overflow: hidden;
-}
-.mp-hero-bg {
-  position: absolute; inset: 0;
-  background-size: cover; background-position: center top;
-  filter: brightness(0.55);
-}
-.mp-hero-overlay {
-  position: absolute; inset: 0;
-  background: linear-gradient(to bottom, rgba(255,255,255,0) 20%, #ffffff 100%);
-}
-.mp-hero-content {
-  position: relative; z-index: 2; height: 100%;
-  display: flex; align-items: flex-end; padding: 0 40px 24px; gap: 18px;
-}
-.mp-icon {
-  width: 68px; height: 68px; border-radius: 16px;
-  border: 2px solid rgba(0,209,255,0.6);
-  object-fit: cover; flex-shrink: 0;
-  box-shadow: 0 4px 20px rgba(0,209,255,0.25);
-}
-.mp-game-name {
-  font-family: 'PSL Kampanath Pro', sans-serif;
-  font-size: 28px; font-weight: 900; color: #fff;
-  letter-spacing: 0.05em; text-shadow: 0 2px 12px rgba(0,0,0,0.4);
-}
-.mp-game-sub { font-size: 13px; color: rgba(255,255,255,0.75); margin-top: 2px; }
 .mp-game-badge {
   display: inline-block; background: rgba(0,209,255,0.88); color: #fff;
   font-size: 10px; font-weight: 800; padding: 2px 9px; border-radius: 20px;
@@ -60,7 +31,7 @@
 .mp-game-bar-label {
   position: absolute; top: 20px; left: 0;
   font-family: 'PSL Kampanath Pro', sans-serif;
-  font-size: 28px; font-weight: 700; color: #1e293b;
+  font-size: 28px; font-weight: 700; color: #475569;
   letter-spacing: 0.05em; line-height: 1;
 }
 .mp-game-bar-name {
@@ -85,7 +56,7 @@
   display: flex; align-items: center; gap: 12px; padding: 16px 0;
   font-size: 26px; font-weight: 700; color: #94a3b8;
 }
-.mp-step-item.active { color: #0f172a; }
+.mp-step-item.active { color: #475569; }
 .mp-step-item.done   { color: #00d1ff; }
 .mp-step-num {
   width: 44px; height: 44px; border-radius: 50%;
@@ -120,6 +91,9 @@
   .mp-confirm-btn { font-size: 18px; }
   .mp-sum-qty-label, .mp-qty-num { font-size: 15px; }
   .mp-section-title, .mp-section-tag { font-size: 20px !important; }
+  .mp-step2-modal { max-width: calc(100vw - 24px); }
+  .mp-step2-header { padding: 12px 14px; }
+  .mp-step2-header-icon { width: 48px; height: 48px; border-radius: 10px; }
 }
 
 /* ── Body ── */
@@ -137,7 +111,7 @@
 .mp-section-title {
   font-family: 'PSL Empire Pro', sans-serif;
   font-size: clamp(22px, 2.8vw, 34px); font-weight: 900;
-  color: #1e293b; letter-spacing: 0.06em;
+  color: #475569; letter-spacing: 0.06em;
   border-left: 4px solid #00d1ff; padding-left: 12px;
 }
 .mp-section-tag {
@@ -232,7 +206,7 @@
   font-size: 9px; font-weight: 900; padding: 2px 7px 2px 10px; border-radius: 0;
   clip-path: polygon(5px 0, 100% 0, 100% 100%, 0 100%);
   letter-spacing: 0.04em; z-index: 4; white-space: nowrap;
-  font-family: 'Noto Sans Thai', sans-serif;
+  font-family: 'PSL Empire Pro', sans-serif;
   background: #00b8d9; color: #fff;
 }
 .mp-pkg-badge.hot { background: #00b8d9; }
@@ -255,10 +229,12 @@
   left: 4px; right: 4px; bottom: 25%;
   padding: 0 6px 2px;
   font-size: clamp(20px, 2vw, 28px); font-weight: 700;
-  color: #1e293b; text-align: center; line-height: 1.2;
+  color: #475569; text-align: center; line-height: 1.2;
   font-family: 'PSL Empire Pro', sans-serif; z-index: 2;
 }
-.mp-pkg-amount-label strong { font-weight: 900; color: #0f172a; font-size: 1.25em; transition: color 0.2s; }
+.mp-pkg-amount-label strong { font-weight: 900; color: #475569; font-size: 1.25em; transition: color 0.2s; }
+.mp-pkg-amount-label.is-label { font-size: clamp(14px, 1.6vw, 19px); line-height: 1.35; }
+.mp-pkg-amount-label.is-label strong { font-size: 1em; font-weight: 900; }
 .mp-pkg-currency { color: #0284c7; font-weight: 900; transition: color 0.2s; }
 .mp-pkg-card-wrap.selected .mp-pkg-amount-label strong { color: #00d1ff; }
 .mp-pkg-card-wrap.selected .mp-pkg-currency { color: #0096ba; }
@@ -308,7 +284,7 @@
 .mp-sum-box-title {
   font-size: 20px; font-weight: 700; color: #00d1ff; text-align: center;
   padding: 2px 8px 1px;
-  font-family: 'PSL Khemarat Pro', sans-serif; letter-spacing: 0.04em;
+  font-family: 'PSL Kampanath Pro', sans-serif; letter-spacing: 0.04em;
 }
 .mp-sum-box-body {
   flex: 1; padding: 5px 12px 4px;
@@ -323,42 +299,42 @@
 .mp-sum-detail-line {
   display: flex; align-items: center; justify-content: space-between; gap: 8px;
   font-size: 25px; color: #64748b;
-  font-family: 'PSL Khemarat Pro', sans-serif;
+  font-family: 'PSL Kampanath Pro', sans-serif;
 }
 .mp-sum-detail-val {
   display: flex; align-items: center; gap: 6px;
-  font-weight: 900; color: #1e293b; font-size: 25px;
-  font-family: 'PSL Khemarat Pro', sans-serif;
+  font-weight: 900; color: #475569; font-size: 25px;
+  font-family: 'PSL Kampanath Pro', sans-serif;
 }
 .mp-sum-item-name {
   display: flex; align-items: center; gap: 10px;
-  font-family: 'PSL Khemarat Pro', sans-serif;
-  font-size: 17px; font-weight: 700; color: #1e293b; line-height: 1.4;
+  font-family: 'PSL Kampanath Pro', sans-serif;
+  font-size: 17px; font-weight: 700; color: #475569; line-height: 1.4;
 }
 .mp-sum-total-big {
-  font-family: 'PSL Khemarat Pro', sans-serif;
-  font-size: 30px; font-weight: 900; color: #1e293b;
+  font-family: 'PSL Kampanath Pro', sans-serif;
+  font-size: 30px; font-weight: 900; color: #475569;
   display: flex; align-items: center; gap: 8px; line-height: 1;
 }
 .mp-sum-price-big {
-  font-family: 'PSL Khemarat Pro', sans-serif;
-  font-size: 36px; font-weight: 900; color: #1e293b;
+  font-family: 'PSL Kampanath Pro', sans-serif;
+  font-size: 36px; font-weight: 900; color: #475569;
   display: flex; align-items: baseline; gap: 6px;
   margin-top: -15px;
 }
 .mp-sum-thb {
   font-size: 19px; color: #00d1ff; font-weight: 700;
-  font-family: 'PSL Khemarat Pro', sans-serif;
+  font-family: 'PSL Kampanath Pro', sans-serif;
 }
 .mp-sum-qty-row { display: flex; align-items: center; gap: 8px; }
 .mp-sum-qty-label {
   font-size: 19px; color: #64748b; font-weight: 600;
-  font-family: 'PSL Khemarat Pro', sans-serif; white-space: nowrap;
+  font-family: 'PSL Kampanath Pro', sans-serif; white-space: nowrap;
 }
 .mp-qty-num {
-  font-size: 19px; font-weight: 900; color: #1e293b;
+  font-size: 19px; font-weight: 900; color: #475569;
   min-width: 34px; text-align: center; padding: 0 4px;
-  font-family: 'PSL Khemarat Pro', sans-serif;
+  font-family: 'PSL Kampanath Pro', sans-serif;
 }
 .mp-sum-note {
   font-size: 10px; color: #94a3b8;
@@ -370,7 +346,7 @@
   color: #fff; border: none; border-radius: 8px;
   padding: 9px 12px; font-size: 22px; font-weight: 900;
   cursor: pointer; white-space: nowrap;
-  font-family: 'PSL Khemarat Pro', sans-serif;
+  font-family: 'PSL Kampanath Pro', sans-serif;
   transition: opacity 0.18s, transform 0.12s;
   filter: drop-shadow(0 4px 14px rgba(0,196,232,0.4));
 }
@@ -394,21 +370,22 @@
   max-height: calc(100vh - 60px); overflow-y: auto;
   filter: drop-shadow(0 -8px 40px rgba(0,0,0,0.28));
   animation: mp-slide-up 0.26s cubic-bezier(0.34,1.15,0.64,1);
+  font-family: 'Noto Sans Thai', sans-serif;
 }
 .mp-step2-header {
-  background: #e8f4ff; padding: 14px 18px;
+  background: #e8f4ff; padding: 14px 18px 14px 100px;
   border-bottom: 1.5px solid #e2e8f0;
   display: flex; align-items: center; gap: 12px;
   position: sticky; top: 0; z-index: 2;
 }
 .mp-step2-header-icon {
-  width: 56px; height: 56px; border-radius: 12px;
+  width: 64px; height: 64px; border-radius: 14px;
   border: 2px solid rgba(0,209,255,0.45); object-fit: cover; flex-shrink: 0;
   box-shadow: 0 4px 18px rgba(0,209,255,0.22);
 }
 .mp-step2-header-name {
   font-family: 'PSL Kampanath Pro', sans-serif;
-  font-size: 22px; font-weight: 900; color: #0f172a; letter-spacing: 0.04em;
+  font-size: 26px; font-weight: 900; color: #475569; letter-spacing: 0.04em;
 }
 .mp-step2-close {
   margin-left: auto; width: 32px; height: 32px; border-radius: 50%;
@@ -419,7 +396,7 @@
 .mp-step2-close:hover { background: #e2e8f0; }
 .mp-modal-steps-bar {
   display: flex; align-items: center; justify-content: center;
-  background: #e8f4ff; padding: 12px 24px;
+  background: #e8f4ff; padding: 12px max(24px, calc((100% - 734px) / 2 - 40px));
   border-bottom: 1px solid #e2e8f0; gap: 0;
 }
 .mp-modal-step {
@@ -427,7 +404,7 @@
   font-size: 12px; font-weight: 700; color: #94a3b8;
   white-space: nowrap; flex: 1; justify-content: center;
 }
-.mp-modal-step.active { color: #0f172a; }
+.mp-modal-step.active { color: #475569; }
 .mp-modal-step.done   { color: #00d1ff; }
 .mp-modal-step-num {
   width: 22px; height: 22px; border-radius: 50%;
@@ -439,7 +416,8 @@
 .mp-modal-step-line { flex: 1; height: 1.5px; background: #e2e8f0; margin: 0 8px; max-width: 80px; }
 .mp-step2-section-header {
   display: flex; align-items: center; justify-content: space-between;
-  padding: 10px 24px; background: #e8f4ff; border-bottom: 1px solid #e2e8f0;
+  padding: 10px max(14px, calc((100% - 734px) / 2));
+  background: #e8f4ff; border-bottom: 1px solid #e2e8f0;
 }
 .mp-step2-section-header .mp-section-title,
 .mp-step2-section-header .mp-section-tag { font-size: clamp(14px, 1.6vw, 20px); }
@@ -456,7 +434,7 @@
 }
 .mp-step2-section-title {
   display: flex; align-items: center; gap: 10px;
-  font-size: 17px; font-weight: 800; color: #0f172a; margin-bottom: 14px;
+  font-size: 17px; font-weight: 800; color: #475569; margin-bottom: 14px;
 }
 .mp-step2-section-icon {
   width: 32px; height: 32px; border-radius: 50%;
@@ -464,14 +442,39 @@
   display: flex; align-items: center; justify-content: center; flex-shrink: 0;
 }
 
-/* ── Inputs ── */
-.mp-input {
+/* ── Account fields (UID-style icon inside input) ── */
+.mp-account-field { display: flex; flex-direction: column; gap: 6px; margin-bottom: 12px; }
+.mp-field-label { font-size: 12px; font-weight: 800; color: #475569; font-family: 'Noto Sans Thai', sans-serif; margin-bottom: 8px; }
+.mp-field-req { color: #f87171; }
+.mp-field-label-hint { font-size: 11px; color: #94a3b8; font-weight: 400; margin-left: 4px; }
+.mp-field-hint { font-size: 11px; color: #94a3b8; line-height: 1.5; }
+.mp-uid-field { position: relative; }
+.mp-uid-input {
   width: 100%; box-sizing: border-box;
-  background: #f8fafc; border: 1.5px solid #e2e8f0;
-  border-radius: 10px; color: #1e293b; font-size: 15px; font-weight: 600;
-  padding: 13px 16px; outline: none;
-  font-family: 'PSL Empire Pro', sans-serif; transition: border-color 0.2s;
-  margin-bottom: 12px;
+  padding: 11px 14px 11px 38px;
+  border: 1.5px solid #e2e8f0; border-radius: 10px;
+  font-size: 14px; color: #475569; background: #f8fafc;
+  outline: none; font-family: 'Noto Sans Thai', sans-serif;
+  transition: border-color 0.15s, box-shadow 0.15s;
+}
+.mp-uid-input:focus { border-color: #00c4e8; box-shadow: 0 0 0 3px rgba(0,196,232,0.15); background: #fff; }
+.mp-uid-input::placeholder { color: #94a3b8; font-weight: 400; }
+.mp-uid-input.pw { padding-right: 48px; letter-spacing: 0.06em; }
+.mp-uid-input-icon { position: absolute; left: 11px; top: 50%; translate: 0 -50%; color: #94a3b8; pointer-events: none; }
+.mp-uid-pw-toggle {
+  position: absolute; right: 12px; top: 50%; transform: translateY(-50%);
+  background: none; border: none; cursor: pointer;
+  color: #94a3b8; padding: 4px; transition: color 0.2s;
+}
+.mp-uid-pw-toggle:hover { color: #00d1ff; }
+
+/* ── Inputs (legacy email/password games) ── */
+.mp-input {
+  width: 100%; box-sizing: border-box; background: #f8fafc;
+  border: 1.5px solid #e2e8f0; border-radius: 10px;
+  color: #475569; font-size: 14px; font-weight: 600;
+  padding: 11px 14px; outline: none;
+  font-family: 'PSL Empire Pro', sans-serif; transition: border-color 0.2s; margin-bottom: 12px;
 }
 .mp-input::placeholder { color: #94a3b8; font-weight: 400; }
 .mp-input:focus { border-color: #00d1ff; background: #fff; }
@@ -479,21 +482,20 @@
 .mp-pw-wrap .mp-input { padding-right: 48px; margin-bottom: 0; letter-spacing: 0.06em; }
 .mp-pw-toggle {
   position: absolute; right: 14px; top: 50%; transform: translateY(-50%);
-  background: none; border: none; cursor: pointer;
-  color: #94a3b8; padding: 4px; transition: color 0.2s;
+  background: none; border: none; cursor: pointer; color: #94a3b8; padding: 4px; transition: color 0.2s;
 }
 .mp-pw-toggle:hover { color: #00d1ff; }
 .mp-hint {
-  font-size: 12px; color: #94a3b8; margin-top: 6px;
+  font-size: 11px; color: #94a3b8; margin-top: 6px;
   display: flex; align-items: flex-start; gap: 5px; line-height: 1.6;
 }
 .mp-howto-btn {
-  display: flex; align-items: center; gap: 8px;
-  background: #fff; border: 1.5px solid #fde68a;
-  border-radius: 10px; padding: 10px 14px; margin-top: 10px;
-  cursor: pointer; width: 100%; font: inherit;
+  display: inline-flex; align-items: center; gap: 6px;
+  background: #fff8e7; border: 1.5px solid #fde68a; border-radius: 9px;
+  padding: 8px 16px; cursor: pointer;
   color: #92400e; font-size: 13px; font-weight: 700;
-  transition: background 0.2s; font-family: 'PSL Empire Pro', sans-serif;
+  transition: background 0.18s; font-family: 'Noto Sans Thai', sans-serif;
+  white-space: nowrap; flex-shrink: 0;
 }
 .mp-howto-btn:hover { background: #fffbeb; }
 
@@ -505,14 +507,12 @@
 }
 .mp-security-box strong { color: #78350f; }
 
-/* ── Payment list (vertical) ── */
+/* ── Payment list ── */
 .mp-pay-list { display: flex; flex-direction: column; gap: 8px; }
 .mp-pay-item {
-  display: flex; align-items: center; gap: 12px;
-  padding: 10px 14px; border-radius: 8px;
+  display: flex; align-items: center; gap: 12px; padding: 10px 14px; border-radius: 8px;
   border: 1.5px solid #e2e8f0; border-left: 3px solid transparent;
-  background: #f8fafc; cursor: pointer;
-  transition: border-color 0.18s, background 0.18s;
+  background: #f8fafc; cursor: pointer; transition: border-color 0.18s, background 0.18s;
 }
 .mp-pay-item:hover { border-color: #bae6fd; border-left-color: #00d1ff; background: #f0f9ff; }
 .mp-pay-item.selected { border-color: #bae6fd; border-left-color: #00d1ff; background: #fff; }
@@ -520,55 +520,51 @@
   width: 36px; height: 36px; border-radius: 8px;
   display: flex; align-items: center; justify-content: center; flex-shrink: 0;
 }
-.mp-pay-item-name { font-size: 13px; font-weight: 700; color: #0f172a; }
+.mp-pay-item-name { font-size: 13px; font-weight: 700; color: #475569; }
 .mp-pay-item-desc { font-size: 11px; color: #94a3b8; margin-top: 1px; }
 .mp-pay-radio {
-  width: 18px; height: 18px; border-radius: 50%;
-  border: 2px solid #cbd5e1; margin-left: auto; flex-shrink: 0;
-  display: flex; align-items: center; justify-content: center; transition: border-color 0.15s;
+  width: 18px; height: 18px; border-radius: 50%; border: 2px solid #cbd5e1;
+  margin-left: auto; flex-shrink: 0; display: flex; align-items: center; justify-content: center;
+  transition: border-color 0.15s;
 }
 .mp-pay-item.selected .mp-pay-radio { border-color: #00c4e8; }
 .mp-pay-radio-dot { width: 9px; height: 9px; border-radius: 50%; background: #00c4e8; display: none; }
 .mp-pay-item.selected .mp-pay-radio-dot { display: block; }
 
 /* ── Order summary right col ── */
-.mp-order-sum {
-  background: #fff; border-radius: 14px; padding: 16px; border: 1.5px solid #e2e8f0;
-}
+.mp-order-sum { background: #fff; border-radius: 14px; padding: 16px; border: 1.5px solid #e2e8f0; }
 .mp-order-sum-title {
-  font-size: 11px; font-weight: 800; color: #64748b;
-  letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 12px;
+  font-size: 12px; font-weight: 800; color: #64748b;
+  margin-bottom: 12px;
 }
 .mp-order-pkg-row { display: flex; align-items: center; gap: 12px; margin-bottom: 12px; }
 .mp-order-pkg-img {
   width: 50px; height: 50px; border-radius: 10px;
-  background: #f1f5f9; border: 1.5px solid #e2e8f0;
-  object-fit: contain; flex-shrink: 0;
+  background: #f1f5f9; border: 1.5px solid #e2e8f0; object-fit: contain; flex-shrink: 0;
 }
 .mp-order-pkg-big {
   font-family: 'PSL Kampanath Pro', sans-serif;
-  font-size: 18px; font-weight: 900; color: #1e293b; line-height: 1.2;
+  font-size: 20px; font-weight: 900; color: #475569; line-height: 1.1;
 }
 .mp-order-pkg-sub { font-size: 11px; color: #64748b; margin-top: 2px; }
 .mp-order-detail-row {
   display: flex; align-items: center; justify-content: space-between;
-  font-size: 12px; color: #475569; padding: 6px 0;
-  border-bottom: 1px solid #f1f5f9;
+  font-size: 12px; color: #475569; padding: 5px 0; border-bottom: 1px solid #f1f5f9;
 }
-.mp-order-detail-val { font-weight: 700; color: #1e293b; }
+.mp-order-detail-val { font-weight: 700; color: #475569; }
 .mp-order-total-row {
   display: flex; align-items: flex-end; justify-content: space-between;
   margin-top: 10px; padding-top: 10px; border-top: 1.5px solid #e2e8f0;
 }
 .mp-order-total-price {
   font-family: 'PSL Kampanath Pro', sans-serif;
-  font-size: 26px; font-weight: 900; color: #1e293b; line-height: 1;
+  font-size: 28px; font-weight: 900; color: #475569; line-height: 1;
 }
 .mp-step2-confirm-btn {
   width: 100%; background: linear-gradient(90deg, #00c4e8, #0096c7);
   color: #fff; border: none; border-radius: 12px;
   padding: 13px; font-size: 15px; font-weight: 900;
-  cursor: pointer; font-family: 'PSL Empire Pro', sans-serif;
+  cursor: pointer; font-family: 'Noto Sans Thai', sans-serif;
   transition: opacity 0.18s, transform 0.12s;
   filter: drop-shadow(0 4px 14px rgba(0,196,232,0.4));
 }
@@ -578,7 +574,7 @@
   width: 100%; background: rgba(255,255,255,0.6); border: 1.5px solid #e2e8f0;
   color: #64748b; border-radius: 10px; padding: 9px;
   font-size: 13px; font-weight: 700; cursor: pointer;
-  font-family: 'PSL Empire Pro', sans-serif; transition: background 0.12s;
+  font-family: 'Noto Sans Thai', sans-serif; transition: background 0.12s;
 }
 .mp-step2-back-btn:hover { background: rgba(255,255,255,0.9); }
 
@@ -634,7 +630,7 @@
 }
 .mp-summary-row:last-child { border-bottom: none; }
 .mp-summary-key { color: #64748b; font-weight: 600; }
-.mp-summary-val { color: #0f172a; font-weight: 800; }
+.mp-summary-val { color: #475569; font-weight: 800; }
 .mp-summary-val.accent { color: #00d1ff; }
 .mp-total-row {
   display: flex; justify-content: space-between; align-items: center; padding: 16px 0 4px; font-size: 16px;
@@ -676,7 +672,7 @@
 }
 .mp-success-title {
   font-family: 'PSL Kampanath Pro', sans-serif;
-  font-size: 28px; font-weight: 900; color: #0f172a; margin-bottom: 6px;
+  font-size: 28px; font-weight: 900; color: #475569; margin-bottom: 6px;
   animation: mp-fade-up 0.4s 0.2s both;
 }
 .mp-success-sub {
@@ -699,7 +695,7 @@
   animation: mp-fade-up 0.4s 0.5s both;
 }
 .mp-home-btn {
-  background: #f1f5f9; color: #1e293b; border: none; padding: 12px 28px;
+  background: #f1f5f9; color: #475569; border: none; padding: 12px 28px;
   font-size: 14px; font-weight: 700; border-radius: 10px; cursor: pointer;
   font-family: 'PSL Empire Pro', sans-serif; transition: background 0.2s;
 }

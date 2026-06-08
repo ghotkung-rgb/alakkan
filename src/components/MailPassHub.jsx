@@ -306,10 +306,12 @@ export default function MailPassHub({ onSelectGame, onBack }) {
             {filtered.map(game => {
               const hasPackages = game.packages && game.packages.length > 0;
               return (
-                <div
+                <a
                   key={game.id}
                   className="mph-card"
-                  onClick={() => onSelectGame(game.id)}
+                  href={`#mailpass/${encodeURIComponent(game.id)}`}
+                  onClick={(e) => { e.preventDefault(); onSelectGame(game.id); }}
+                  style={{ textDecoration: 'none', display: 'block' }}
                 >
                   <img
                     src={game.bg}
@@ -334,7 +336,7 @@ export default function MailPassHub({ onSelectGame, onBack }) {
                       {hasPackages ? 'เติมเกม' : 'เร็วๆ นี้'}
                     </span>
                   </div>
-                </div>
+                </a>
               );
             })}
           </div>

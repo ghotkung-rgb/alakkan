@@ -1,7 +1,7 @@
 .tp-page {
   min-height: 100vh;
   background: #ffffff;
-  color: #1e293b;
+  color: #475569;
   font-family: 'PSL Empire Pro', sans-serif;
 }
 
@@ -55,7 +55,7 @@
 .tp-game-bar-label {
   position: absolute; top: 20px; left: 0;
   font-family: 'PSL Kampanath Pro', sans-serif;
-  font-size: 28px; font-weight: 700; color: #1e293b;
+  font-size: 28px; font-weight: 700; color: #475569;
   letter-spacing: 0.05em; line-height: 1;
 }
 .tp-game-bar-name {
@@ -89,7 +89,7 @@
   display: flex; align-items: center; gap: 12px; padding: 16px 0;
   font-size: 26px; font-weight: 700; color: #94a3b8;
 }
-.tp-step-item.active { color: #0f172a; }
+.tp-step-item.active { color: #475569; }
 .tp-step-item.done   { color: #00d1ff; }
 .tp-step-num {
   width: 44px; height: 44px; border-radius: 50%;
@@ -143,7 +143,7 @@
 .tp-section-title {
   font-family: 'PSL Empire Pro', sans-serif;
   font-size: clamp(22px, 2.8vw, 34px); font-weight: 900;
-  color: #1e293b; letter-spacing: 0.06em;
+  color: #475569; letter-spacing: 0.06em;
   border-left: 4px solid #00d1ff; padding-left: 12px;
 }
 .tp-section-tag {
@@ -322,17 +322,22 @@
   left: 4px; right: 4px; bottom: 25%;
   padding: 0 6px 2px;
   font-size: clamp(20px, 2vw, 28px); font-weight: 700;
-  color: #1e293b; text-align: center; line-height: 1.2;
-  font-family: 'PSL Empire Pro', sans-serif;
+  color: #475569; text-align: center; line-height: 1.2;
+  font-family: 'PSL Khemarat W24 Pro', 'PSL Empire Pro', sans-serif;
   z-index: 2;
 }
 .tp-pkg-amount-label strong {
-  font-weight: 900; color: #0f172a; font-size: 1.25em;
+  font-weight: 900; color: #475569; font-size: 1.25em;
   transition: color 0.2s;
 }
-.tp-pkg-currency { color: #0284c7; font-weight: 900; transition: color 0.2s; }
+.tp-pkg-amount-label--item {
+  font-size: clamp(13px, 1.6vw, 18px);
+  line-height: 1.3;
+}
+.tp-pkg-amount-label--item strong { font-size: 1em; }
+.tp-pkg-currency { color: #475569; font-weight: 900; transition: color 0.2s; }
 .tp-pkg-card-wrap.selected .tp-pkg-amount-label strong { color: #00d1ff; }
-.tp-pkg-card-wrap.selected .tp-pkg-currency { color: #0096ba; }
+.tp-pkg-card-wrap.selected .tp-pkg-currency { color: #00d1ff; }
 
 /* Price box — sits inside the cyan bar of pack.png */
 .tp-pkg-price-box {
@@ -344,7 +349,7 @@
   clip-path: none; margin: 0; width: 100%;
   font-size: clamp(24px, 2.2vw, 34px); font-weight: 900;
   color: #fff; text-align: center; letter-spacing: 0.05em;
-  font-family: 'PSL Kampanath Pro', sans-serif;
+  font-family: 'PSL Khemarat W24 Pro', 'PSL Kampanath Pro', sans-serif;
   display: flex; align-items: center; justify-content: center;
   z-index: 2;
   transition: none;
@@ -389,7 +394,7 @@
 .tp-sum-box-title {
   font-size: 20px; font-weight: 700; color: #00d1ff; text-align: center;
   padding: 2px 8px 1px;
-  font-family: 'PSL Khemarat Pro', sans-serif; letter-spacing: 0.04em;
+  font-family: 'PSL Khemarat W24 Pro', 'PSL Khemarat Pro', sans-serif; letter-spacing: 0.04em;
 }
 .tp-sum-box-body {
   flex: 1; padding: 5px 12px 4px;
@@ -404,38 +409,38 @@
 .tp-sum-detail-line {
   display: flex; align-items: center; justify-content: space-between; gap: 8px;
   font-size: 25px; color: #64748b;
-  font-family: 'PSL Khemarat Pro', sans-serif;
+  font-family: 'PSL Khemarat W24 Pro', 'PSL Khemarat Pro', sans-serif;
 }
 .tp-sum-detail-val {
   display: flex; align-items: center; gap: 6px;
-  font-weight: 900; color: #1e293b; font-size: 25px;
-  font-family: 'PSL Khemarat Pro', sans-serif;
+  font-weight: 900; color: #475569; font-size: 25px;
+  font-family: 'PSL Khemarat W24 Pro', 'PSL Khemarat Pro', sans-serif;
 }
 .tp-sum-bonus { color: #16a34a; }
 .tp-sum-item-name {
   display: flex; align-items: center; gap: 10px;
-  font-family: 'PSL Khemarat Pro', sans-serif;
-  font-size: 17px; font-weight: 700; color: #1e293b; line-height: 1.4;
+  font-family: 'PSL Khemarat W24 Pro', 'PSL Khemarat Pro', sans-serif;
+  font-size: 17px; font-weight: 700; color: #475569; line-height: 1.4;
 }
 .tp-sum-total-big {
-  font-family: 'PSL Khemarat Pro', sans-serif;
-  font-size: 30px; font-weight: 900; color: #1e293b;
+  font-family: 'PSL Khemarat W24 Pro', 'PSL Khemarat Pro', sans-serif;
+  font-size: 30px; font-weight: 900; color: #475569;
   display: flex; align-items: center; gap: 8px; line-height: 1;
 }
 .tp-sum-qty-row { display: flex; align-items: center; gap: 8px; }
 .tp-sum-qty-label {
   font-size: 19px; color: #64748b; font-weight: 600;
-  font-family: 'PSL Khemarat Pro', sans-serif; white-space: nowrap;
+  font-family: 'PSL Khemarat W24 Pro', 'PSL Khemarat Pro', sans-serif; white-space: nowrap;
 }
 .tp-sum-price-big {
-  font-family: 'PSL Khemarat Pro', sans-serif;
-  font-size: 36px; font-weight: 900; color: #1e293b;
+  font-family: 'PSL Khemarat W24 Pro', 'PSL Khemarat Pro', sans-serif;
+  font-size: 36px; font-weight: 900; color: #475569;
   display: flex; align-items: baseline; gap: 6px;
   margin-top: -15px;
 }
 .tp-sum-thb {
   font-size: 19px; color: #00d1ff; font-weight: 700;
-  font-family: 'PSL Khemarat Pro', sans-serif;
+  font-family: 'PSL Khemarat W24 Pro', 'PSL Khemarat Pro', sans-serif;
 }
 .tp-sum-note {
   font-size: 10px; color: #94a3b8;
@@ -457,9 +462,9 @@
 .tp-qty-btn:hover:not(:disabled) { background: #e0f2fe; color: #0369a1; }
 .tp-qty-btn:disabled { opacity: 0.35; cursor: not-allowed; }
 .tp-qty-num {
-  font-size: 19px; font-weight: 900; color: #1e293b;
+  font-size: 19px; font-weight: 900; color: #475569;
   min-width: 34px; text-align: center; padding: 0 4px;
-  font-family: 'PSL Khemarat Pro', sans-serif;
+  font-family: 'PSL Khemarat W24 Pro', 'PSL Khemarat Pro', sans-serif;
 }
 
 /* Confirm button */
@@ -469,7 +474,7 @@
   color: #fff; border: none; border-radius: 8px;
   padding: 9px 12px; font-size: 22px; font-weight: 900;
   cursor: pointer; white-space: nowrap;
-  font-family: 'PSL Khemarat Pro', sans-serif;
+  font-family: 'PSL Khemarat W24 Pro', 'PSL Khemarat Pro', sans-serif;
   transition: opacity 0.18s, transform 0.12s;
   filter: drop-shadow(0 4px 14px rgba(0,196,232,0.4));
 }
@@ -481,7 +486,7 @@
   width: 100%; box-sizing: border-box;
   padding: 11px 14px 11px 38px;
   border: 1.5px solid #e2e8f0; border-radius: 10px;
-  font-size: 14px; color: #0f172a; background: #f8fafc;
+  font-size: 14px; color: #475569; background: #f8fafc;
   outline: none; font-family: 'Noto Sans Thai', sans-serif;
   transition: border-color 0.15s, box-shadow 0.15s;
 }
@@ -546,7 +551,7 @@
 }
 .tp-step2-header-name {
   font-family: 'PSL Kampanath Pro', sans-serif;
-  font-size: 26px; font-weight: 900; color: #0f172a;
+  font-size: 26px; font-weight: 900; color: #475569;
   letter-spacing: 0.04em; line-height: 1.2;
 }
 .tp-step2-header-plats { margin-top: 4px; }
@@ -574,7 +579,7 @@
   font-size: 12px; font-weight: 700; color: #94a3b8; white-space: nowrap;
   flex: 1;
 }
-.tp-modal-step.active { color: #0f172a; }
+.tp-modal-step.active { color: #475569; }
 .tp-modal-step.done   { color: #00d1ff; }
 .tp-modal-step-num {
   width: 22px; height: 22px; border-radius: 50%;
@@ -599,7 +604,7 @@
 }
 .tp-step2-section-title {
   display: flex; align-items: center; gap: 10px;
-  font-size: 17px; font-weight: 800; color: #0f172a; margin-bottom: 14px;
+  font-size: 17px; font-weight: 800; color: #475569; margin-bottom: 14px;
 }
 .tp-step2-section-icon {
   width: 32px; height: 32px; border-radius: 50%;
@@ -624,7 +629,7 @@
   display: flex; align-items: center; justify-content: center;
   font-size: 10px; font-weight: 900; flex-shrink: 0;
 }
-.tp-pay-item-name { font-size: 13px; font-weight: 700; color: #0f172a; }
+.tp-pay-item-name { font-size: 13px; font-weight: 700; color: #475569; }
 .tp-pay-item-desc { font-size: 11px; color: #94a3b8; margin-top: 1px; }
 .tp-pay-radio {
   width: 18px; height: 18px; border-radius: 50%;
@@ -649,7 +654,7 @@
 }
 .tp-order-pkg-big {
   font-family: 'PSL Kampanath Pro', sans-serif;
-  font-size: 20px; font-weight: 900; color: #1e293b; line-height: 1.1;
+  font-size: 20px; font-weight: 900; color: #475569; line-height: 1.1;
 }
 .tp-order-pkg-sub { font-size: 11px; color: #64748b; margin-top: 2px; }
 .tp-order-detail-row {
@@ -659,7 +664,7 @@
 }
 .tp-order-detail-val {
   display: flex; align-items: center; gap: 4px;
-  font-weight: 700; color: #1e293b; font-size: 12px;
+  font-weight: 700; color: #475569; font-size: 12px;
 }
 .tp-order-toggle-btn {
   display: flex; align-items: center; gap: 4px;
@@ -677,7 +682,7 @@
 }
 .tp-order-total-price {
   font-family: 'PSL Kampanath Pro', sans-serif;
-  font-size: 28px; font-weight: 900; color: #1e293b; line-height: 1;
+  font-size: 28px; font-weight: 900; color: #475569; line-height: 1;
 }
 .tp-step2-confirm-btn {
   width: 100%; background: linear-gradient(90deg, #00c4e8, #0096c7);
@@ -704,7 +709,7 @@
 }
 .tp-summary-row:last-child { border-bottom: none; }
 .tp-summary-key { color: #64748b; font-weight: 600; }
-.tp-summary-val { color: #0f172a; font-weight: 800; }
+.tp-summary-val { color: #475569; font-weight: 800; }
 .tp-summary-val.accent { color: #00d1ff; }
 
 /* ── Success screen ── */
@@ -740,7 +745,7 @@
 }
 .tp-success-title {
   font-family: 'PSL Kampanath Pro', sans-serif;
-  font-size: 28px; font-weight: 900; color: #0f172a; margin-bottom: 6px;
+  font-size: 28px; font-weight: 900; color: #475569; margin-bottom: 6px;
   animation: tp-fade-up 0.4s 0.2s both;
 }
 .tp-success-sub {
@@ -763,7 +768,7 @@
   animation: tp-fade-up 0.4s 0.5s both;
 }
 .tp-home-btn {
-  background: #f1f5f9; color: #1e293b; border: none; padding: 12px 28px;
+  background: #f1f5f9; color: #475569; border: none; padding: 12px 28px;
   font-size: 14px; font-weight: 700; border-radius: 10px; cursor: pointer;
   font-family: 'Noto Sans Thai', sans-serif; transition: background 0.2s;
 }
@@ -812,6 +817,21 @@
 .tp-howto-zoom-label { font-size: 11px; color: rgba(255,255,255,0.75); min-width: 34px; text-align: center; }
 .tp-howto-imgwrap { overflow: hidden; line-height: 0; }
 .tp-howto-img { width: 100%; display: block; object-fit: contain; max-height: 92vh; }
+.tp-howto-coming-soon {
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  gap: 18px; padding: 64px 32px 72px;
+  background: #0f172a; min-height: 280px;
+}
+.tp-howto-coming-icon { color: #38bdf8; width: 52px; height: 52px; flex-shrink: 0; }
+.tp-howto-coming-title {
+  font-family: 'PSL Kampanath Pro', 'PSL Empire Pro', sans-serif;
+  font-size: 30px; font-weight: 900; color: #f1f5f9;
+  letter-spacing: 0.04em; text-align: center; line-height: 1.3;
+}
+.tp-howto-coming-sub {
+  font-size: 15px; font-weight: 700; color: #64748b;
+  text-align: center; letter-spacing: 0.02em;
+}
 
 /* ── Reduced motion ── */
 @media (prefers-reduced-motion: reduce) {
