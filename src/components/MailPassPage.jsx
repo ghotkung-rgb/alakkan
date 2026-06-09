@@ -130,6 +130,7 @@ function buildDefaultInfo(game) {
 
 export default function MailPassPage({ game, onBack, step, onStep, onHome }) {
   const [selectedPkgs, setSelectedPkgs] = useState([]);
+  const [quantity, setQuantity]         = useState(1);
   const [email, setEmail]               = useState('');
   const [password, setPassword]         = useState('');
   const [fieldValues, setFieldValues]   = useState({});
@@ -162,10 +163,11 @@ export default function MailPassPage({ game, onBack, step, onStep, onHome }) {
     setSelectedPkgs(prev =>
       prev.some(p => p.id === pkg.id) ? [] : [pkg]
     );
+    setQuantity(1);
   };
 
-  const totalPrice  = selectedPkgs.reduce((sum, p) => sum + p.price, 0);
-  const totalAmount = selectedPkgs.reduce((sum, p) => sum + (p.amount || 0), 0);
+  const totalPrice  = selectedPkgs.reduce((sum, p) => sum + p.price, 0) * quantity;
+  const totalAmount = selectedPkgs.reduce((sum, p) => sum + (p.amount || 0), 0) * quantity;
 
   const validateMPField = (field, value) => {
     const raw = value ?? '';
@@ -223,7 +225,7 @@ export default function MailPassPage({ game, onBack, step, onStep, onHome }) {
         gameId: game.id,
         uid: game.accountFields ? (fieldValues['idLogin'] || '') : email,
         accountData: game.accountFields ? fieldValues : { email, password },
-        packages: selectedPkgs.map(p => ({ id: p.id, amount: p.amount, price: p.price, label: p.label })),
+        packages: selectedPkgs.map(p => ({ id: p.id, amount: (p.amount || 0) * quantity, price: p.price * quantity, label: quantity > 1 ? `${p.label || `${p.amount} ${game.currency}`} × ${quantity}` : (p.label || `${p.amount} ${game.currency}`) })),
         totalPrice,
         paymentMethod: selectedPayment,
         slip: slip?.src || null,
@@ -416,7 +418,11 @@ export default function MailPassPage({ game, onBack, step, onStep, onHome }) {
                       )}
                       <div className="mp-sum-qty-row">
                         <span className="mp-sum-qty-label">จำนวน</span>
-                        <span className="mp-qty-num">{selectedPkgs.length}</span>
+                        <div className="mp-qty-wrap">
+                          <button className="mp-qty-btn" onClick={() => setQuantity(q => Math.max(1, q - 1))} disabled={quantity <= 1}>−</button>
+                          <span className="mp-qty-num">{quantity}</span>
+                          <button className="mp-qty-btn" onClick={() => setQuantity(q => Math.min(10, q + 1))}>+</button>
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -659,7 +665,7 @@ export default function MailPassPage({ game, onBack, step, onStep, onHome }) {
                         <div>
                           <div className="mp-order-pkg-big">
                             {selectedPkgs.length === 1
-                              ? (selectedPkgs[0].label || `${selectedPkgs[0].amount?.toLocaleString()} ${game.currency}`)
+                              ? `${selectedPkgs[0].label || `${selectedPkgs[0].amount?.toLocaleString()} ${game.currency}`}${quantity > 1 ? ` × ${quantity}` : ''}`
                               : `${selectedPkgs.length} แพ็กเกจ`}
                           </div>
                           {totalAmount > 0 && (

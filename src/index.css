@@ -368,10 +368,10 @@
 
   /* ─── Buttons ─── */
   .see-more-btn {
-    font-size:15px; font-weight:900; color:#fff;
+    font-size:18x; font-weight:900; color:#fff;
     border:none; padding:10px 36px;
     background:#00d1ff; cursor:pointer; letter-spacing:0.12em;
-    font-family:'PSL Empire Pro', sans-serif;
+    font-family:'PSL Chocolate Extra Pro', sans-serif;
     text-transform:uppercase;
     clip-path:polygon(20px 0%,100% 0%,100% calc(100% - 20px),calc(100% - 20px) 100%,0% 100%,0% 20px);
     transition: background 0.15s var(--ease-out-quart),

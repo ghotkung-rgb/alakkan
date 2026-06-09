@@ -248,6 +248,9 @@ Phase 3 — Auth
 
 - **Admin เข้าได้ผ่าน** `#admin` ใน URL หรือ Ctrl+Shift+A (ไม่มีปุ่มในหน้าหลัก)
 - **QR ปัจจุบัน** เก็บใน localStorage — ต้อง upload QR บนเครื่องเดียวกับลูกค้าถึงจะเห็น (Phase 2 แก้ได้)
+- **TEST_QR (สำคัญ)** ไฟล์ `public/images/QR/QR.jpg` เป็น QR เทสชั่วคราว — ลูกค้าจะเห็นรูปนี้เมื่อยังไม่ได้ upload QR จริง ต้องแทนที่ด้วย QR จริงก่อน go-live หรือลบออกเมื่อ Phase 2 (getQR API) ทำงานแล้ว อ้างอิงใน:
+  - `src/components/TopupStep2Modal.jsx` บรรทัด 9, 21
+  - `src/components/MailPassPage.jsx` บรรทัด 11, 22
 - **console.log** ใน topupService.js เป็น intentional mock markers — ลบได้ทันทีเมื่อ activate API
 - **favicon** ใช้ PNG (ALASKAN_3D_LOGO_2000.png) — ไม่ใช้ .svg แล้ว
 
