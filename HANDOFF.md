@@ -1,319 +1,260 @@
-# ALASKAN SHOP — Frontend Handoff
+# ALASKAN SHOP — Dev Handoff
 
-> ไฟล์นี้สำหรับ dev team ที่รับช่วง backend ต่อ
-> Frontend พร้อม 100% — ต้องทำเฉพาะส่วนที่ระบุด้านล่าง
+Frontend พร้อมส่งมอบแล้ว เหลืองาน backend และ 5 จุด activate
+
+**สถานะล่าสุด:** Build ผ่าน ✓ | Deploy บน Vercel แล้ว ✓ | 2026-06-09
 
 ---
 
-## 1. Tech Stack
+## Pre-Handoff Checklist
+
+| รายการ | สถานะ |
+|---|---|
+| `npm run build` ผ่าน | ✅ (465KB JS / 92KB CSS) |
+| ไม่มี console.log นอก topupService.js | ✅ |
+| TODO ทั้งหมดเป็น `[API]` markers ตั้งใจ | ✅ |
+| Deploy ขึ้น Vercel | ✅ https://alaskan.vercel.app |
+| HANDOFF.md + topupService.js พร้อม | ✅ |
+
+---
+
+## สิ่งที่ frontend ทำเสร็จแล้ว
+
+- หน้า Home พร้อม HeroSlider (7 slides), GameGrid (23 เกม), PromoGrid, Footer
+- หน้าเติมเกม UID (TopupPage) — เลือกแพ็ค, กรอก UID, สรุปออเดอร์, แนบสลิป
+- หน้าเติมเกม Mail/Pass (MailPassPage) — กรอก email/password หรือ accountFields ตาม game config
+- Validation ครบ — field required, payment not selected แสดง error สีแดง
+- Admin panel — Dashboard, Orders, Games, Payment (QR upload), News
+- QR Code แสดงผลใน TopupStep2Modal และ MailPassPage (ลูกค้าเห็น)
+- Admin upload QR แต่ละธนาคารได้จาก AdminPayment
+- Vercel demo: https://alaskan.vercel.app
+
+---
+
+## Stack
 
 | ส่วน | เทคโนโลยี |
-|------|-----------|
+|---|---|
 | Frontend | React 18 + Vite |
-| Styling | Tailwind CSS v3 + CSS-in-JS (inline + `<style>`) |
-| Icons | react-icons (Feather set) |
-| Routing | Hash-based SPA (`#home`, `#topup/ROV`, `#mailpass/eFootball`) — ไม่ใช้ React Router |
-| Deployment | Vercel (demo) → เปลี่ยนเป็น server จริงได้เลย |
+| Styling | CSS (inline `<style>` ต่อ component) |
+| Icons | react-icons (fi, bs, fa) |
+| Font | PSL Empire Pro, PSL Chocolate Extra Pro |
+| Deploy (demo) | Vercel (auto-deploy จาก GitHub `main`) |
 
 ---
 
-## 2. Environment Variables
+## โครงสร้างไฟล์สำคัญ
 
-สร้างไฟล์ `.env` ที่ root หรือตั้งค่าบน server:
+```
+src/
+  config/
+    games.js          — รายชื่อเกม UID ทั้งหมด (23 เกม) + packages + ราคา
+    mailpassGames.js  — รายชื่อเกม Mail/Pass + accountFields ต่อเกม
+    constants.js      — PAYMENT_METHODS, COUNTRY_NAMES
+    homeData.js       — ข้อมูล HeroSlider, PromoGrid
+
+  services/
+    topupService.js   — API layer (ทั้งหมดยังเป็น mock — ดู "งานที่ต้องทำ")
+
+  components/
+    TopupPage.jsx           — หน้าเติม UID
+    TopupStep2Modal.jsx     — modal step 2 (UID input + payment + QR)
+    MailPassPage.jsx        — หน้าเติม Mail/Pass
+    AdminPage.jsx           — shell หน้า admin + nav
+    admin/
+      AdminDashboard.jsx    — ภาพรวมออเดอร์
+      AdminOrders.jsx       — จัดการออเดอร์ (เปลี่ยนสถานะ)
+      AdminGames.jsx        — แก้ไขข้อมูลเกม (ชื่อ, icon, tag)
+      AdminPayment.jsx      — upload QR ต่อธนาคาร
+      AdminNews.jsx         — จัดการข่าวสาร
+      AdminLogin.jsx        — หน้า login (ปัจจุบัน bypass — ดูด้านล่าง)
+      adminShared.js        — constants, mock data, shared styles
+```
+
+---
+
+## งานที่ dev team ต้องทำ
+
+### 1. สร้าง API Endpoints (5 ตัว)
+
+ดู `src/services/topupService.js` — แต่ละ function มี comment บอก payload + response ที่ต้องการ
+
+| Endpoint | Method | ใช้ใน |
+|---|---|---|
+| `POST /api/orders` | createOrder | TopupPage, MailPassPage — เมื่อลูกค้ากดยืนยัน |
+| `GET /api/orders` | getOrders | AdminPage — โหลดรายการออเดอร์ |
+| `POST /api/orders/status` | updateOrderStatus | AdminOrders — เปลี่ยนสถานะออเดอร์ |
+| `POST /api/qr/upload` | uploadQR | AdminPayment — admin upload QR รูปภาพ |
+| `GET /api/qr/:methodId` | getQR | TopupStep2Modal, MailPassPage — ลูกค้าเห็น QR |
+
+**วิธี activate แต่ละ function ใน `topupService.js`:**
+1. ลบบรรทัดที่มี `// REMOVE` (console.log + mock return)
+2. uncomment บล็อค fetch ที่มี `// UNCOMMENT`
+
+ตัวอย่าง `createOrder`:
+```js
+// ลบสองบรรทัดนี้:
+console.log('[topupService] createOrder (mock)', payload);
+return { orderId: 'MOCK-' + Date.now(), status: 'pending' };
+
+// เปิดบรรทัดนี้:
+return apiPost('/api/orders', payload);
+```
+
+---
+
+### 2. เปิดใช้งาน getOrders ใน AdminPage
+
+ไฟล์: `src/components/AdminPage.jsx`
+
+```js
+// 1. เพิ่ม useEffect ใน import บรรทัดแรก:
+import { useState, useEffect } from 'react';
+
+// 2. uncomment บรรทัดนี้ (บรรทัด 7):
+import { getOrders } from '../services/topupService';
+
+// 3. เปลี่ยน useState:
+const [orders, setOrders] = useState([]);  // เปลี่ยนจาก useState(INIT_ORDERS)
+
+// 4. เพิ่ม useEffect หลัง useState:
+useEffect(() => {
+  if (!authed) return;
+  getOrders().then(setOrders);
+}, [authed]);
+
+// 5. ลบ import INIT_ORDERS, INIT_NEWS และลบ INIT_NEWS mock ใน adminShared.js
+```
+
+---
+
+### 3. QR — ย้ายจาก localStorage ไป server
+
+ปัจจุบัน admin upload QR แล้วเก็บใน `localStorage` ของ browser
+ลูกค้าบนเครื่องอื่นจะไม่เห็น QR — ต้องเก็บบน server แทน
+
+**`src/components/admin/AdminPayment.jsx`** (admin upload):
+```js
+// เปลี่ยนจาก:
+localStorage.setItem(`alaskan_qr_${method.id}`, data);
+
+// เป็น:
+import { uploadQR } from '../../services/topupService';
+await uploadQR(method.id, data);
+```
+
+**`src/components/TopupStep2Modal.jsx`** และ **`src/components/MailPassPage.jsx`** (ลูกค้าเห็น QR):
+```js
+// เปลี่ยนจาก:
+setQr(localStorage.getItem(`alaskan_qr_${selectedPayment}`) || TEST_QR);
+
+// เป็น:
+import { getQR } from '../services/topupService';
+getQR(selectedPayment).then(r => setQr(r.url || TEST_QR));
+```
+
+---
+
+### 4. ระบบ Auth Admin
+
+ปัจจุบัน: login ถูก bypass (`authed = true` ใน AdminPage.jsx)
+
+**วิธีเปิดใช้งาน login จริง:**
+
+`src/components/AdminPage.jsx` บรรทัด 24:
+```js
+// เปลี่ยนจาก:
+const [authed, setAuthed] = useState(true); // DEV
+
+// เป็น:
+const [authed, setAuthed] = useState(false);
+```
+
+Credentials ปัจจุบัน (frontend-only ชั่วคราว) อ่านจาก env — รับค่าจริงจาก frontend dev แยกต่างหาก
+
+**Phase 2** — เปลี่ยนเป็น backend JWT: แก้ `handleSubmit` ใน `AdminLogin.jsx` ให้ POST ไปยัง `/api/auth/login` แล้วเก็บ token ใน httpOnly cookie
+
+> **หมายเหตุ:** หน้า Admin เข้าได้ผ่าน URL `/admin` หรือกด Ctrl+Shift+A บนหน้าเว็บ (shortcut ซ่อนไว้) ไม่มีปุ่มในหน้าหลักแล้ว
+
+---
+
+### 5. ลบ Mock Data
+
+`src/components/admin/adminShared.js`:
+- ลบ `INIT_ORDERS` และ `INIT_NEWS` หลังจาก API ทำงานได้แล้ว
+- ลบ `import { INIT_ORDERS, INIT_NEWS }` ใน `AdminPage.jsx`
+
+---
+
+## Environment Variables
+
+| ตัวแปร | ที่ใช้ | ค่าตัวอย่าง |
+|---|---|---|
+| `VITE_API_BASE` | `topupService.js` — prefix ทุก API call | `https://api.alaskan.shop` |
+| `VITE_ADMIN_USER` | `adminShared.js` — admin username (ชั่วคราว) | `alaskan` |
+| `VITE_ADMIN_PASS` | `adminShared.js` — admin password (ชั่วคราว) | `ADMIN2025` |
+
+ตั้งบน Vercel: Settings > Environment Variables
+ตั้ง local: สร้างไฟล์ `.env.local` ที่ root
 
 ```env
-VITE_ADMIN_USER=your_admin_username
-VITE_ADMIN_PASS=your_admin_password
-```
-
-> ตัวอย่างดู `.env.example`
-> ⚠️ ตอนนี้ใช้ basic username/password — Phase 2 ควรเปลี่ยนเป็น JWT
-
----
-
-## 3. จุดเชื่อมต่อ Backend (API Integration Points)
-
-### 3.1 สร้างออเดอร์ — จุดสำคัญที่สุด
-
-**ไฟล์:** `src/services/topupService.js`
-
-ไฟล์นี้ไฟล์เดียวครอบคลุมทุกเกม ทั้ง UID และ Mail/Pass
-
-```js
-// ปัจจุบัน (mock):
-export async function createOrder({ gameId, uid, packages, totalPrice }) {
-  return { orderId: 'MOCK-' + Date.now(), status: 'pending' };
-}
-
-// เปลี่ยนเป็น (จริง):
-export async function createOrder({ gameId, uid, packages, totalPrice }) {
-  return await fetch('/api/orders', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ gameId, uid, packages, totalPrice }),
-  }).then(r => r.json());
-  // ต้อง return: { orderId: string, status: 'pending' }
-}
-```
-
-**ข้อมูลที่ส่งไป:**
-```json
-{
-  "gameId": "ROV",
-  "uid": "1234567890",
-  "packages": [
-    { "id": 14, "amount": 555, "price": 435, "label": null }
-  ],
-  "totalPrice": 435
-}
-```
-
-**ข้อมูลที่ต้อง return:**
-```json
-{ "orderId": "ORD-001", "status": "pending" }
+VITE_API_BASE=https://your-api-domain.com
+VITE_ADMIN_USER=your-admin-username
+VITE_ADMIN_PASS=your-admin-password
 ```
 
 ---
 
-### 3.2 ดึงรายการออเดอร์ (Admin)
+## ลำดับการทำ (แนะนำ)
 
-**ไฟล์:** `src/components/admin/adminShared.js` บรรทัด 8
-
-```js
-// ปัจจุบัน (hardcode mock data):
-export const INIT_ORDERS = [ ... ];
-
-// เปลี่ยนเป็น (จริง):
-// ใน AdminPage.jsx เพิ่ม useEffect ดึง GET /api/orders แล้วใส่ใน state
-// โครงสร้าง order object ดูที่ INIT_ORDERS เป็นตัวอย่าง
 ```
+Phase 1 — API + Orders
+  1. สร้าง POST /api/orders
+  2. activate createOrder() ใน topupService.js
+  3. สร้าง GET /api/orders + activate getOrders()
+  4. สร้าง POST /api/orders/status + activate updateOrderStatus()
+  5. ลบ INIT_ORDERS mock
 
-**โครงสร้าง order object:**
-```json
-{
-  "id": "ORD-001",
-  "game": "ROV",
-  "type": "UID",
-  "pkg": "555 คูปอง",
-  "price": 435,
-  "uid": "1234567890",
-  "status": "pending",
-  "date": "2026-06-08 10:23"
-}
-```
+Phase 2 — QR Server
+  6. สร้าง POST /api/qr/upload + GET /api/qr/:methodId
+  7. activate uploadQR() และ getQR()
+  8. แก้ AdminPayment.jsx + TopupStep2Modal.jsx + MailPassPage.jsx
 
-**status ที่รองรับ:** `pending` | `processing` | `completed` | `failed`
-
----
-
-### 3.3 อัปเดตสถานะออเดอร์ (Admin)
-
-**ไฟล์:** `src/components/admin/AdminOrders.jsx` บรรทัด 96
-
-```js
-// ปัจจุบัน (แก้แค่ state ใน browser):
-const handleStatusChange = (id, newStatus) => {
-  setOrders(prev => prev.map(o => o.id === id ? { ...o, status: newStatus } : o));
-  // TODO: PUT /api/orders/:id  { status: newStatus }
-};
-
-// เพิ่มบรรทัดนี้:
-await fetch(`/api/orders/${id}`, {
-  method: 'PUT',
-  headers: { 'Content-Type': 'application/json' },
-  body: JSON.stringify({ status: newStatus }),
-});
+Phase 3 — Auth
+  9. สร้าง POST /api/auth/login (return JWT)
+  10. เปลี่ยน AdminLogin.jsx ให้ POST + เก็บ token
+  11. เปลี่ยน authed กลับเป็น false ใน AdminPage.jsx
+  12. ลบ DEV bypass comment
 ```
 
 ---
 
-### 3.4 จัดการข่าวสาร (Admin)
+## TODO [API] markers ในโค้ด
 
-**ไฟล์:** `src/components/admin/AdminNews.jsx`
+ค้นหา `TODO [API]` จะเจอ 14 จุดใน 5 ไฟล์:
 
-| บรรทัด | TODO | API ที่ต้องสร้าง |
-|--------|------|-----------------|
-| 11 | อัปโหลดรูปข่าว | `POST /api/upload` รับ `FormData({ file })` → return `{ url: string }` |
-| 91 | สร้างข่าวใหม่ | `POST /api/news` รับ `{ title, content, image, isHot, date }` |
-| 94 | แก้ไขข่าว | `PUT /api/news/:id` รับ `{ title, content, image, isHot, date }` |
-
-**โครงสร้าง news object:**
-```json
-{
-  "id": 1,
-  "title": "โปรโมชั่น ROV เดือนมิถุนายน",
-  "content": "...",
-  "image": "/uploads/news1.jpg",
-  "imagePosition": 50,
-  "isHot": true,
-  "date": "2026-06-08"
-}
-```
-
-ดึงข่าวครั้งแรก: แทนที่ `INIT_NEWS` ด้วย `GET /api/news`
+| ไฟล์ | จำนวน | เรื่อง |
+|---|---|---|
+| `topupService.js` | 5 functions | REMOVE/UNCOMMENT per function |
+| `AdminPage.jsx` | 4 | useEffect + getOrders + ลบ mock imports |
+| `adminShared.js` | 1 | ลบ INIT_ORDERS/INIT_NEWS |
+| `AdminPayment.jsx` | 3 | localStorage → uploadQR/getQR/DELETE |
+| `TopupStep2Modal.jsx` | 2 | localStorage → getQR |
+| `MailPassPage.jsx` | 2 | localStorage → getQR |
 
 ---
 
-### 3.5 Admin Authentication
+## หมายเหตุสำหรับ dev team
 
-**ไฟล์:** `src/components/admin/adminShared.js` บรรทัด 4-5
-
-```js
-export const ADMIN_USER     = import.meta.env.VITE_ADMIN_USER;
-export const ADMIN_PASSWORD = import.meta.env.VITE_ADMIN_PASS;
-```
-
-**ปัจจุบัน:** เช็ค username/password ใน browser (ไม่ปลอดภัย)
-**Phase 2:** เปลี่ยน `AdminLogin.jsx` ให้ POST ไป `/api/auth/login` แล้วรับ JWT token กลับมาเก็บใน `localStorage` + ส่ง `Authorization: Bearer <token>` ทุก API call
+- **Admin เข้าได้ผ่าน** `#admin` ใน URL หรือ Ctrl+Shift+A (ไม่มีปุ่มในหน้าหลัก)
+- **QR ปัจจุบัน** เก็บใน localStorage — ต้อง upload QR บนเครื่องเดียวกับลูกค้าถึงจะเห็น (Phase 2 แก้ได้)
+- **console.log** ใน topupService.js เป็น intentional mock markers — ลบได้ทันทีเมื่อ activate API
+- **favicon** ใช้ PNG (ALASKAN_3D_LOGO_2000.png) — ไม่ใช้ .svg แล้ว
 
 ---
 
-## 4. Config Files — แก้ข้อมูลเกม
+## ข้อมูลติดต่อ
 
-### 4.1 เกม UID (`src/config/games.js`)
-
-แต่ละเกมเป็น object ใน `export const GAMES = { ... }`
-
-**โครงสร้างพื้นฐาน:**
-```js
-'ROV': {
-  id: 'ROV',                    // ต้องตรงกับ key
-  name: 'ROV',                  // ชื่อที่แสดง
-  subtitle: 'Realm of Valor',   // คำอธิบายสั้น
-  icon: '/images/...',          // path รูปไอคอน (ใน public/)
-  bg: '/images/...',            // path รูปพื้นหลัง
-  promoBg: '/images/...',       // รูปแบนเนอร์หน้าเติมเกม (สัดส่วน 21:7)
-  howtoImage: '/images/...',    // รูปวิธีการเติม — ต้องมีทุกเกม หรือ null
-  category: 'เกม MOBA',
-  currency: 'คูปอง',            // หน่วยเงินในเกม
-  tags: ['โปรโมชั่น', 'ขายดี'], // ['ขายดี', 'ใหม่', 'โปรโมชั่น']
-  showOnHome: true,             // แสดงบน home page หรือไม่
-  packages: [ ... ],            // รายการแพ็กเกจ (ดูด้านล่าง)
-  accountFields: [ ... ],       // ฟิลด์กรอก UID (ดูด้านล่าง)
-}
-```
-
-**โครงสร้าง package:**
-```js
-{ id: 14, amount: 555, price: 435, badge: 'ขายดี', img: '/images/...' }
-// amount: จำนวน currency ในเกม
-// price: ราคา (บาท)
-// badge: 'ขายดี' | 'แนะนำ' | undefined
-// label: ข้อความแทน amount เมื่อ amount = 0 (เช่น Weekly Pass)
-```
-
-**โครงสร้าง accountFields (ฟิลด์กรอก UID):**
-```js
-accountFields: [
-  { key: 'userId',   label: 'User ID',   placeholder: 'เช่น 123456789', inputMode: 'numeric', required: true },
-  // เกมที่ต้องการ Server ID เพิ่มฟิลด์ที่สอง:
-  { key: 'serverId', label: 'Server ID', placeholder: 'เช่น 1234',      inputMode: 'numeric', required: true },
-]
-```
-
-### 4.2 เกม Mail/Pass (`src/config/mailpassGames.js`)
-
-โครงสร้างเดียวกันกับ UID แต่ไม่มี `accountFields` — ใช้ email + password แทน
-
----
-
-### 4.3 หน้าหลัก (`src/config/homeData.js`)
-
-```js
-// โปรโมการ์ดบนสุด
-export const PROMOS = [
-  { id: 1, name: "ชื่อโปร", img: "/images/...", tag: "HOT",
-    gameId: 'ROV',       // ต้องตรงกับ id ใน GAMES หรือ MAILPASS_GAMES
-    type: 'uid' },       // 'uid' | 'mailpass'
-];
-
-// รูปภาพ Popular Package
-export const POPULAR_PACKAGES = [
-  { id: 1, img: "/images/PRO/..." },
-];
-```
-
----
-
-### 4.4 ช่องทางชำระเงิน (`src/config/constants.js`)
-
-```js
-export const PAYMENT_METHODS = [
-  { id: 'promptpay', name: 'QR Code Promptpay', ... },
-  // เพิ่ม/ลบช่องทางได้ที่นี่
-];
-```
-
-ตอนนี้แสดง UI เท่านั้น — ต้องเชื่อม payment gateway จริงเมื่อ user เลือกช่องทาง
-
----
-
-## 5. ที่เก็บรูปภาพ
-
-รูปทั้งหมดอยู่ใน `public/images/` โดยมีโครงสร้าง:
-
-```
-public/images/
-├── GAMES ICON/           — ไอคอนแอพเกม (.png)
-├── GAMES BG/             — รูปพื้นหลังเกม (.png)
-├── HOW TO/               — รูปวิธีเติมเกมแต่ละเกม (.jpg)
-├── BG_UID/               — แบนเนอร์ 21:7 หน้าเติม UID
-├── MAIL/                 — แบนเนอร์ 21:7 หน้าเติม Mail/Pass
-├── PRO/                  — รูปโปรโมชั่น
-├── ALASKAN_WEB_ASSET/
-│   ├── PACKAGE ICON/     — ไอคอนแพ็กเกจแยกตามเกม
-│   ├── GAMES ICON/       — ไอคอนในรูปแบบ Alaskan asset
-│   ├── BACKGROUND/       — background และ game banner
-│   ├── LOGO 3D/          — โลโก้
-│   └── FLAG/             — ธงประเทศ (ใช้กับ MLBB multi-server)
-```
-
-> ชื่อโฟลเดอร์มีช่องว่าง — path ใน HTML/JS ใช้ได้ปกติ (`/images/GAMES ICON/xxx.png`)
-> ในกรณีที่ encode: `/images/HOW%20TO/H_ROV.jpg`
-
----
-
-## 6. การ Build และ Deploy
-
-```bash
-npm install        # ติดตั้ง dependencies
-npm run dev        # dev server ที่ localhost:5173
-npm run build      # build ไปที่ dist/
-```
-
-ไฟล์ที่ได้หลัง build อยู่ใน `dist/` — นำขึ้น server ได้เลย
-
-**Server config สำคัญ:**
-เนื่องจากใช้ hash routing (`#...`) server ไม่ต้อง config พิเศษ — `index.html` ตัวเดียวรองรับทุก URL
-
----
-
-## 7. Development Phases (แผนที่วางไว้)
-
-| Phase | สถานะ | รายละเอียด |
-|-------|--------|-----------|
-| Phase 1 | รอ dev | เชื่อม `createOrder` → API, ดึงออเดอร์จาก Google Sheets หรือ DB |
-| Phase 2 | รอ dev | Payment Gateway (PromptPay, ShopeePay ฯลฯ) |
-| Phase 3 | รอ dev | Game API อัตโนมัติ (เติมเกมผ่าน API ของเกมโดยตรง) |
-
----
-
-## 8. ไฟล์ที่ไม่ต้องแตะ
-
-| ไฟล์ | เหตุผล |
-|------|--------|
-| `src/components/Navbar.jsx` | ออกแบบตำแหน่งตายตัว |
-| `src/components/HeroSlider.jsx` | animation ซับซ้อน |
-| `src/components/GameGrid.jsx` | card style มาตรฐานโปรเจกต์ |
-| `src/index.css` | ใช้ custom font + animation ทั้งเว็บ |
-
----
-
-## 9. Summary — สิ่งที่ dev ต้องทำ
-
-1. **สร้าง API endpoints** ตามข้อ 3 (ใช้ Express / FastAPI / ฯลฯ ก็ได้)
-2. **แก้ `topupService.js`** ไฟล์เดียว — uncomment โค้ดที่ comment ไว้แล้ว
-3. **แก้ `adminShared.js`** — เปลี่ยน `INIT_ORDERS` / `INIT_NEWS` ดึงจาก API แทน
-4. **ตั้ง `.env`** บน server (`VITE_ADMIN_USER`, `VITE_ADMIN_PASS`)
-5. **เพิ่มข้อมูลเกม** ที่ยังขาดใน `games.js` / `mailpassGames.js` (packages + ราคา)
-6. **เชื่อม Payment Gateway** ใน `constants.js` + `TopupPage.jsx` Step 3
+Frontend dev: AlasKan (ghotkung@gmail.com)
+Repository: https://github.com/ghotkung-rgb/alakkan
+Demo: https://alaskan.vercel.app
