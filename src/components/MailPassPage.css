@@ -460,6 +460,9 @@
 .mp-uid-input:focus { border-color: #00c4e8; box-shadow: 0 0 0 3px rgba(0,196,232,0.15); background: #fff; }
 .mp-uid-input::placeholder { color: #94a3b8; font-weight: 400; }
 .mp-uid-input.pw { padding-right: 48px; letter-spacing: 0.06em; }
+.mp-uid-input.mp-select { appearance: none; cursor: pointer; padding-right: 14px; }
+.mp-uid-input.err { border-color: #f87171 !important; box-shadow: 0 0 0 3px rgba(248,113,113,0.15) !important; }
+.mp-field-error { font-size: 11px; color: #ef4444; font-weight: 600; margin-top: 2px; }
 .mp-uid-input-icon { position: absolute; left: 11px; top: 50%; translate: 0 -50%; color: #94a3b8; pointer-events: none; }
 .mp-uid-pw-toggle {
   position: absolute; right: 12px; top: 50%; transform: translateY(-50%);
@@ -509,6 +512,7 @@
 
 /* ── Payment list ── */
 .mp-pay-list { display: flex; flex-direction: column; gap: 8px; }
+.mp-pay-list.pay-err { border: 1.5px solid #fca5a5; border-radius: 10px; padding: 8px; background: #fff5f5; }
 .mp-pay-item {
   display: flex; align-items: center; gap: 12px; padding: 10px 14px; border-radius: 8px;
   border: 1.5px solid #e2e8f0; border-left: 3px solid transparent;

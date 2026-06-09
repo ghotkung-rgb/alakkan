@@ -1,6 +1,6 @@
 import { useState, useMemo } from 'react';
-import { FiSearch, FiCheck, FiX, FiRefreshCw, FiClock } from 'react-icons/fi';
-import { STATUS_MAP, sTh, sTd, sBtn } from './adminShared';
+import { FiSearch, FiCheck, FiX, FiRefreshCw, FiClock, FiImage } from 'react-icons/fi';
+import { STATUS_MAP, PAYMENT_METHODS_MAP, sTh, sTd, sBtn } from './adminShared';
 
 export function StatusBadge({ status }) {
   const s = STATUS_MAP[status] || STATUS_MAP.pending;
@@ -11,10 +11,45 @@ export function StatusBadge({ status }) {
   );
 }
 
+function SlipCell({ slip }) {
+  if (!slip) return <span style={{ fontSize: 11, color: '#cbd5e1' }}>ไม่มี</span>;
+  const open = () => {
+    const w = window.open('', '_blank');
+    w.document.write(`<html><body style="margin:0;background:#111;display:flex;align-items:center;justify-content:center;min-height:100vh"><img src="${slip}" style="max-width:100%;max-height:100vh;object-fit:contain" /></body></html>`);
+    w.document.close();
+  };
+  return (
+    <button onClick={open} title="ดูสลิปขนาดเต็ม" style={{
+      background: 'none', border: '1.5px solid #e2e8f0', borderRadius: 6,
+      padding: '3px 8px', cursor: 'pointer', display: 'flex', alignItems: 'center',
+      gap: 5, fontSize: 11, color: '#0369a1', fontWeight: 700, fontFamily: 'inherit',
+    }}>
+      <FiImage size={12} /> ดูสลิป
+    </button>
+  );
+}
+
+function PaymentCell({ methodId }) {
+  if (!methodId) return <span style={{ fontSize: 11, color: '#cbd5e1' }}>—</span>;
+  const m = PAYMENT_METHODS_MAP[methodId];
+  if (!m) return <span style={{ fontSize: 11, color: '#64748b' }}>{methodId}</span>;
+  return (
+    <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+      <div style={{
+        width: 22, height: 22, borderRadius: 5, flexShrink: 0,
+        background: m.iconBg, display: 'flex', alignItems: 'center', justifyContent: 'center',
+      }}>
+        <span style={{ color: m.iconColor, fontSize: 7, fontWeight: 900, lineHeight: 1 }}>{m.iconText}</span>
+      </div>
+      <span style={{ fontSize: 11, fontWeight: 600, color: '#334155', whiteSpace: 'nowrap' }}>{m.name}</span>
+    </div>
+  );
+}
+
 export function OrdersTable({ orders, onStatusChange }) {
   return (
-    <div style={{ background: '#fff', borderRadius: 14, overflow: 'hidden', boxShadow: '0 2px 8px rgba(0,0,0,0.06)' }}>
-      <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+    <div style={{ background: '#fff', borderRadius: 14, overflow: 'auto', boxShadow: '0 2px 8px rgba(0,0,0,0.06)' }}>
+      <table style={{ width: '100%', borderCollapse: 'collapse', minWidth: 900 }}>
         <thead>
           <tr>
             <th style={sTh}>รหัสออเดอร์</th>
@@ -22,6 +57,8 @@ export function OrdersTable({ orders, onStatusChange }) {
             <th style={sTh}>แพ็กเกจ</th>
             <th style={sTh}>ราคา</th>
             <th style={sTh}>UID / Email</th>
+            <th style={sTh}>ช่องทางชำระ</th>
+            <th style={sTh}>สลิป</th>
             <th style={sTh}>วันที่</th>
             <th style={sTh}>สถานะ</th>
             {onStatusChange && <th style={sTh}>อัปเดต</th>}
@@ -46,6 +83,8 @@ export function OrdersTable({ orders, onStatusChange }) {
               <td style={sTd}>
                 <span style={{ fontFamily: 'monospace', fontSize: 12, color: '#64748b', background: '#f8fafc', padding: '2px 8px', borderRadius: 5 }}>{o.uid}</span>
               </td>
+              <td style={sTd}><PaymentCell methodId={o.paymentMethod} /></td>
+              <td style={sTd}><SlipCell slip={o.slip} /></td>
               <td style={sTd}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 5, color: '#94a3b8', fontSize: 12 }}>
                   <FiClock size={11} /> {o.date}
@@ -79,7 +118,7 @@ export function OrdersTable({ orders, onStatusChange }) {
             </tr>
           ))}
           {orders.length === 0 && (
-            <tr><td colSpan={9} style={{ ...sTd, textAlign: 'center', color: '#94a3b8', padding: '40px' }}>ไม่พบรายการ</td></tr>
+            <tr><td colSpan={10} style={{ ...sTd, textAlign: 'center', color: '#94a3b8', padding: '40px' }}>ไม่พบรายการ</td></tr>
           )}
         </tbody>
       </table>

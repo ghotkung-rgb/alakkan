@@ -1,22 +1,34 @@
+// TODO [API] เมื่อ backend พร้อม: เพิ่ม useEffect import และ uncomment บล็อก API ด้านล่าง
 import { useState } from 'react';
-import { FiGrid, FiShoppingBag, FiFileText, FiMonitor, FiLogOut, FiChevronLeft } from 'react-icons/fi';
+import { FiGrid, FiShoppingBag, FiFileText, FiMonitor, FiLogOut, FiChevronLeft, FiCreditCard } from 'react-icons/fi';
+// TODO [API] ลบ INIT_ORDERS, INIT_NEWS ออกเมื่อดึงข้อมูลจาก API แล้ว
 import { INIT_ORDERS, INIT_NEWS } from './admin/adminShared';
-import AdminLogin    from './admin/AdminLogin';
-import Dashboard     from './admin/AdminDashboard';
-import Orders        from './admin/AdminOrders';
-import NewsManager   from './admin/AdminNews';
-import GamesManager  from './admin/AdminGames';
+// TODO [API] uncomment บรรทัดด้านล่าง:
+// import { getOrders } from '../services/topupService';
+import AdminLogin      from './admin/AdminLogin';
+import Dashboard       from './admin/AdminDashboard';
+import Orders          from './admin/AdminOrders';
+import NewsManager     from './admin/AdminNews';
+import GamesManager    from './admin/AdminGames';
+import PaymentManager  from './admin/AdminPayment';
 
 const NAV_ITEMS = [
-  { key: 'dashboard', icon: <FiGrid size={18} />,        label: 'ภาพรวม'  },
-  { key: 'games',     icon: <FiMonitor size={18} />,     label: 'เกม'     },
-  { key: 'orders',    icon: <FiShoppingBag size={18} />, label: 'ออเดอร์' },
-  { key: 'news',      icon: <FiFileText size={18} />,    label: 'ข่าวสาร' },
+  { key: 'dashboard', icon: <FiGrid size={18} />,        label: 'ภาพรวม'   },
+  { key: 'games',     icon: <FiMonitor size={18} />,     label: 'เกม'      },
+  { key: 'orders',    icon: <FiShoppingBag size={18} />, label: 'ออเดอร์'  },
+  { key: 'payment',   icon: <FiCreditCard size={18} />,  label: 'ชำระเงิน' },
+  { key: 'news',      icon: <FiFileText size={18} />,    label: 'ข่าวสาร'  },
 ];
 
 export default function AdminPage({ onHome }) {
-  const [authed, setAuthed] = useState(false);
+  const [authed, setAuthed] = useState(true); // DEV: ข้ามหน้า login ไปก่อน
   const [tab,    setTab]    = useState('games');
+  // TODO [API] เมื่อ getOrders() พร้อม: เปลี่ยน useState(INIT_ORDERS) → useState([])
+  //   แล้วเพิ่ม useEffect ด้านล่างนี้ (ต้อง import useEffect ก่อน):
+  //   useEffect(() => {
+  //     if (!authed) return;
+  //     getOrders().then(setOrders);
+  //   }, [authed]);
   const [orders, setOrders] = useState(INIT_ORDERS);
   const [news,   setNews]   = useState(INIT_NEWS);
 
@@ -28,11 +40,12 @@ export default function AdminPage({ onHome }) {
       case 'orders':    return <Orders orders={orders} setOrders={setOrders} />;
       case 'news':      return <NewsManager news={news} setNews={setNews} />;
       case 'games':     return <GamesManager />;
+      case 'payment':   return <PaymentManager />;
       default:          return null;
     }
   };
 
-  const TAB_LABELS = { dashboard: 'ภาพรวม', games: 'จัดการเกม', orders: 'ออเดอร์', news: 'ข่าวสาร' };
+  const TAB_LABELS = { dashboard: 'ภาพรวม', games: 'จัดการเกม', orders: 'ออเดอร์', payment: 'ชำระเงิน', news: 'ข่าวสาร' };
 
   return (
     <>

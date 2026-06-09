@@ -165,7 +165,7 @@ export default function App() {
          style={{ background: '#ffffff', display: 'flex', flexDirection: 'column' }}>
 
       {activeMenu !== 'ADMIN' && (
-        <Navbar activeMenu={activeMenu} setActiveMenu={handleMenuChange} onLogin={() => handleMenuChange('ADMIN')} />
+        <Navbar activeMenu={activeMenu} setActiveMenu={handleMenuChange} />
       )}
 
       <div key={viewKey} className={exiting ? 'page-exit' : 'page-enter'} style={{ flex: 1 }}>

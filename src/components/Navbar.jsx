@@ -1,7 +1,7 @@
 ﻿import { useState, useEffect, useRef, useCallback } from 'react';
 import { FiMenu, FiX } from 'react-icons/fi';
 
-export default function Navbar({ activeMenu, setActiveMenu, onLogin }) {
+export default function Navbar({ activeMenu, setActiveMenu }) {
   const menuItems = ['HOME', 'ข่าวสาร', 'ติดต่อเรา'];
   const [isOpen, setIsOpen] = useState(false);
   const [isClosing, setIsClosing] = useState(false);
@@ -421,11 +421,8 @@ export default function Navbar({ activeMenu, setActiveMenu, onLogin }) {
             })}
           </div>
 
-          {/* CTA + Hamburger — right column */}
+          {/* Hamburger — right column */}
           <div className="nav-right">
-            <button className="nav-cta" onClick={onLogin}>
-              ลงชื่อเข้าใช้
-            </button>
             <button
               className="nav-hamburger"
               aria-label={isOpen ? 'ปิดเมนู' : 'เปิดเมนู'}
@@ -477,9 +474,6 @@ export default function Navbar({ activeMenu, setActiveMenu, onLogin }) {
               );
             })}
           </div>
-          <button className="nav-drawer-cta" onClick={() => { closeDrawer(); setTimeout(() => onLogin?.(), CLOSE_DURATION); }}>
-            ลงชื่อเข้าใช้
-          </button>
         </div>
       </div>
     </>

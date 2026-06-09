@@ -1,30 +1,33 @@
 import { FiTrendingUp, FiZap, FiTag } from 'react-icons/fi';
+import { PAYMENT_METHODS } from '../../config/constants';
+
+// map id → ชื่อ เพื่อ render ใน AdminOrders
+export const PAYMENT_METHODS_MAP = Object.fromEntries(
+  PAYMENT_METHODS.map(m => [m.id, { name: m.name, iconBg: m.iconBg, iconText: m.iconText, iconColor: m.iconColor }])
+);
 
 // credentials อ่านจาก .env (VITE_ADMIN_USER / VITE_ADMIN_PASS) — Phase 2: เปลี่ยนเป็น backend JWT
 export const ADMIN_USER     = import.meta.env.VITE_ADMIN_USER;
 export const ADMIN_PASSWORD = import.meta.env.VITE_ADMIN_PASS;
 
 // ══════════════════════════════════════════════════════════════
-//  [BACKEND] ข้อมูล mock ด้านล่าง ใช้ระหว่างพัฒนาเท่านั้น
+//  TODO [API] ข้อมูล mock ด้านล่าง — ลบออกเมื่อ backend พร้อม
 //
-//  วิธีเปลี่ยนเป็นข้อมูลจริง:
-//  ใน AdminPage.jsx เพิ่ม useEffect แบบนี้:
+//  ขั้นตอน:
+//  1. ใน AdminPage.jsx — uncomment useEffect + getOrders() (ดู TODO ในไฟล์นั้น)
+//  2. ลบ INIT_ORDERS และ INIT_NEWS ที่นี่ออก
+//  3. ลบ import { INIT_ORDERS, INIT_NEWS } ใน AdminPage.jsx ออก
 //
-//  useEffect(() => {
-//    fetch('/api/orders').then(r => r.json()).then(setOrders);
-//    fetch('/api/news').then(r => r.json()).then(setNews);
-//  }, []);
-//
-//  แล้วลบ INIT_ORDERS และ INIT_NEWS ออก (หรือเก็บไว้เป็น fallback)
-//  โครงสร้าง object ดูได้จาก mock ด้านล่างนี้เป็นตัวอย่าง
+//  โครงสร้าง object สำหรับ dev ดูได้จาก mock ด้านล่าง
 // ══════════════════════════════════════════════════════════════
+// โครงสร้าง order object — backend ต้อง return ตาม field เหล่านี้ทุกตัว
 export const INIT_ORDERS = [
-  { id: 'ORD-001', game: 'ROV',         type: 'UID',       pkg: '555 คูปอง',      price: 435,  uid: '112233445',      status: 'pending',    date: '2026-05-31 10:23' },
-  { id: 'ORD-002', game: 'Free Fire',   type: 'UID',       pkg: '530 ไดมอนด์',   price: 299,  uid: '998877665',      status: 'completed',  date: '2026-05-31 09:15' },
-  { id: 'ORD-003', game: 'FC Mobile',   type: 'Mail/Pass', pkg: '2200 FC Points', price: 399,  uid: 'user@gmail.com', status: 'processing', date: '2026-05-31 08:44' },
-  { id: 'ORD-004', game: 'PUBG Mobile', type: 'UID',       pkg: '325 UC',         price: 119,  uid: '555000111',      status: 'failed',     date: '2026-05-30 22:10' },
-  { id: 'ORD-005', game: 'ROV',         type: 'UID',       pkg: '185 คูปอง',      price: 145,  uid: '777888999',      status: 'pending',    date: '2026-05-30 20:05' },
-  { id: 'ORD-006', game: 'eFootball',   type: 'Mail/Pass', pkg: '1000 Coin',      price: 180,  uid: 'admin@mail.com', status: 'completed',  date: '2026-05-30 18:30' },
+  { id: 'ORD-001', game: 'ROV',         type: 'UID',       pkg: '555 คูปอง',      price: 435,  uid: '112233445',      paymentMethod: 'promptpay', slip: null, status: 'pending',    date: '2026-05-31 10:23' },
+  { id: 'ORD-002', game: 'Free Fire',   type: 'UID',       pkg: '530 ไดมอนด์',   price: 299,  uid: '998877665',      paymentMethod: 'kplus',     slip: null, status: 'completed',  date: '2026-05-31 09:15' },
+  { id: 'ORD-003', game: 'FC Mobile',   type: 'Mail/Pass', pkg: '2200 FC Points', price: 399,  uid: 'user@gmail.com', paymentMethod: 'bbl',       slip: null, status: 'processing', date: '2026-05-31 08:44' },
+  { id: 'ORD-004', game: 'PUBG Mobile', type: 'UID',       pkg: '325 UC',         price: 119,  uid: '555000111',      paymentMethod: 'shopeepay', slip: null, status: 'failed',     date: '2026-05-30 22:10' },
+  { id: 'ORD-005', game: 'ROV',         type: 'UID',       pkg: '185 คูปอง',      price: 145,  uid: '777888999',      paymentMethod: 'promptpay', slip: null, status: 'pending',    date: '2026-05-30 20:05' },
+  { id: 'ORD-006', game: 'eFootball',   type: 'Mail/Pass', pkg: '1000 Coin',      price: 180,  uid: 'admin@mail.com', paymentMethod: 'kplus',     slip: null, status: 'completed',  date: '2026-05-30 18:30' },
 ];
 
 export const INIT_NEWS = [

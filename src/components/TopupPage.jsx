@@ -17,6 +17,8 @@ export default function TopupPage({ game, onBack, step, onStep, onHome }) {
   const [done, setDone]                         = useState(false);
   const [showHowto, setShowHowto]               = useState(false);
   const [selectedPayment, setSelectedPayment]   = useState(null);
+  const [paymentError,    setPaymentError]      = useState(false);
+  const [slip, setSlip]                         = useState(null);
   const [imgZoom, setImgZoom]                   = useState(1);
   const [imgPan, setImgPan]                     = useState({ x: 0, y: 0 });
   const [showOrderDetails, setShowOrderDetails] = useState(false);
@@ -123,11 +125,16 @@ export default function TopupPage({ game, onBack, step, onStep, onHome }) {
 
   const validateField = (field, value) => {
     const trimmed = value.trim();
-    if (field.required && !trimmed) return 'กรุณากรอก ' + field.label;
-    if (field.inputMode === 'numeric' && trimmed && !/^\d+$/.test(trimmed))
-      return 'กรอกเฉพาะตัวเลขเท่านั้น ไม่มีตัวอักษรหรือช่องว่าง';
-    if (field.inputMode === 'numeric' && trimmed && trimmed.length < 5)
-      return 'UID ต้องมีอย่างน้อย 5 หลัก';
+    if (field.required && !trimmed) return `กรุณากรอก ${field.label}`;
+    if (!trimmed) return null;
+    if (field.inputMode === 'numeric') {
+      if (!/^\d+$/.test(trimmed)) return 'กรอกเฉพาะตัวเลขเท่านั้น';
+      if (trimmed.length < 5)      return 'ต้องมีอย่างน้อย 5 หลัก';
+      if (trimmed.length > 20)     return 'UID ยาวเกินไป';
+    }
+    if (field.type === 'tel') {
+      if (!/^0[0-9]{8,9}$/.test(trimmed)) return 'เบอร์โทรไม่ถูกต้อง (เช่น 0812345678)';
+    }
     return null;
   };
 
@@ -140,6 +147,16 @@ export default function TopupPage({ game, onBack, step, onStep, onHome }) {
     const trimmed = (accountValues[field.key] || '').trim();
     setAccountValues(prev => ({ ...prev, [field.key]: trimmed }));
     setFieldErrors(prev => ({ ...prev, [field.key]: validateField(field, trimmed) }));
+  };
+
+  const validateAllFields = () => {
+    const errors = {};
+    accountFields.forEach(f => {
+      const err = validateField(f, accountValues[f.key] || '');
+      if (err) errors[f.key] = err;
+    });
+    setFieldErrors(errors);
+    return Object.keys(errors).length === 0;
   };
 
   const selectPkg = (pkg) => {
@@ -168,6 +185,8 @@ export default function TopupPage({ game, onBack, step, onStep, onHome }) {
   const itemDisplayName = selectedPkg?.label || '';
 
   const handleConfirm = async () => {
+    if (!selectedPayment) { setPaymentError(true); return; }
+    if (!validateAllFields()) return;
     setLoading(true);
     try {
       const result = await createOrder({
@@ -179,6 +198,7 @@ export default function TopupPage({ game, onBack, step, onStep, onHome }) {
           : [],
         totalPrice,
         paymentMethod: selectedPayment,
+        slip: slip?.src || null,
       });
       setOrderId(result.orderId);
       setDone(true);
@@ -416,6 +436,8 @@ export default function TopupPage({ game, onBack, step, onStep, onHome }) {
               blurAccountField={blurAccountField}
               selectedPayment={selectedPayment}
               setSelectedPayment={setSelectedPayment}
+              paymentError={paymentError}
+              setPaymentError={setPaymentError}
               showOrderDetails={showOrderDetails}
               setShowOrderDetails={setShowOrderDetails}
               accountComplete={accountComplete}
@@ -429,6 +451,8 @@ export default function TopupPage({ game, onBack, step, onStep, onHome }) {
               isItem={isItem}
               itemDisplayName={itemDisplayName}
               onShowHowto={() => setShowHowto(true)}
+              slip={slip}
+              setSlip={setSlip}
             />
           )}
 

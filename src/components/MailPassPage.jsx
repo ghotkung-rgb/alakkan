@@ -1,10 +1,101 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { createOrder } from '../services/topupService';
-import { FiAlertTriangle, FiLock, FiBook, FiEye, FiEyeOff, FiCheck, FiX, FiUser, FiTool } from 'react-icons/fi';
+import { FiAlertTriangle, FiLock, FiBook, FiEye, FiEyeOff, FiCheck, FiX, FiUser, FiTool, FiPlus, FiChevronDown } from 'react-icons/fi';
 import { BsWallet2 } from 'react-icons/bs';
 import { FaGooglePlay, FaApple } from 'react-icons/fa';
 import { PAYMENT_METHODS } from '../config/constants';
+import QRLightbox from './QRLightbox';
 import './MailPassPage.css';
+
+// TODO [API] ลบ TEST_QR เมื่อ backend พร้อม (QR จะมาจาก getQR() แทน)
+const TEST_QR = '/images/QR/QR.jpg';
+
+function PaymentQR({ selectedPayment }) {
+  const method = PAYMENT_METHODS.find(m => m.id === selectedPayment);
+  const [qr,       setQr]       = useState('');
+  const [lightbox, setLightbox] = useState(false);
+  useEffect(() => {
+    if (!method?.hasQR) { setQr(''); return; }
+    // TODO [API] แทนที่ localStorage.getItem ด้วย:
+    //   import { getQR } from '../services/topupService';
+    //   getQR(selectedPayment).then(r => setQr(r.url || TEST_QR));
+    setQr(localStorage.getItem(`alaskan_qr_${selectedPayment}`) || TEST_QR);
+  }, [selectedPayment, method]);
+  if (!method?.hasQR || !qr) return null;
+  return (
+    <>
+      <div style={{ background: '#f8fafc', border: '1.5px solid #e2e8f0', borderRadius: 10, padding: '14px 16px', marginBottom: 12, textAlign: 'center' }}>
+        <div style={{ fontSize: 12, fontWeight: 800, color: '#475569', marginBottom: 10, letterSpacing: '0.05em' }}>
+          สแกน QR — {method.name}
+        </div>
+        <img src={qr} alt={`QR ${method.name}`}
+          onClick={() => setLightbox(true)}
+          style={{ width: 210, height: 210, objectFit: 'contain', borderRadius: 8, display: 'block', margin: '0 auto', cursor: 'zoom-in' }}
+          onError={e => { e.target.style.display = 'none'; }}
+        />
+        <div style={{ fontSize: 11, color: '#94a3b8', marginTop: 8 }}>
+          กดรูปเพื่อขยาย · โอนแล้วกด "ยืนยันการสั่งซื้อ"
+        </div>
+      </div>
+      {lightbox && <QRLightbox src={qr} label={`QR — ${method.name}`} onClose={() => setLightbox(false)} />}
+    </>
+  );
+}
+
+function SlipUpload({ slip, setSlip }) {
+  const fileRef = useRef();
+  const handleFile = (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = (ev) => setSlip({ src: ev.target.result, name: file.name });
+    reader.readAsDataURL(file);
+    e.target.value = '';
+  };
+  return (
+    <div style={{
+      border: slip ? '1.5px solid #bbf7d0' : '2px dashed #cbd5e1',
+      borderRadius: 10, marginBottom: 12,
+      background: slip ? '#f0fdf4' : '#f8fafc',
+      overflow: 'hidden', transition: 'all 0.2s',
+    }}>
+      {slip ? (
+        <div style={{ padding: '12px 14px' }}>
+          <div style={{ fontSize: 12, fontWeight: 800, color: '#16a34a', marginBottom: 8, display: 'flex', alignItems: 'center', gap: 6 }}>
+            <FiCheck size={14} /> แนบสลิปแล้ว
+          </div>
+          <div style={{ display: 'flex', gap: 12, alignItems: 'center' }}>
+            <img src={slip.src} alt="slip"
+              style={{ width: 64, height: 64, objectFit: 'cover', borderRadius: 8, border: '1px solid #bbf7d0', flexShrink: 0 }}
+            />
+            <div style={{ flex: 1, minWidth: 0 }}>
+              <div style={{ fontSize: 12, color: '#374151', fontWeight: 600, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                {slip.name}
+              </div>
+              <button onClick={() => setSlip(null)} style={{
+                marginTop: 6, fontSize: 11, color: '#dc2626', fontWeight: 700,
+                background: 'none', border: 'none', cursor: 'pointer', padding: 0, fontFamily: 'inherit',
+              }}>ลบสลิป</button>
+            </div>
+          </div>
+        </div>
+      ) : (
+        <button onClick={() => fileRef.current.click()} style={{
+          display: 'flex', flexDirection: 'row', alignItems: 'center', gap: 8,
+          width: '100%', padding: '10px 14px', background: 'none', border: 'none',
+          cursor: 'pointer', fontFamily: 'inherit',
+        }}>
+          <FiPlus size={18} style={{ color: '#94a3b8', flexShrink: 0 }} />
+          <div>
+            <div style={{ fontSize: 12, fontWeight: 700, color: '#475569' }}>แนบสลิปการโอนเงิน</div>
+            <div style={{ fontSize: 11, color: '#94a3b8' }}>ไม่บังคับ — ช่วยให้ตรวจสอบได้เร็วขึ้น</div>
+          </div>
+        </button>
+      )}
+      <input ref={fileRef} type="file" accept="image/*" style={{ display: 'none' }} onChange={handleFile} />
+    </div>
+  );
+}
 
 function buildDefaultInfo(game) {
   return {
@@ -46,8 +137,10 @@ export default function MailPassPage({ game, onBack, step, onStep, onHome }) {
   const [showHowtoPopup, setShowHowtoPopup] = useState(false);
   const [loading, setLoading]           = useState(false);
   const [orderId, setOrderId]           = useState(null);
+  const [slip, setSlip]                 = useState(null);
   const [done, setDone]                 = useState(false);
   const [selectedPayment, setSelectedPayment] = useState(null);
+  const [paymentError,    setPaymentError]    = useState(false);
 
   // scroll lock while modal open
   useEffect(() => {
@@ -74,11 +167,56 @@ export default function MailPassPage({ game, onBack, step, onStep, onHome }) {
   const totalPrice  = selectedPkgs.reduce((sum, p) => sum + p.price, 0);
   const totalAmount = selectedPkgs.reduce((sum, p) => sum + (p.amount || 0), 0);
 
+  const validateMPField = (field, value) => {
+    const raw = value ?? '';
+    const trimmed = field.type === 'password' ? raw : raw.trim();
+    if (field.required && !trimmed) return field.type === 'select' ? `กรุณาเลือก ${field.label}` : `กรุณากรอก ${field.label}`;
+    if (!trimmed) return null;
+    if (field.type === 'email') {
+      if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(trimmed)) return 'อีเมลไม่ถูกต้อง';
+    }
+    if (field.type === 'password') {
+      if (trimmed.length < 6) return 'รหัสผ่านต้องมีอย่างน้อย 6 ตัวอักษร';
+    }
+    if (field.type === 'tel') {
+      if (!/^0[0-9]{8,9}$/.test(trimmed)) return 'เบอร์โทรไม่ถูกต้อง (เช่น 0812345678)';
+    }
+    if (field.inputMode === 'numeric') {
+      if (!/^\d+$/.test(trimmed)) return 'กรอกเฉพาะตัวเลขเท่านั้น';
+      if (trimmed.length < 5)     return 'ต้องมีอย่างน้อย 5 หลัก';
+      if (trimmed.length > 20)    return 'ค่าที่กรอกยาวเกินไป';
+    }
+    return null;
+  };
+
+  const [mpFieldErrors, setMpFieldErrors] = useState({});
+
+  const validateAllMP = () => {
+    if (!game.accountFields) {
+      const errs = {};
+      if (!email.trim()) errs.email = 'กรุณากรอกอีเมล';
+      else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim())) errs.email = 'อีเมลไม่ถูกต้อง';
+      if (!password) errs.password = 'กรุณากรอกรหัสผ่าน';
+      else if (password.length < 6) errs.password = 'รหัสผ่านต้องมีอย่างน้อย 6 ตัวอักษร';
+      setMpFieldErrors(errs);
+      return Object.keys(errs).length === 0;
+    }
+    const errs = {};
+    game.accountFields.forEach(f => {
+      const err = validateMPField(f, fieldValues[f.key] || '');
+      if (err) errs[f.key] = err;
+    });
+    setMpFieldErrors(errs);
+    return Object.keys(errs).length === 0;
+  };
+
   const canConfirm = game.accountFields
-    ? game.accountFields.filter(f => f.required).every(f => (fieldValues[f.key] || '').trim()) && selectedPayment
-    : email.trim() && password.trim() && selectedPayment;
+    ? game.accountFields.filter(f => f.required).every(f => (fieldValues[f.key] || '').trim())
+    : email.trim() && password.trim();
 
   const handleConfirm = async () => {
+    if (!selectedPayment) { setPaymentError(true); return; }
+    if (!validateAllMP()) return;
     setLoading(true);
     try {
       const result = await createOrder({
@@ -88,6 +226,7 @@ export default function MailPassPage({ game, onBack, step, onStep, onHome }) {
         packages: selectedPkgs.map(p => ({ id: p.id, amount: p.amount, price: p.price, label: p.label })),
         totalPrice,
         paymentMethod: selectedPayment,
+        slip: slip?.src || null,
       });
       setOrderId(result.orderId);
       setDone(true);
@@ -381,47 +520,82 @@ export default function MailPassPage({ game, onBack, step, onStep, onHome }) {
                               {field.labelHint && <span className="mp-field-label-hint">({field.labelHint})</span>}
                             </div>
                             <div className="mp-uid-field">
-                              {field.type === 'password'
-                                ? <FiLock size={14} className="mp-uid-input-icon" />
-                                : <FiUser size={14} className="mp-uid-input-icon" />}
-                              <input
-                                className={`mp-uid-input${field.type === 'password' ? ' pw' : ''}`}
-                                type={field.type === 'password' ? (showPw ? 'text' : 'password') : field.type}
-                                placeholder={field.placeholder}
-                                value={fieldValues[field.key] || ''}
-                                onChange={e => setFieldValues(prev => ({ ...prev, [field.key]: e.target.value }))}
-                                autoComplete={field.type === 'password' ? 'current-password' : 'off'}
-                              />
-                              {field.type === 'password' && (
-                                <button type="button" className="mp-uid-pw-toggle"
-                                  onClick={() => setShowPw(v => !v)} tabIndex={-1}>
-                                  {showPw ? <FiEyeOff size={16} /> : <FiEye size={16} />}
-                                </button>
+                              {field.type === 'select' ? (
+                                <>
+                                  <FiChevronDown size={14} className="mp-uid-input-icon" />
+                                  <select
+                                    className={`mp-uid-input mp-select${mpFieldErrors[field.key] ? ' err' : ''}`}
+                                    value={fieldValues[field.key] || ''}
+                                    onChange={e => {
+                                      setFieldValues(prev => ({ ...prev, [field.key]: e.target.value }));
+                                      setMpFieldErrors(prev => ({ ...prev, [field.key]: null }));
+                                    }}
+                                  >
+                                    <option value="">{field.placeholder}</option>
+                                    {(field.options || []).map(opt => (
+                                      <option key={opt} value={opt}>{opt}</option>
+                                    ))}
+                                  </select>
+                                </>
+                              ) : (
+                                <>
+                                  {field.type === 'password'
+                                    ? <FiLock size={14} className="mp-uid-input-icon" />
+                                    : <FiUser size={14} className="mp-uid-input-icon" />}
+                                  <input
+                                    className={`mp-uid-input${field.type === 'password' ? ' pw' : ''}${mpFieldErrors[field.key] ? ' err' : ''}`}
+                                    type={field.type === 'password' ? (showPw ? 'text' : 'password') : field.type}
+                                    placeholder={field.placeholder}
+                                    value={fieldValues[field.key] || ''}
+                                    onChange={e => {
+                                      setFieldValues(prev => ({ ...prev, [field.key]: e.target.value }));
+                                      setMpFieldErrors(prev => ({ ...prev, [field.key]: null }));
+                                    }}
+                                    autoComplete={field.type === 'password' ? 'current-password' : 'off'}
+                                  />
+                                  {field.type === 'password' && (
+                                    <button type="button" className="mp-uid-pw-toggle"
+                                      onClick={() => setShowPw(v => !v)} tabIndex={-1}>
+                                      {showPw ? <FiEyeOff size={16} /> : <FiEye size={16} />}
+                                    </button>
+                                  )}
+                                </>
                               )}
                             </div>
-                            {field.hint && <div className="mp-field-hint">{field.hint}</div>}
+                            {mpFieldErrors[field.key] && (
+                              <div className="mp-field-error">{mpFieldErrors[field.key]}</div>
+                            )}
+                            {field.hint && !mpFieldErrors[field.key] && <div className="mp-field-hint">{field.hint}</div>}
                           </div>
                         ))
                       ) : (
                         <>
-                          <div className="mp-uid-field">
-                            <FiUser size={14} className="mp-uid-input-icon" />
-                            <input className="mp-uid-input" type="email"
-                              placeholder="Email ของบัญชีเกม"
-                              value={email} onChange={e => setEmail(e.target.value)}
-                              autoFocus autoComplete="username" />
+                          <div className="mp-account-field">
+                            <div className="mp-uid-field">
+                              <FiUser size={14} className="mp-uid-input-icon" />
+                              <input className={`mp-uid-input${mpFieldErrors.email ? ' err' : ''}`} type="email"
+                                placeholder="Email ของบัญชีเกม"
+                                value={email}
+                                onChange={e => { setEmail(e.target.value); setMpFieldErrors(p => ({ ...p, email: null })); }}
+                                autoFocus autoComplete="username" />
+                            </div>
+                            {mpFieldErrors.email && <div className="mp-field-error">{mpFieldErrors.email}</div>}
                           </div>
-                          <div className="mp-uid-field">
-                            <FiLock size={14} className="mp-uid-input-icon" />
-                            <input className={`mp-uid-input pw`}
-                              type={showPw ? 'text' : 'password'}
-                              placeholder="Password ของบัญชีเกม"
-                              value={password} onChange={e => setPassword(e.target.value)}
-                              autoComplete="current-password" />
-                            <button type="button" className="mp-uid-pw-toggle"
-                              onClick={() => setShowPw(v => !v)} tabIndex={-1}>
-                              {showPw ? <FiEyeOff size={16} /> : <FiEye size={16} />}
-                            </button>
+                          <div className="mp-account-field">
+                            <div className="mp-uid-field">
+                              <FiLock size={14} className="mp-uid-input-icon" />
+                              <input className={`mp-uid-input pw${mpFieldErrors.password ? ' err' : ''}`}
+                                type={showPw ? 'text' : 'password'}
+                                placeholder="Password ของบัญชีเกม"
+                                value={password}
+                                onChange={e => { setPassword(e.target.value); setMpFieldErrors(p => ({ ...p, password: null })); }}
+                                autoComplete="current-password" />
+                              <button type="button" className="mp-uid-pw-toggle"
+                                onClick={() => setShowPw(v => !v)} tabIndex={-1}>
+                                {showPw ? <FiEyeOff size={16} /> : <FiEye size={16} />}
+                              </button>
+                            </div>
+                            {mpFieldErrors.password && <div className="mp-field-error">{mpFieldErrors.password}</div>}
                           </div>
                         </>
                       )}
@@ -438,12 +612,17 @@ export default function MailPassPage({ game, onBack, step, onStep, onHome }) {
                           <BsWallet2 size={15} style={{ color: '#0ea5e9' }} />
                         </div>
                         เลือกช่องทางการชำระเงิน
+                        {paymentError && (
+                          <span style={{ marginLeft: 8, fontSize: 11, color: '#ef4444', fontWeight: 700 }}>
+                            — กรุณาเลือกช่องทางชำระเงิน
+                          </span>
+                        )}
                       </div>
-                      <div className="mp-pay-list">
+                      <div className={`mp-pay-list${paymentError ? ' pay-err' : ''}`}>
                         {PAYMENT_METHODS.map(pm => (
                           <div key={pm.id}
                             className={`mp-pay-item${selectedPayment === pm.id ? ' selected' : ''}`}
-                            onClick={() => setSelectedPayment(pm.id)}>
+                            onClick={() => { setSelectedPayment(pm.id); setPaymentError(false); }}>
                             <div className="mp-pay-item-icon" style={{ background: pm.iconBg }}>
                               <span style={{ color: pm.iconColor, fontSize: 10, fontWeight: 900 }}>{pm.iconText}</span>
                             </div>
@@ -501,6 +680,10 @@ export default function MailPassPage({ game, onBack, step, onStep, onHome }) {
                         <div className="mp-order-total-price">฿ {totalPrice.toLocaleString()}</div>
                       </div>
                     </div>
+
+                    <PaymentQR selectedPayment={selectedPayment} />
+
+                    <SlipUpload slip={slip} setSlip={setSlip} />
 
                     <button className="mp-step2-confirm-btn"
                       disabled={!canConfirm || loading}

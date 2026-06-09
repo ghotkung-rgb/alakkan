@@ -99,6 +99,13 @@ export const MAILPASS_GAMES = {
     tag: 'ขายดี',
     showOnHome: true,
     tags: [],
+    accountFields: [
+      { key: 'idLogin',      label: 'ID Login, facebook หรือ gmail', placeholder: 'กรุณากรอก ID Login, facebook หรือ gmail', hint: 'ไอดีที่ใช้ในการล็อคอิน เช่น Username facebook, gmail เป็นต้น', required: true,  type: 'text' },
+      { key: 'password',     label: 'Password',                       placeholder: 'กรุณากรอก Password',                       hint: 'พาสเวิร์ดที่ใช้ในการล็อคอิน',                                   required: true,  type: 'password' },
+      { key: 'loginChannel', label: 'ช่องทางการล็อคอินเกม',         placeholder: 'เลือก ช่องทางการล็อคอินเกม',              hint: 'ช่องทางที่ใช้ในการเข้าเกม เช่น ถ้าเข้าเกมด้วยระบบ Facebook จำเป็นต้องใช้รหัสเข้า facebook เพื่อล็อคอิน', required: true,  type: 'select',  options: ['Facebook', 'Google', 'EA Account'] },
+      { key: 'charName',     label: 'ชื่อตัวละคร',                  placeholder: 'กรุณากรอกชื่อตัวละครในเกม',                required: true,  type: 'text' },
+      { key: 'phone',        label: 'เบอร์โทรติดต่อกลับ',            placeholder: 'เบอร์โทร',                                  labelHint: 'กรณีลูกค้าต้องการให้โทรแจ้งเมื่อถึงคิว', required: false, type: 'tel' },
+    ],
     packages: [
       { id: 'fc-40',    amount: 40,    price: 15,   img: '/images/ALASKAN_WEB_ASSET/PACKAGE%20ICON/FCmobile_coin.png' },
       { id: 'fc-200',   amount: 200,   price: 33,   img: '/images/ALASKAN_WEB_ASSET/PACKAGE%20ICON/FCmobile_coin.png' },
@@ -127,6 +134,13 @@ export const MAILPASS_GAMES = {
     tag: null,
     showOnHome: true,
     tags: [],
+    accountFields: [
+      { key: 'idLogin',      label: 'ID Login, facebook หรือ gmail', placeholder: 'กรุณากรอก ID Login, facebook หรือ gmail', hint: 'ไอดีที่ใช้ในการล็อคอิน เช่น Username facebook, gmail เป็นต้น', required: true,  type: 'text' },
+      { key: 'password',     label: 'Password',                       placeholder: 'กรุณากรอก Password',                       hint: 'พาสเวิร์ดที่ใช้ในการล็อคอิน. เช่น รหัสผ่าน facebook หรือ Gmail เป็นต้น', required: true,  type: 'password' },
+      { key: 'loginChannel', label: 'ช่องทางการล็อคอินเกม',         placeholder: 'เลือก ช่องทางการล็อคอินเกม',              hint: 'ช่องทางที่ใช้ในการเข้าเกม เช่น ถ้าเข้าเกมด้วยระบบ Facebook จำเป็นต้องใช้รหัสเข้า facebook เพื่อล็อคอิน', required: true,  type: 'select',  options: ['Facebook', 'Email'] /* TODO: เพิ่ม 'Google', 'Apple ID' เมื่อพร้อมรับ */ },
+      { key: 'charName',     label: 'ชื่อตัวละคร',                  placeholder: 'กรุณากรอกชื่อตัวละครในเกม',                required: true,  type: 'text' },
+      { key: 'phone',        label: 'เบอร์โทรติดต่อกลับ',            placeholder: 'เบอร์โทร',                                  labelHint: 'กรณีลูกค้าต้องการให้โทรแจ้งเมื่อถึงคิว', required: false, type: 'tel' },
+    ],
     packages: [
       { id: 'ht-mp-60',    amount: 60,    price: 35,   img: '/images/ALASKAN_WEB_ASSET/PACKAGE%20ICON/HEATOPIA/Heartopia_candy.png' },
       { id: 'ht-mp-sfp',   amount: 0,     label: 'Supreme Festival Pack',  price: 88,   img: '/images/ALASKAN_WEB_ASSET/PACKAGE%20ICON/HEATOPIA/heartopia_FestivalPack.png' },
@@ -156,6 +170,13 @@ export const MAILPASS_GAMES = {
     tag: null,
     showOnHome: true,
     tags: [],
+    accountFields: [
+      { key: 'idLogin',      label: 'ID Login, facebook หรือ gmail', placeholder: 'กรุณากรอก ID Login, facebook หรือ gmail', hint: 'ไอดีที่ใช้ในการล็อคอิน เช่น Username facebook, gmail เป็นต้น', required: true,  type: 'text' },
+      { key: 'password',     label: 'Password',                       placeholder: 'กรุณากรอก Password',                       hint: 'พาสเวิร์ดที่ใช้ในการล็อคอิน. เช่น รหัสผ่าน facebook หรือ Gmail เป็นต้น', required: true,  type: 'password' },
+      { key: 'loginChannel', label: 'ช่องทางการล็อคอินเกม',         placeholder: 'เลือก ช่องทางการล็อคอินเกม',              hint: 'ช่องทางที่ใช้ในการเข้าเกม เช่น ถ้าเข้าเกมด้วยระบบ Facebook จำเป็นต้องใช้รหัสเข้า facebook เพื่อล็อคอิน', required: true,  type: 'select',  options: ['Facebook'] /* TODO: เพิ่ม 'Google', 'Activision', 'Apple ID' เมื่อพร้อมรับ */ },
+      { key: 'charName',     label: 'ชื่อตัวละคร',                  placeholder: 'กรุณากรอกชื่อตัวละครในเกม',                required: true,  type: 'text' },
+      { key: 'phone',        label: 'เบอร์โทรติดต่อกลับ',            placeholder: 'เบอร์โทร',                                  labelHint: 'กรณีลูกค้าต้องการให้โทรแจ้งเมื่อถึงคิว', required: false, type: 'tel' },
+    ],
     packages: [
       { id: 'cod-mp-160',   amount: 160,   price: 29,   img: '/images/ALASKAN_WEB_ASSET/PACKAGE%20ICON/CALLOFDUTY/COD_COIN.png' },
       { id: 'cod-mp-80',    amount: 80,    price: 33,   img: '/images/ALASKAN_WEB_ASSET/PACKAGE%20ICON/CALLOFDUTY/COD_COIN.png' },
@@ -190,6 +211,13 @@ export const MAILPASS_GAMES = {
     tag: 'ขายดี',
     showOnHome: true,
     tags: [],
+    accountFields: [
+      { key: 'idLogin',      label: 'ID Login, Garena หรือ facebook', placeholder: 'กรุณากรอก ID Login, Garena หรือ facebook', hint: 'ไอดีที่ใช้ในการล็อคอิน เช่น Username Garena, facebook เป็นต้น', required: true,  type: 'text' },
+      { key: 'password',     label: 'Password',                        placeholder: 'กรุณากรอก Password',                        hint: 'พาสเวิร์ดที่ใช้ในการล็อคอิน',                                   required: true,  type: 'password' },
+      { key: 'loginChannel', label: 'ช่องทางการล็อคอินเกม',          placeholder: 'เลือก ช่องทางการล็อคอินเกม',               hint: 'ช่องทางที่ใช้ในการเข้าเกม เช่น ถ้าเข้าเกมด้วยระบบ Facebook จำเป็นต้องใช้รหัสเข้า facebook เพื่อล็อคอิน', required: true,  type: 'select',  options: ['Garena', 'Facebook'] },
+      { key: 'charName',     label: 'ชื่อตัวละคร',                   placeholder: 'กรุณากรอกชื่อตัวละครในเกม',                 required: true,  type: 'text' },
+      { key: 'phone',        label: 'เบอร์โทรติดต่อกลับ',             placeholder: 'เบอร์โทร',                                   labelHint: 'กรณีลูกค้าต้องการให้โทรแจ้งเมื่อถึงคิว', required: false, type: 'tel' },
+    ],
     packages: [
       { id: 'ff-mp-94',    amount: 94,    price: 30,   img: '/images/ALASKAN_WEB_ASSET/PACKAGE%20ICON/FREEFIRE/diamond1_freefire.png' },
       { id: 'ff-mp-304',   amount: 304,   price: 85,   img: '/images/ALASKAN_WEB_ASSET/PACKAGE%20ICON/FREEFIRE/diamond1_freefire.png' },
