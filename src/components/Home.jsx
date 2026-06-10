@@ -87,7 +87,7 @@ export default function Home({ onTopup, onMailPass }) {
         <div className="popular-section">
           <div className="popular-title">
             <span style={{ color: '#00d1ff' }}>POPULAR</span>
-            <span style={{ color: '#1e293b' }}>PACKAGE</span>
+            <span style={{ color: '#475569' }}>PACKAGE</span>
           </div>
         </div>
 

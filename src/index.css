@@ -81,7 +81,7 @@
     position:relative; width:100%; height:100%; overflow-y:auto;
     background:#ffffff;
     font-family:'PSL Empire Pro', sans-serif;
-    color:#1e293b;
+    color:#475569;
     scrollbar-width:thin;
     scrollbar-color:#00d1ff #e2e8f0;
     will-change: scroll-position;
@@ -139,7 +139,7 @@
     display:flex; align-items:center; justify-content:center;
     font-family:'Good Times Rg', sans-serif;
     font-size:clamp(18px, 2.8vw, 38px);
-    font-weight:900; color:#1e293b;
+    font-weight:900; color:#475569;
     letter-spacing:0.18em; text-transform:uppercase;
     margin-top:4px; gap:0;
   }
@@ -465,7 +465,7 @@
   .section-title {
     font-size:26px; font-weight:900; letter-spacing:0.08em;
     text-transform:uppercase; margin-bottom:16px;
-    display:flex; align-items:center; gap:10px; color:#0f172a;
+    display:flex; align-items:center; gap:10px; color:#475569;
     font-family:'Ethnocentric', 'Good Times Rg', sans-serif;
   }
   .section-title::before {
@@ -571,7 +571,7 @@
   }
   .promo-card .game-name {
     position:absolute; bottom:0; left:0; right:0;
-    padding:8px 10px 10px; font-size:14px; font-weight:700;
+    padding:8px 10px 10px; font-size:22px; font-weight:700;
     text-align:center; line-height:1.4; color:#fff;
     font-family:'PSL Empire Pro', sans-serif;
   }
@@ -684,7 +684,7 @@
     padding:48px 32px 56px; text-align:center;
   }
   .quality-title {
-    font-size:32px; font-weight:900; color:#0f172a;
+    font-size:32px; font-weight:900; color:#475569;
     font-family:'PSL Empire Pro', sans-serif;
     margin-bottom:32px; letter-spacing:0.04em;
   }
@@ -708,12 +708,12 @@
   .quality-card { transition: transform 0.22s var(--ease-out-quart), box-shadow 0.22s var(--ease-out-quart); }
   .quality-card:hover { transform:translateY(-4px); box-shadow:0 10px 30px rgba(0,209,255,0.2); }
   .quality-stat {
-    font-size:58px; font-weight:900; color:#0f172a; line-height:1;
+    font-size:58px; font-weight:900; color:#475569; line-height:1;
     font-family:'Good Times Rg','PSL Empire Pro',sans-serif;
     letter-spacing:0.04em; margin-bottom:12px;
   }
   .quality-card-title {
-    font-size:17px; font-weight:700; color:#1e293b;
+    font-size:17px; font-weight:700; color:#475569;
     margin-bottom:12px; line-height:1.5;
     font-family:'PSL Empire Pro', sans-serif;
   }

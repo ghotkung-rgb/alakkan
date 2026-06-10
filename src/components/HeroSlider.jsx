@@ -196,18 +196,21 @@ export default function HeroSlider() {
     setDir(idx > cur ? 'down' : 'up');
     setCur(idx);
     setAnimKey(k => k + 1);
+    startTimer();
   };
 
   const goPrev = () => {
     setCur(c => (c - 1 + SLIDES.length) % SLIDES.length);
     setDir('up');
     setAnimKey(k => k + 1);
+    startTimer();
   };
 
   const goNext = () => {
     setCur(c => (c + 1) % SLIDES.length);
     setDir('down');
     setAnimKey(k => k + 1);
+    startTimer();
   };
 
   const slide = SLIDES[cur];

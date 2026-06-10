@@ -282,9 +282,9 @@ export default function MailPassPage({ game, onBack, step, onStep, onHome }) {
           <div style={{ display: 'flex', justifyContent: 'center', padding: '56px 24px 80px' }}>
             <div style={{ textAlign: 'center', maxWidth: 360 }}>
               <div style={{ marginBottom: 18, color: '#94a3b8' }}><FiTool size={52} /></div>
-              <div style={{ fontFamily: "'PSL Kampanath Pro', sans-serif", fontSize: 24, fontWeight: 900, color: '#1e293b', letterSpacing: '0.04em', marginBottom: 10 }}>กำลังเปิดให้บริการ</div>
+              <div style={{ fontFamily: "'PSL Kampanath Pro', sans-serif", fontSize: 24, fontWeight: 900, color: '#475569', letterSpacing: '0.04em', marginBottom: 10 }}>กำลังเปิดให้บริการ</div>
               <div style={{ fontSize: 18, fontWeight: 700, color: '#475569', lineHeight: 2, marginBottom: 28 }}>
-                สินค้าจะมาในเร็วๆ นี้<br />ติดตามได้ที่เฟส <strong style={{ color: '#1e293b' }}>ALASKAN ONLINE SHOP</strong> ของเรา
+                สินค้าจะมาในเร็วๆ นี้<br />ติดตามได้ที่เฟส <strong style={{ color: '#475569' }}>ALASKAN ONLINE SHOP</strong> ของเรา
               </div>
               <a href="https://www.facebook.com/ALASKAN.ONLINE.SHOP" target="_blank" rel="noopener noreferrer"
                 style={{ display: 'inline-flex', alignItems: 'center', gap: 8, background: '#1877f2', color: '#fff', textDecoration: 'none', padding: '11px 28px', borderRadius: 10, fontSize: 14, fontWeight: 700, filter: 'drop-shadow(0 4px 12px rgba(24,119,242,0.4))' }}>
@@ -342,7 +342,7 @@ export default function MailPassPage({ game, onBack, step, onStep, onHome }) {
                 <div className="mp-section-title">กรุณาเลือกแพ็คที่ต้องการ</div>
                 <div className="mp-section-tag">
                   <span style={{ color: '#00d1ff' }}>MAIL</span>
-                  <span style={{ color: '#0f172a' }}>PASS</span>
+                  <span style={{ color: '#475569' }}>PASS</span>
                 </div>
               </div>
 
@@ -493,7 +493,7 @@ export default function MailPassPage({ game, onBack, step, onStep, onHome }) {
                   <div className="mp-section-title">ข้อมูลการชำระเงิน</div>
                   <div className="mp-section-tag">
                     <span style={{ color: '#00d1ff' }}>MAIL</span>
-                    <span style={{ color: '#0f172a' }}>PASS</span>
+                    <span style={{ color: '#475569' }}>PASS</span>
                   </div>
                 </div>
 

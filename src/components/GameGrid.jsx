@@ -30,7 +30,7 @@ export default function GameGrid({ games, expanded, onCollapse, onTopup, urlPref
   const catFontSize    = 17;
   const catTop         = -7;
   const catLeft        = -8.5;
-  const btnFontSize    = 14;
+  const btnFontSize    = 16;
   const btnPad         = '10px 18px';
   const barPadLeft     = 60;
   // ────────────────────────────────────────────────────
@@ -80,14 +80,15 @@ export default function GameGrid({ games, expanded, onCollapse, onTopup, urlPref
             <img src={game.icon} alt="" loading="lazy" decoding="async"
               style={{ width: 36, height: 37, borderRadius: 8, objectFit: 'cover', flexShrink: 0, border: '1.5px solid rgba(255,255,255,0.18)', marginLeft: iconMarginLeft, marginTop: iconMarginTop }}
               onError={e => { e.target.style.display = 'none'; }} />
-            <span style={{ color: '#fff', fontWeight: 700, fontSize: nameFontSize, lineHeight: 1.2, whiteSpace: 'nowrap', position: 'relative', top: nameTop, left: nameLeft, fontFamily: "'PSL Empire Pro', sans-serif" }}>{displayName}</span>
+            <span style={{ color: '#fff', fontWeight: 700, fontSize: nameFontSize, lineHeight: 1.2, whiteSpace: 'nowrap', position: 'relative', top: nameTop, left: nameLeft, fontFamily: "'PSL Khemarat Pro', sans-serif" }}>{displayName}</span>
           </div>
-          {game.category && <div style={{ color: '#ffffff', fontSize: catFontSize, position: 'relative', top: catTop, left: catLeft, fontFamily: "'PSL Empire Pro', sans-serif" }}>{game.category}</div>}
+          {game.category && <div style={{ color: '#ffffff', fontSize: catFontSize, position: 'relative', top: catTop, left: catLeft, fontFamily: "'PSL Khemarat Pro', sans-serif" }}>{game.category}</div>}
         </div>
-        <button style={{
-          background: '#00d1ff', color: '#ffffff', border: 'none', borderRadius: 20,
-          padding: btnPad, fontSize: btnFontSize, fontWeight: 700, cursor: 'pointer', flexShrink: 0, lineHeight: 1, fontFamily: "'PSL Empire Pro', sans-serif",
-        }} onClick={(e) => { e.stopPropagation(); onTopup && onTopup(game.id); }}>เติมเกม</button>
+        <span style={{
+          background: '#00d1ff', color: '#ffffff', borderRadius: 20,
+          padding: btnPad, fontSize: btnFontSize, fontWeight: 700, flexShrink: 0, lineHeight: 1, fontFamily: "'PSL Khemarat Pro', sans-serif",
+          pointerEvents: 'none', userSelect: 'none',
+        }}>เติมเกม</span>
       </div>
     </a>
     );
@@ -100,8 +101,8 @@ export default function GameGrid({ games, expanded, onCollapse, onTopup, urlPref
           style={{
             display: 'flex', alignItems: 'center', gap: 5,
             padding: '7px 18px', borderRadius: 20, border: 'none', cursor: 'pointer',
-            fontSize: 15, fontWeight: 700, lineHeight: 1, fontFamily: "'PSL Empire Pro', sans-serif", transition: 'background 0.2s ease, color 0.2s ease, box-shadow 0.15s ease, transform 0.15s ease',
-            background: activeFilter === key ? '#00d1ff' : 'rgba(0,0,0,0.07)',
+            fontSize: 19, fontWeight: 700, lineHeight: 1, fontFamily: "'PSL Khemarat Pro', sans-serif", transition: 'background 0.2s ease, color 0.2s ease, box-shadow 0.15s ease, transform 0.15s ease',
+            background: activeFilter === key ? '#00d1ff' : 'rgba(71,85,105,0.10)',
             color: activeFilter === key ? '#fff' : '#475569',
             boxShadow: activeFilter === key ? '0 4px 12px rgba(0,209,255,0.35)' : 'none',
             transform: activeFilter === key ? 'translateY(-1px)' : 'none',

@@ -230,7 +230,7 @@
   padding: 0 6px 2px;
   font-size: clamp(20px, 2vw, 28px); font-weight: 700;
   color: #475569; text-align: center; line-height: 1.2;
-  font-family: 'PSL Empire Pro', sans-serif; z-index: 2;
+  font-family: 'PSL Khemarat W24 Pro', 'PSL Empire Pro', sans-serif; z-index: 2;
 }
 .mp-pkg-amount-label strong { font-weight: 900; color: #475569; font-size: 1.25em; transition: color 0.2s; }
 .mp-pkg-amount-label.is-label { font-size: clamp(14px, 1.6vw, 19px); line-height: 1.35; }
@@ -247,7 +247,7 @@
   background: transparent; clip-path: none; margin: 0; width: 100%;
   font-size: clamp(24px, 2.2vw, 34px); font-weight: 900;
   color: #fff; text-align: center; letter-spacing: 0.05em;
-  font-family: 'PSL Kampanath Pro', sans-serif;
+  font-family: 'PSL Khemarat W24 Pro', 'PSL Kampanath Pro', sans-serif;
   display: flex; align-items: center; justify-content: center; z-index: 2;
 }
 
@@ -284,7 +284,7 @@
 .mp-sum-box-title {
   font-size: 20px; font-weight: 700; color: #00d1ff; text-align: center;
   padding: 2px 8px 1px;
-  font-family: 'PSL Kampanath Pro', sans-serif; letter-spacing: 0.04em;
+  font-family: 'PSL Khemarat W24 Pro', 'PSL Khemarat Pro', sans-serif; letter-spacing: 0.04em;
 }
 .mp-sum-box-body {
   flex: 1; padding: 5px 12px 4px;
@@ -299,37 +299,37 @@
 .mp-sum-detail-line {
   display: flex; align-items: center; justify-content: space-between; gap: 8px;
   font-size: 25px; color: #64748b;
-  font-family: 'PSL Kampanath Pro', sans-serif;
+  font-family: 'PSL Khemarat W24 Pro', 'PSL Khemarat Pro', sans-serif;
 }
 .mp-sum-detail-val {
   display: flex; align-items: center; gap: 6px;
   font-weight: 900; color: #475569; font-size: 25px;
-  font-family: 'PSL Kampanath Pro', sans-serif;
+  font-family: 'PSL Khemarat W24 Pro', 'PSL Khemarat Pro', sans-serif;
 }
 .mp-sum-item-name {
   display: flex; align-items: center; gap: 10px;
-  font-family: 'PSL Kampanath Pro', sans-serif;
+  font-family: 'PSL Khemarat W24 Pro', 'PSL Khemarat Pro', sans-serif;
   font-size: 17px; font-weight: 700; color: #475569; line-height: 1.4;
 }
 .mp-sum-total-big {
-  font-family: 'PSL Kampanath Pro', sans-serif;
+  font-family: 'PSL Khemarat W24 Pro', 'PSL Khemarat Pro', sans-serif;
   font-size: 30px; font-weight: 900; color: #475569;
   display: flex; align-items: center; gap: 8px; line-height: 1;
 }
 .mp-sum-price-big {
-  font-family: 'PSL Kampanath Pro', sans-serif;
+  font-family: 'PSL Khemarat W24 Pro', 'PSL Khemarat Pro', sans-serif;
   font-size: 36px; font-weight: 900; color: #475569;
   display: flex; align-items: baseline; gap: 6px;
   margin-top: -15px;
 }
 .mp-sum-thb {
   font-size: 19px; color: #00d1ff; font-weight: 700;
-  font-family: 'PSL Kampanath Pro', sans-serif;
+  font-family: 'PSL Khemarat W24 Pro', 'PSL Khemarat Pro', sans-serif;
 }
 .mp-sum-qty-row { display: flex; align-items: center; gap: 8px; }
 .mp-sum-qty-label {
   font-size: 19px; color: #64748b; font-weight: 600;
-  font-family: 'PSL Kampanath Pro', sans-serif; white-space: nowrap;
+  font-family: 'PSL Khemarat W24 Pro', 'PSL Khemarat Pro', sans-serif; white-space: nowrap;
 }
 .mp-qty-wrap {
   display: flex; align-items: center; flex-shrink: 0;
@@ -346,7 +346,7 @@
 .mp-qty-num {
   font-size: 19px; font-weight: 900; color: #475569;
   min-width: 34px; text-align: center; padding: 0 4px;
-  font-family: 'PSL Kampanath Pro', sans-serif;
+  font-family: 'PSL Khemarat W24 Pro', 'PSL Khemarat Pro', sans-serif;
 }
 .mp-sum-note {
   font-size: 10px; color: #94a3b8;
@@ -358,7 +358,7 @@
   color: #fff; border: none; border-radius: 8px;
   padding: 9px 12px; font-size: 22px; font-weight: 900;
   cursor: pointer; white-space: nowrap;
-  font-family: 'PSL Kampanath Pro', sans-serif;
+  font-family: 'PSL Khemarat W24 Pro', 'PSL Khemarat Pro', sans-serif;
   transition: opacity 0.18s, transform 0.12s;
   filter: drop-shadow(0 4px 14px rgba(0,196,232,0.4));
 }
