@@ -37,6 +37,34 @@ const SLIDES = [
     ],
     thumb: '/images/Silde%20show/LAYER/ROV/HOME%20WEB%20SLIDESHOW_2ROV.png',
   },
+  {
+    type: 'layer',
+    bg: '/images/Silde%20show/LAYER/PUBG/HOME%20WEB%20SLIDESHOW_3PUBGM-1bg.png',
+    layers: [
+      { src: '/images/Silde%20show/LAYER/PUBG/HOME%20WEB%20SLIDESHOW_3PUBGM-bg2.png',       cls: 'hs-hok-bg2'   },
+      { src: '/images/Silde%20show/LAYER/PUBG/HOME%20WEB%20SLIDESHOW_3PUBGM-item1.png',      cls: 'hs-hok-item1' },
+      { src: '/images/Silde%20show/LAYER/PUBG/HOME%20WEB%20SLIDESHOW_3PUBGM-item2.png',      cls: 'hs-hok-item2' },
+      { src: '/images/Silde%20show/LAYER/PUBG/HOME%20WEB%20SLIDESHOW_3PUBGM-character1.png', cls: 'hs-hok-char1' },
+      { src: '/images/Silde%20show/LAYER/PUBG/HOME%20WEB%20SLIDESHOW_3PUBGM-character2.png', cls: 'hs-hok-char2' },
+      { src: '/images/Silde%20show/LAYER/PUBG/HOME%20WEB%20SLIDESHOW_3PUBGM-honor.png',      cls: 'hs-hok-logo'  },
+      { src: '/images/Silde%20show/LAYER/PUBG/HOME%20WEB%20SLIDESHOW_3PUBGM-text1.png',      cls: 'hs-hok-text1' },
+      { src: '/images/Silde%20show/LAYER/PUBG/HOME%20WEB%20SLIDESHOW_3PUBGM-text2.png',      cls: 'hs-hok-text2' },
+    ],
+    thumb: '/images/GAMES%20BG/HONOROFKINGS_bg.png',
+  },
+  {
+    type: 'layer',
+    bg: '/images/Silde%20show/LAYER/FC_MOBILE/HOME%20WEB%20SLIDESHOW_5FCMOBILE-bg.png',
+    layers: [
+      { src: '/images/Silde%20show/LAYER/FC_MOBILE/HOME%20WEB%20SLIDESHOW_5FCMOBILE-smoke.png', cls: 'hs-fcm-smoke' },
+      { src: '/images/Silde%20show/LAYER/FC_MOBILE/HOME%20WEB%20SLIDESHOW_5FCMOBILE-fc2.png',   cls: 'hs-fcm-fc2'   },
+      { src: '/images/Silde%20show/LAYER/FC_MOBILE/HOME%20WEB%20SLIDESHOW_5FCMOBILE-logo.png',  cls: 'hs-fcm-logo'  },
+      { src: '/images/Silde%20show/LAYER/FC_MOBILE/HOME%20WEB%20SLIDESHOW_5FCMOBILE-fc3.png',   cls: 'hs-fcm-fc3'   },
+      { src: '/images/Silde%20show/LAYER/FC_MOBILE/HOME%20WEB%20SLIDESHOW_5FCMOBILE-fc1.png',   cls: 'hs-fcm-fc1'   },
+      { src: '/images/Silde%20show/LAYER/FC_MOBILE/HOME%20WEB%20SLIDESHOW_5FCMOBILE-text.png',  cls: 'hs-fcm-text'  },
+    ],
+    thumb: '/images/GAMES%20ICON/FCMOBILE_iconapp.png',
+  },
   { type: 'promo', bg: '/images/BG_UID/FF.png', bgPos: 'center center', thumb: '/images/GAMES ICON/FREEFIRE_iconapp.png' },
 ];
 
@@ -138,7 +166,7 @@ export default function HeroSlider() {
       setCur(c => (c + 1) % SLIDES.length);
       setDir('down');
       setAnimKey(k => k + 1);
-    }, 12000);
+    }, 99999999);
     return () => clearInterval(timerRef.current);
   }, []);
 
