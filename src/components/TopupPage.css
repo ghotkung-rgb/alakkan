@@ -295,15 +295,14 @@
 
 /* Badge */
 .tp-pkg-badge {
-  position: absolute; top: 8px; right: 10px;
-  font-size: 9px; font-weight: 900; padding: 2px 7px 2px 10px; border-radius: 0;
-  clip-path: polygon(5px 0, 100% 0, 100% 100%, 0 100%);
-  letter-spacing: 0.04em; z-index: 4; white-space: nowrap;
-  font-family: 'Noto Sans Thai', sans-serif;
-  background: #00b8d9; color: #fff;
+  position: absolute; top: 14px; right: 16px;
+  font-size: 15px; font-weight: 900; padding: 4px 9px; border-radius: 0;
+  letter-spacing: 0.06em; z-index: 4; white-space: nowrap;
+  font-family: 'PSL Khemarat W24 Pro','PSL Empire Pro', sans-serif;
+  background: #00d1ff; color: #fff;
 }
-.tp-pkg-badge.hot { background: #00b8d9; }
-.tp-pkg-badge.rec { background: #0099b8; }
+.tp-pkg-badge.hot { background: #00d1ff; color: #fff; }
+.tp-pkg-badge.rec { background: #00d1ff; color: #fff; }
 
 /* Check indicator */
 .tp-pkg-check {
@@ -335,7 +334,7 @@
   line-height: 1.3;
 }
 .tp-pkg-amount-label--item strong { font-size: 1em; }
-.tp-pkg-currency { color: #475569; font-weight: 900; transition: color 0.2s; }
+.tp-pkg-currency { color: #475569; font-weight: 900; transition: color 0.2s; margin-left: 0.25em; }
 .tp-pkg-card-wrap.selected .tp-pkg-amount-label strong { color: #00d1ff; }
 .tp-pkg-card-wrap.selected .tp-pkg-currency { color: #00d1ff; }
 

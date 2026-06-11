@@ -2,6 +2,14 @@ import { useState, useEffect, useRef } from 'react';
 import { COUNTRY_NAMES, FLAG_BASE } from '../config/constants';
 import { FILTER_TABS, PAGE_SIZE } from '../config/homeData';
 
+const TAG_CLASS = {
+  'ใหม่':       'new',
+  'ฮิต':        'hot',
+  'มาแรง':     'hot',
+  'โปรโมชั่น': 'promo',
+  'แนะนำ':     'rec',
+};
+
 export default function GameGrid({ games, expanded, onCollapse, onTopup, urlPrefix = 'topup' }) {
   const ref = useRef(null);
   const [seen, setSeen] = useState(false);
@@ -51,7 +59,7 @@ export default function GameGrid({ games, expanded, onCollapse, onTopup, urlPref
         style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center top' }}
         onError={e => { e.target.style.display = 'none'; }} />
       {game.tag && (
-        <div className={`promo-tag${game.tag === 'ใหม่' ? ' new' : ''}`} style={{ zIndex: 11 }}>
+        <div className={`promo-tag${TAG_CLASS[game.tag] ? ` ${TAG_CLASS[game.tag]}` : ''}`}>
           {game.tag}
         </div>
       )}

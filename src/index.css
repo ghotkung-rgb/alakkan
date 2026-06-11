@@ -576,13 +576,18 @@
     font-family:'PSL Empire Pro', sans-serif;
   }
   .promo-tag {
-    position:absolute; top:8px; right:8px;
-    background:#f2d000; color:#1a1a1a;
-    font-size:12px; font-weight:900;
-    padding:3px 8px; border-radius:4px; letter-spacing:0.08em;
-    font-family:'PSL Empire Pro', sans-serif;
+    position:absolute; top:0; right:0;
+    background:#00d1ff; color:#fff;
+    font-size:13px; font-weight:900;
+    padding:5px 10px;
+    letter-spacing:0.06em;
+    font-family:'PSL Khemarat W24 Pro','PSL Empire Pro',sans-serif;
+    z-index:11; white-space:nowrap;
   }
-  .promo-tag.new { background:#ef4444; color:#fff; }
+  .promo-tag.new   { background:#ef4444; color:#fff; }    /* ใหม่ */
+  .promo-tag.hot   { background:#f2d000; color:#1a1a1a; } /* ฮิต / มาแรง */
+  .promo-tag.promo { background:#f2d000; color:#1a1a1a; } /* โปรโมชั่น */
+  .promo-tag.rec   { background:#0099b8; color:#fff; }    /* แนะนำ */
 
   /* ─── Games grid ─── */
   .games-grid { display:flex; flex-direction:row; gap:8px; justify-content:center; }
@@ -769,6 +774,7 @@
   .footer-desc {
     font-size:18px; color:#64748b; line-height:1.9;
     font-family:'PSL Empire Pro', sans-serif; margin-bottom:20px;
+    text-align: justify;
   }
   .footer-contact { display:flex; align-items:center; gap:10px; flex-wrap:wrap; }
   .footer-contact-label {

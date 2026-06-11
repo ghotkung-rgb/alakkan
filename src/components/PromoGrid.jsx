@@ -1,5 +1,13 @@
 import { useState, useEffect, useRef } from 'react';
 
+const TAG_CLASS = {
+  'ใหม่':       'new',
+  'ฮิต':        'hot',
+  'มาแรง':     'hot',
+  'โปรโมชั่น': 'promo',
+  'แนะนำ':     'rec',
+};
+
 export default function PromoGrid({ promos, onTopup, onMailPass }) {
   const ref = useRef(null);
   const scrollRef = useRef(null);
@@ -54,7 +62,7 @@ export default function PromoGrid({ promos, onTopup, onMailPass }) {
                   <img src={p.bg} alt={p.name} loading="lazy" decoding="async"
                     style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover' }}
                     onError={e => { e.target.style.display = 'none'; }} />
-                  {p.tag && <div className={`promo-tag ${p.tag === 'ใหม่' ? 'new' : ''}`}>{p.tag}</div>}
+                  {p.tag && <div className={`promo-tag${TAG_CLASS[p.tag] ? ` ${TAG_CLASS[p.tag]}` : ''}`}>{p.tag}</div>}
                   <div style={{
                     position: 'absolute', bottom: 0, left: 0, right: 0,
                     background: 'linear-gradient(to top, rgba(0,0,0,0.92) 0%, rgba(0,0,0,0.55) 60%, transparent 100%)',
@@ -82,7 +90,7 @@ export default function PromoGrid({ promos, onTopup, onMailPass }) {
                     style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover' }}
                     onError={e => { e.target.style.display = 'none'; }} />
                   <div className="game-overlay" />
-                  {p.tag && <div className={`promo-tag ${p.tag === 'ใหม่' ? 'new' : ''}`}>{p.tag}</div>}
+                  {p.tag && <div className={`promo-tag${TAG_CLASS[p.tag] ? ` ${TAG_CLASS[p.tag]}` : ''}`}>{p.tag}</div>}
                   <div className="game-name">{p.name}</div>
                 </>
               )}

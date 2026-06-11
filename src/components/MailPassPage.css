@@ -202,15 +202,14 @@
 
 /* Badge */
 .mp-pkg-badge {
-  position: absolute; top: 8px; right: 10px;
-  font-size: 9px; font-weight: 900; padding: 2px 7px 2px 10px; border-radius: 0;
-  clip-path: polygon(5px 0, 100% 0, 100% 100%, 0 100%);
-  letter-spacing: 0.04em; z-index: 4; white-space: nowrap;
-  font-family: 'PSL Empire Pro', sans-serif;
-  background: #00b8d9; color: #fff;
+  position: absolute; top: 14px; right: 16px;
+  font-size: 15px; font-weight: 900; padding: 4px 9px; border-radius: 0;
+  letter-spacing: 0.06em; z-index: 4; white-space: nowrap;
+  font-family: 'PSL Khemarat W24 Pro','PSL Empire Pro', sans-serif;
+  background: #00d1ff; color: #fff;
 }
-.mp-pkg-badge.hot { background: #00b8d9; }
-.mp-pkg-badge.rec { background: #0099b8; }
+.mp-pkg-badge.hot { background: #00d1ff; color: #fff; }
+.mp-pkg-badge.rec { background: #00d1ff; color: #fff; }
 
 /* Check indicator */
 .mp-pkg-check {
@@ -235,7 +234,7 @@
 .mp-pkg-amount-label strong { font-weight: 900; color: #475569; font-size: 1.25em; transition: color 0.2s; }
 .mp-pkg-amount-label.is-label { font-size: clamp(14px, 1.6vw, 19px); line-height: 1.35; }
 .mp-pkg-amount-label.is-label strong { font-size: 1em; font-weight: 900; }
-.mp-pkg-currency { color: #0284c7; font-weight: 900; transition: color 0.2s; }
+.mp-pkg-currency { color: #0284c7; font-weight: 900; transition: color 0.2s; margin-left: 0.25em; }
 .mp-pkg-card-wrap.selected .mp-pkg-amount-label strong { color: #00d1ff; }
 .mp-pkg-card-wrap.selected .mp-pkg-currency { color: #0096ba; }
 
