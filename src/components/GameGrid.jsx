@@ -88,7 +88,7 @@ export default function GameGrid({ games, expanded, onCollapse, onTopup, urlPref
             <img src={game.icon} alt="" loading="lazy" decoding="async"
               style={{ width: 36, height: 37, borderRadius: 8, objectFit: 'cover', flexShrink: 0, border: '1.5px solid rgba(255,255,255,0.18)', marginLeft: iconMarginLeft, marginTop: iconMarginTop }}
               onError={e => { e.target.style.display = 'none'; }} />
-            <span style={{ color: '#fff', fontWeight: 700, fontSize: nameFontSize, lineHeight: 1.2, whiteSpace: 'nowrap', position: 'relative', top: nameTop, left: nameLeft, fontFamily: "'PSL Khemarat Pro', sans-serif" }}>{displayName}</span>
+            <span className="card-name" style={{ color: '#fff', fontWeight: 700, fontSize: nameFontSize, lineHeight: 1.2, whiteSpace: 'nowrap', position: 'relative', top: nameTop, left: nameLeft, fontFamily: "'PSL Khemarat Pro', sans-serif" }}>{displayName}</span>
           </div>
           {game.category && <div style={{ color: '#ffffff', fontSize: catFontSize, position: 'relative', top: catTop, left: catLeft, fontFamily: "'PSL Khemarat Pro', sans-serif" }}>{game.category}</div>}
         </div>
@@ -127,11 +127,13 @@ export default function GameGrid({ games, expanded, onCollapse, onTopup, urlPref
     return (
       <div ref={ref}>
         {filterBar}
-        <div className="games-grid" style={{ padding: '80px', margin: '-80px' }}>
-          {preview.map((game, i) => renderCard(game, i, seen
-            ? { animation: `gameCardIn 0.5s ${i * 0.1}s ease both` }
-            : { opacity: 0 }
-          ))}
+        <div style={{ overflow: 'hidden' }}>
+          <div className="games-grid" style={{ padding: '80px', margin: '-80px' }}>
+            {preview.map((game, i) => renderCard(game, i, seen
+              ? { animation: `gameCardIn 0.5s ${i * 0.1}s ease both` }
+              : { opacity: 0 }
+            ))}
+          </div>
         </div>
       </div>
     );
@@ -143,10 +145,12 @@ export default function GameGrid({ games, expanded, onCollapse, onTopup, urlPref
   return (
     <div ref={ref}>
       {filterBar}
-      <div className="games-grid-expanded" style={{ padding: '80px', margin: '-80px' }}>
-        {visibleGames.map((game, i) => renderCard(game, i, {
-          animation: `gameCardIn 0.4s ${(i % PAGE_SIZE) * 0.03}s ease both`,
-        }))}
+      <div style={{ overflow: 'hidden' }}>
+        <div className="games-grid-expanded" style={{ padding: '80px', margin: '-80px' }}>
+          {visibleGames.map((game, i) => renderCard(game, i, {
+            animation: `gameCardIn 0.4s ${(i % PAGE_SIZE) * 0.03}s ease both`,
+          }))}
+        </div>
       </div>
       <div style={{ display: 'flex', justifyContent: 'center', gap: 12, marginTop: 20 }}>
         {hasMore && (

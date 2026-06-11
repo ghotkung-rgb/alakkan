@@ -24,9 +24,9 @@ export default function PromoGrid({ promos, onTopup, onMailPass }) {
 
   // ── ค่าปรับได้ (sync กับ GameGrid) ─────────────────────
   const iconMarginLeft = 10;
-  const iconMarginTop  = 48;
+  const iconMarginTop  = 34;
   const nameTop        =  10;
-  const nameFontSize   = 22;
+  const nameFontSize   = 20;
   const catFontSize    = 17;
   const btnFontSize    = 16;
   const btnPad         = '10px 18px';
@@ -69,14 +69,14 @@ export default function PromoGrid({ promos, onTopup, onMailPass }) {
                     padding: '36px 14px 12px 49px',
                     display: 'flex', flexDirection: 'row', alignItems: 'center', gap: 10,
                   }}>
-                    <div style={{ flex: 1, minWidth: 0 }}>
+                    <div style={{ flex: 1, minWidth: 0, overflow: 'hidden' }}>
                       <div style={{ display: 'flex', alignItems: 'center', gap: 7 }}>
                         <img src={p.icon} alt="" loading="lazy" decoding="async"
                           style={{ width: 36, height: 37, borderRadius: 8, objectFit: 'cover', flexShrink: 0, border: '1.5px solid rgba(255,255,255,0.18)', marginLeft: iconMarginLeft, marginTop: iconMarginTop }}
                           onError={e => { e.target.style.display = 'none'; }} />
-                        <span style={{ color: '#fff', fontWeight: 700, fontSize: nameFontSize, lineHeight: 1.2, whiteSpace: 'nowrap', position: 'relative', top: nameTop, fontFamily: "'PSL Empire Pro', sans-serif" }}>{p.name}</span>
+                        <span className="card-name" style={{ color: '#fff', fontWeight: 700, fontSize: nameFontSize, lineHeight: 1.4, whiteSpace: 'nowrap', fontFamily: "'PSL Khemarat Pro', sans-serif", paddingBottom: 2 }}>{p.name}</span>
                       </div>
-                      {p.category && <div style={{ color: '#ffffff', fontSize: catFontSize, marginTop: 2, fontFamily: "'PSL Empire Pro', sans-serif" }}>{p.category}</div>}
+                      {p.category && <div style={{ color: '#ffffff', fontSize: catFontSize, marginTop: 2, fontFamily: "'PSL Khemarat Pro', sans-serif", lineHeight: 1.4, paddingBottom: 2 }}>{p.category}</div>}
                     </div>
                     <button style={{
                       background: '#00d1ff', color: '#ffffff', border: 'none', borderRadius: 20,
