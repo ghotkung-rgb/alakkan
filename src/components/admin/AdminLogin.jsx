@@ -27,13 +27,6 @@ export default function AdminLogin({ onAuth, onHome }) {
     if (loading) return;
     setError('');
 
-    // DEV bypass: ทั้งสองฟิลด์ว่างเปล่า = ข้ามได้
-    if (!uid.trim() && !pw.trim()) {
-      setLoading(true);
-      setTimeout(() => onAuth(), 380);
-      return;
-    }
-
     if (!uid.trim()) { setError('กรุณากรอก User ID'); return; }
     if (!pw.trim())  { setError('กรุณากรอกรหัสผ่าน'); return; }
 
@@ -339,20 +332,6 @@ export default function AdminLogin({ onAuth, onHome }) {
         }
         .al-back:hover { color: rgba(255,255,255,0.55); }
 
-        /* ── DEV note ── */
-        .al-dev {
-          margin-top: 22px;
-          padding: 8px 14px;
-          background: rgba(251,191,36,0.05);
-          border: 1px solid rgba(251,191,36,0.14);
-          font-size: 11px;
-          color: rgba(251,191,36,0.6);
-          font-weight: 700;
-          letter-spacing: 0.03em;
-          text-align: center;
-          line-height: 1.5;
-        }
-
         @media (max-width: 480px) {
           .al-card { padding: 36px 26px 30px; }
         }
@@ -460,10 +439,6 @@ export default function AdminLogin({ onAuth, onHome }) {
             </button>
           )}
 
-          <div className="al-dev">
-            DEV MODE — ยังไม่มีฐานข้อมูล<br />
-            ว่างทั้งสองช่อง = ข้ามได้ &nbsp;|&nbsp; credentials อยู่ใน .env
-          </div>
         </div>
       </div>
     </>
