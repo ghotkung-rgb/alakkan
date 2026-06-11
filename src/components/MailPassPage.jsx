@@ -133,7 +133,13 @@ export default function MailPassPage({ game, onBack, step, onStep, onHome }) {
   const [quantity, setQuantity]         = useState(1);
   const [email, setEmail]               = useState('');
   const [password, setPassword]         = useState('');
-  const [fieldValues, setFieldValues]   = useState({});
+  const [fieldValues, setFieldValues]   = useState(() => {
+    const init = {};
+    (game.accountFields || []).forEach(f => {
+      if (f.type === 'select' && f.options?.length === 1) init[f.key] = f.options[0];
+    });
+    return init;
+  });
   const [showPw, setShowPw]             = useState(false);
   const [showHowtoPopup, setShowHowtoPopup] = useState(false);
   const [loading, setLoading]           = useState(false);

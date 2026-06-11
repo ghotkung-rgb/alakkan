@@ -18,10 +18,11 @@ export const MAILPASS_GAMES = {
     showOnHome: true,
     tags: [],
     accountFields: [
-      { key: 'idLogin',  label: 'ID Login',           placeholder: 'กรุณากรอก ID Login',         hint: 'ไอดีที่ใช้ในการล็อคอิน',        required: true,  type: 'text' },
-      { key: 'password', label: 'Password',            placeholder: 'กรุณากรอก Password',          hint: 'พาสเวิร์ดที่ใช้ในการล็อคอิน',   required: true,  type: 'password' },
-      { key: 'charName', label: 'ชื่อตัวละคร',        placeholder: 'กรุณากรอกชื่อตัวละครในเกม',  required: true,  type: 'text' },
-      { key: 'phone',    label: 'เบอร์โทรติดต่อกลับ', placeholder: 'เบอร์โทร',                    labelHint: 'กรณีลูกค้าต้องการให้โทรแจ้งเมื่อถึงคิว', required: false, type: 'tel' },
+      { key: 'idLogin',      label: 'Konami ID',               placeholder: 'กรุณากรอก Konami ID',             hint: 'ไอดีที่ใช้ล็อคอินเกม eFootball',        required: true,  type: 'text' },
+      { key: 'password',     label: 'Password',                 placeholder: 'กรุณากรอก Password',              hint: 'พาสเวิร์ดที่ใช้ในการล็อคอิน',            required: true,  type: 'password' },
+      { key: 'loginChannel', label: 'ช่องทางการล็อคอินเกม',   placeholder: 'ช่องทางการล็อคอิน',               hint: 'eFootball รองรับการล็อคอินผ่าน Konami ID เท่านั้น', required: true, type: 'select', options: ['Konami ID'] },
+      { key: 'charName',     label: 'ชื่อตัวละคร',             placeholder: 'กรุณากรอกชื่อตัวละครในเกม',      required: true,  type: 'text' },
+      { key: 'phone',        label: 'เบอร์โทรติดต่อกลับ',      placeholder: 'เบอร์โทร',                         labelHint: 'กรณีลูกค้าต้องการให้โทรแจ้งเมื่อถึงคิว', required: false, type: 'tel' },
     ],
     packages: [
       { id: 'ef-a-550',   amount: 550,   price: 155,  img: '/images/ALASKAN_WEB_ASSET/PACKAGE%20ICON/EFOOBALL/ECOIN1.png' },
@@ -53,10 +54,11 @@ export const MAILPASS_GAMES = {
     showOnHome: true,
     tags: [],
     accountFields: [
-      { key: 'idLogin',  label: 'ID Login',           placeholder: 'กรุณากรอก ID Login',         hint: 'ไอดีที่ใช้ในการล็อคอิน',        required: true,  type: 'text' },
-      { key: 'password', label: 'Password',            placeholder: 'กรุณากรอก Password',          hint: 'พาสเวิร์ดที่ใช้ในการล็อคอิน',   required: true,  type: 'password' },
-      { key: 'charName', label: 'ชื่อตัวละคร',        placeholder: 'กรุณากรอกชื่อตัวละครในเกม',  required: true,  type: 'text' },
-      { key: 'phone',    label: 'เบอร์โทรติดต่อกลับ', placeholder: 'เบอร์โทร',                    labelHint: 'กรณีลูกค้าต้องการให้โทรแจ้งเมื่อถึงคิว', required: false, type: 'tel' },
+      { key: 'idLogin',      label: 'Konami ID',               placeholder: 'กรุณากรอก Konami ID',             hint: 'ไอดีที่ใช้ล็อคอินเกม eFootball',        required: true,  type: 'text' },
+      { key: 'password',     label: 'Password',                 placeholder: 'กรุณากรอก Password',              hint: 'พาสเวิร์ดที่ใช้ในการล็อคอิน',            required: true,  type: 'password' },
+      { key: 'loginChannel', label: 'ช่องทางการล็อคอินเกม',   placeholder: 'ช่องทางการล็อคอิน',               hint: 'eFootball รองรับการล็อคอินผ่าน Konami ID เท่านั้น', required: true, type: 'select', options: ['Konami ID'] },
+      { key: 'charName',     label: 'ชื่อตัวละคร',             placeholder: 'กรุณากรอกชื่อตัวละครในเกม',      required: true,  type: 'text' },
+      { key: 'phone',        label: 'เบอร์โทรติดต่อกลับ',      placeholder: 'เบอร์โทร',                         labelHint: 'กรณีลูกค้าต้องการให้โทรแจ้งเมื่อถึงคิว', required: false, type: 'tel' },
     ],
     packages: [
       { id: 'ef-i-260',   amount: 260,   price: 35,   img: '/images/ALASKAN_WEB_ASSET/PACKAGE%20ICON/EFOOBALL/ECOIN1.png' },

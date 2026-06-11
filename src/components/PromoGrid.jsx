@@ -28,7 +28,7 @@ export default function PromoGrid({ promos, onTopup, onMailPass }) {
   const nameTop        =  10;
   const nameFontSize   = 22;
   const catFontSize    = 17;
-  const btnFontSize    = 14;
+  const btnFontSize    = 16;
   const btnPad         = '10px 18px';
   // ────────────────────────────────────────────────────────
 
@@ -80,7 +80,7 @@ export default function PromoGrid({ promos, onTopup, onMailPass }) {
                     </div>
                     <button style={{
                       background: '#00d1ff', color: '#ffffff', border: 'none', borderRadius: 20,
-                      padding: btnPad, fontSize: btnFontSize, fontWeight: 700, cursor: 'pointer', flexShrink: 0, lineHeight: 1, fontFamily: "'PSL Empire Pro', sans-serif",
+                      padding: btnPad, fontSize: btnFontSize, fontWeight: 700, cursor: 'pointer', flexShrink: 0, lineHeight: 1, fontFamily: "'PSL Khemarat Pro', sans-serif",
                     }} onClick={(e) => { e.stopPropagation(); handlePromo(p); }}>เติมเกม</button>
                   </div>
                 </>

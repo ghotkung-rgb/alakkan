@@ -50,11 +50,12 @@ export default function Navbar({ activeMenu, setActiveMenu }) {
   const handleNav = (item) => {
     closeDrawer();
     if (item === 'ติดต่อเรา') {
-      if (activeMenu === 'HOME') {
-        setTimeout(() => document.getElementById('contact-section')?.scrollIntoView({ behavior: 'smooth' }), 50);
+      const contactEl = document.getElementById('contact-section');
+      if (contactEl) {
+        setTimeout(() => contactEl.scrollIntoView({ behavior: 'smooth' }), 50);
       } else {
         setActiveMenu('HOME');
-        setTimeout(() => document.getElementById('contact-section')?.scrollIntoView({ behavior: 'smooth' }), 220);
+        setTimeout(() => document.getElementById('contact-section')?.scrollIntoView({ behavior: 'smooth' }), 380);
       }
     } else {
       setActiveMenu(item);
