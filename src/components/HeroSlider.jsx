@@ -15,6 +15,7 @@ const bg1Opacity = 0.85;                         // ความโปร่ง�
 const SLIDES = [
   // { type: 'brand', mascot: HERO_MASCOT_IMG, thumb: HERO_MASCOT_IMG },
    { type: 'video', src: '/images/Silde%20show/0001.mp4', loop: false },
+  { type: 'video', src: '/images/Silde%20show/LAYER/EFOOTBALL/EFOOTBALL.mp4', loop: true },
   // { type: 'layer', bg: '/images/Silde%20show/LAYER/FF/HOME%20WEB%20SLIDESHOW_1Freefire-1bg.png', layers: [ { src: '/images/Silde%20show/LAYER/FF/text.png', cls: 'hs-layer-text' }, { src: '/images/Silde%20show/LAYER/FF/text2.png', cls: 'hs-layer-text2' }, { src: '/images/Silde%20show/LAYER/FF/HOME%20WEB%20SLIDESHOW_1Freefire-3character.png', cls: 'hs-layer-char1' }, { src: '/images/Silde%20show/LAYER/FF/HOME%20WEB%20SLIDESHOW_1Freefire-4character.png', cls: 'hs-layer-char2' } ], thumb: '/images/GAMES BG/FREEFIRE_bg.png' },
   // { type: 'layer', bg: '/images/Silde%20show/LAYER/ROV/HOME%20WEB%20SLIDESHOW_2ROV-1bg.png', layers: [ { src: '/images/Silde%20show/LAYER/ROV/HOME%20WEB%20SLIDESHOW_2ROV-2shape.png', cls: 'hs-rov-shape' }, { src: '/images/Silde%20show/LAYER/ROV/HOME%20WEB%20SLIDESHOW_2ROV-2laville.png', cls: 'hs-rov-char' }, { src: '/images/Silde%20show/LAYER/ROV/HOME%20WEB%20SLIDESHOW_2ROV-2tagname.png', cls: 'hs-rov-tagname' }, { src: '/images/Silde%20show/LAYER/ROV/HOME%20WEB%20SLIDESHOW_2ROV-2text.png', cls: 'hs-rov-text' } ], thumb: '/images/Silde%20show/LAYER/ROV/HOME%20WEB%20SLIDESHOW_2ROV.png' },
   {
@@ -44,21 +45,6 @@ const SLIDES = [
       { src: '/images/Silde%20show/LAYER/FC_MOBILE/HOME%20WEB%20SLIDESHOW_5FCMOBILE-text.png',  cls: 'hs-fcm-text'  },
     ],
     thumb: '/images/GAMES%20ICON/FCMOBILE_iconapp.png',
-  },
-  {
-    type: 'layer',
-    bg: '/images/Silde%20show/LAYER/EFOOTBALL/LAYER/HOME%20WEB%20SLIDESHOW_6EFOOTBALL_2-BG.png',
-    layers: [
-      { src: '/images/Silde%20show/LAYER/EFOOTBALL/LAYER/HOME%20WEB%20SLIDESHOW_6EFOOTBALL_2-BG-2.png',        cls: 'hs-ef2-bg2'      },
-      { src: '/images/Silde%20show/LAYER/EFOOTBALL/LAYER/HOME%20WEB%20SLIDESHOW_6EFOOTBALL_2-argentina-flag.png', cls: 'hs-ef2-arg-flag'  },
-      { src: '/images/Silde%20show/LAYER/EFOOTBALL/LAYER/HOME%20WEB%20SLIDESHOW_6EFOOTBALL_2-portugal-flag.png',  cls: 'hs-ef2-por-flag'  },
-      { src: '/images/Silde%20show/LAYER/EFOOTBALL/LAYER/HOME%20WEB%20SLIDESHOW_6EFOOTBALL_2-light.png',          cls: 'hs-ef2-light'     },
-      { src: '/images/Silde%20show/LAYER/EFOOTBALL/LAYER/HOME%20WEB%20SLIDESHOW_6EFOOTBALL_2-argentina-team.png', cls: 'hs-ef2-arg-team'  },
-      { src: '/images/Silde%20show/LAYER/EFOOTBALL/LAYER/HOME%20WEB%20SLIDESHOW_6EFOOTBALL_2-portugal-team.png',  cls: 'hs-ef2-por-team'  },
-      { src: '/images/Silde%20show/LAYER/EFOOTBALL/LAYER/HOME%20WEB%20SLIDESHOW_6EFOOTBALL_2-trophy.png',         cls: 'hs-ef2-trophy'    },
-      { src: '/images/Silde%20show/LAYER/EFOOTBALL/LAYER/efootball-logo.png',                                     cls: 'hs-ef2-logo'      },
-    ],
-    thumb: '/images/Silde%20show/LAYER/EFOOTBALL/LAYER/HOME%20WEB%20SLIDESHOW_6EFOOTBALL_2-BG.png',
   },
   // { type: 'promo', bg: '/images/BG_UID/FF.png', bgPos: 'center center', thumb: '/images/GAMES ICON/FREEFIRE_iconapp.png' },
 ];
