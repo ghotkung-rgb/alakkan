@@ -217,7 +217,7 @@ export default function TopupPage({ game, onBack, step, onStep, onHome }) {
       <img src={game.promoBg} alt={game.name}
         style={{ display: 'block', width: '100%', aspectRatio: game.promoAspect || '21 / 9' }}
         onError={e => { e.target.style.display = 'none'; }} />
-      <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, height: '30%', background: 'linear-gradient(to bottom, transparent, #ffffff)', pointerEvents: 'none' }} />
+      <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, height: '35%', background: 'linear-gradient(to bottom, transparent, #ffffff)', pointerEvents: 'none' }} />
     </div>
   ) : (
     <div className="tp-hero">
