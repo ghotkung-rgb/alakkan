@@ -60,7 +60,7 @@ const SLIDES = [
     ],
     thumb: '/images/Silde%20show/LAYER/EFOOTBALL/LAYER/HOME%20WEB%20SLIDESHOW_6EFOOTBALL_2-BG.png',
   },
-  { type: 'promo', bg: '/images/BG_UID/FF.png', bgPos: 'center center', thumb: '/images/GAMES ICON/FREEFIRE_iconapp.png' },
+  // { type: 'promo', bg: '/images/BG_UID/FF.png', bgPos: 'center center', thumb: '/images/GAMES ICON/FREEFIRE_iconapp.png' },
 ];
 
 function BrandSlide({ slide }) {
