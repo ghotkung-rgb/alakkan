@@ -65,6 +65,21 @@ const SLIDES = [
     ],
     thumb: '/images/GAMES%20ICON/FCMOBILE_iconapp.png',
   },
+  {
+    type: 'layer',
+    bg: '/images/Silde%20show/LAYER/EFOOTBALL/LAYER/HOME%20WEB%20SLIDESHOW_6EFOOTBALL_2-BG.png',
+    layers: [
+      { src: '/images/Silde%20show/LAYER/EFOOTBALL/LAYER/HOME%20WEB%20SLIDESHOW_6EFOOTBALL_2-BG-2.png',        cls: 'hs-ef2-bg2'      },
+      { src: '/images/Silde%20show/LAYER/EFOOTBALL/LAYER/HOME%20WEB%20SLIDESHOW_6EFOOTBALL_2-argentina-flag.png', cls: 'hs-ef2-arg-flag'  },
+      { src: '/images/Silde%20show/LAYER/EFOOTBALL/LAYER/HOME%20WEB%20SLIDESHOW_6EFOOTBALL_2-portugal-flag.png',  cls: 'hs-ef2-por-flag'  },
+      { src: '/images/Silde%20show/LAYER/EFOOTBALL/LAYER/HOME%20WEB%20SLIDESHOW_6EFOOTBALL_2-light.png',          cls: 'hs-ef2-light'     },
+      { src: '/images/Silde%20show/LAYER/EFOOTBALL/LAYER/HOME%20WEB%20SLIDESHOW_6EFOOTBALL_2-argentina-team.png', cls: 'hs-ef2-arg-team'  },
+      { src: '/images/Silde%20show/LAYER/EFOOTBALL/LAYER/HOME%20WEB%20SLIDESHOW_6EFOOTBALL_2-portugal-team.png',  cls: 'hs-ef2-por-team'  },
+      { src: '/images/Silde%20show/LAYER/EFOOTBALL/LAYER/HOME%20WEB%20SLIDESHOW_6EFOOTBALL_2-trophy.png',         cls: 'hs-ef2-trophy'    },
+      { src: '/images/Silde%20show/LAYER/EFOOTBALL/LAYER/efootball-logo.png',                                     cls: 'hs-ef2-logo'      },
+    ],
+    thumb: '/images/Silde%20show/LAYER/EFOOTBALL/LAYER/HOME%20WEB%20SLIDESHOW_6EFOOTBALL_2-BG.png',
+  },
   { type: 'promo', bg: '/images/BG_UID/FF.png', bgPos: 'center center', thumb: '/images/GAMES ICON/FREEFIRE_iconapp.png' },
 ];
 
@@ -158,7 +173,7 @@ export default function HeroSlider() {
       setCur(c => (c + 1) % SLIDES.length);
       setDir('down');
       setAnimKey(k => k + 1);
-    }, 6000);
+    }, 12000);
   }, []);
 
   useEffect(() => {

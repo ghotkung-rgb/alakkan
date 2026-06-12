@@ -457,6 +457,69 @@ html, body { overflow-x: hidden; }
     }
   }
 
+  /* ── eFootball 2 slide layers ──────────────────────── */
+  .hs-layer-overlay .hs-ef2-bg2 {
+    z-index: 2;
+    top: 0; height: 100%;
+    object-fit: cover;
+    animation: layerFadeOnly 0.5s 0.1s ease both;
+  }
+  .hs-layer-overlay .hs-ef2-arg-flag {
+    z-index: 3;
+    top: 0; height: 100%;
+    object-position: left top;
+    animation: layerTextIn 0.9s 0.3s cubic-bezier(0.22,1,0.36,1) both;
+  }
+  .hs-layer-overlay .hs-ef2-por-flag {
+    z-index: 3;
+    top: 0; height: 100%;
+    object-position: right top;
+    animation: layerChar2In 0.9s 0.3s cubic-bezier(0.22,1,0.36,1) both;
+  }
+  .hs-layer-overlay .hs-ef2-light {
+    z-index: 4;
+    top: 0; height: 100%;
+    object-fit: cover;
+    mix-blend-mode: screen;
+    opacity: 0.85;
+    animation: layerFadeOnly 1.2s 0.5s ease both;
+  }
+  .hs-layer-overlay .hs-ef2-arg-team {
+    z-index: 5;
+    top: 0; height: 100%;
+    object-position: left bottom;
+    animation: layerTextIn 1.0s 0.6s cubic-bezier(0.22,1,0.36,1) both;
+    filter: drop-shadow(0 0 28px rgba(120,180,255,0.55));
+  }
+  .hs-layer-overlay .hs-ef2-por-team {
+    z-index: 5;
+    top: 0; height: 100%;
+    object-position: right bottom;
+    animation: layerChar2In 1.0s 0.6s cubic-bezier(0.22,1,0.36,1) both;
+    filter: drop-shadow(0 0 28px rgba(255,80,80,0.5));
+  }
+  .hs-layer-overlay .hs-ef2-trophy {
+    z-index: 1;
+    top: 5%; height: 85%;
+    object-position: center bottom;
+    animation: layerChar1In 1.0s 0.9s cubic-bezier(0.22,1,0.36,1) both;
+    filter: drop-shadow(0 0 28px rgba(100,255,120,0.75)) drop-shadow(0 0 65px rgba(60,180,80,0.3));
+  }
+  .hs-layer-overlay .hs-ef2-logo {
+    z-index: 7;
+    top: auto; bottom: 5%; height: 6%;
+    object-position: center center;
+    animation: layerFadeOnly 0.6s 1.3s ease both;
+    filter: drop-shadow(0 0 12px rgba(255,255,255,0.55));
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .hs-ef2-bg2, .hs-ef2-arg-flag, .hs-ef2-por-flag,
+    .hs-ef2-light, .hs-ef2-arg-team, .hs-ef2-por-team,
+    .hs-ef2-trophy, .hs-ef2-logo {
+      animation: layerFadeOnly 3s both;
+    }
+  }
+
   /* ─── Divider ─── */
   .divider {
     height: 1px; margin: 4px 32px;
