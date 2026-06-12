@@ -7,6 +7,7 @@ import TopupPage from './components/TopupPage';
 import MailPassHub from './components/MailPassHub';
 import MailPassPage from './components/MailPassPage';
 import AdminPage from './components/AdminPage';
+import LoginPage from './components/LoginPage';
 import { GAMES } from './config/games';
 import { MAILPASS_GAMES } from './config/mailpassGames';
 
@@ -14,14 +15,14 @@ import { MAILPASS_GAMES } from './config/mailpassGames';
 const stateToHash = (s) => {
   if (s.topupGame)    return `topup/${encodeURIComponent(s.topupGame)}`;
   if (s.mailpassGame) return `mailpass/${encodeURIComponent(s.mailpassGame)}`;
-  const m = { HOME: 'home', 'ข่าวสาร': 'news', 'บริการเติมเกม': 'topup', 'บริการ Mail/Pass': 'mailpass', ADMIN: 'admin' };
+  const m = { HOME: 'home', 'ข่าวสาร': 'news', 'บริการเติมเกม': 'topup', 'บริการ Mail/Pass': 'mailpass', ADMIN: 'admin', LOGIN: 'login' };
   return m[s.activeMenu] ?? 'home';
 };
 const hashToState = (hash) => {
   const h = (hash || '').replace(/^#/, '');
   if (h.startsWith('topup/'))    return { activeMenu: 'HOME', topupGame: decodeURIComponent(h.slice(6)),    mailpassGame: null, topupStep: 1, mailpassStep: 1 };
   if (h.startsWith('mailpass/')) return { activeMenu: 'HOME', topupGame: null, mailpassGame: decodeURIComponent(h.slice(9)), topupStep: 1, mailpassStep: 1 };
-  const m = { '': 'HOME', home: 'HOME', news: 'ข่าวสาร', topup: 'บริการเติมเกม', mailpass: 'บริการ Mail/Pass', admin: 'ADMIN' };
+  const m = { '': 'HOME', home: 'HOME', news: 'ข่าวสาร', topup: 'บริการเติมเกม', mailpass: 'บริการ Mail/Pass', admin: 'ADMIN', login: 'LOGIN' };
   return { activeMenu: m[h] ?? 'HOME', topupGame: null, mailpassGame: null, topupStep: 1, mailpassStep: 1 };
 };
 
@@ -33,6 +34,7 @@ export default function App() {
   const [mailpassStep, setMailpassStep] = useState(1);
   const [viewKey, setViewKey]           = useState(0);
   const [exiting, setExiting]           = useState(false);
+  const [isAdminAuthed, setIsAdminAuthed] = useState(false);
 
   // ref สำหรับ event listeners ที่ mount ครั้งเดียว ให้อ่าน state ล่าสุดได้
   const navStateRef = useRef({ activeMenu, topupGame, mailpassGame });
@@ -133,9 +135,10 @@ export default function App() {
   useEffect(() => {
     const handleKey = (e) => {
       if (e.ctrlKey && e.shiftKey && e.key === 'A') {
-        const next = navStateRef.current.activeMenu === 'ADMIN' ? 'HOME' : 'ADMIN';
+        const cur = navStateRef.current.activeMenu;
+        const next = (cur === 'ADMIN' || cur === 'LOGIN') ? 'HOME' : 'LOGIN';
         const nextState = { activeMenu: next, topupGame: null, mailpassGame: null, topupStep: 1, mailpassStep: 1 };
-        window.history.pushState(nextState, '', '#' + (next === 'ADMIN' ? 'admin' : 'home'));
+        window.history.pushState(nextState, '', '#' + stateToHash(nextState));
         setExiting(true);
         setTimeout(() => applyNav(nextState), 160);
       }
@@ -157,14 +160,20 @@ export default function App() {
 
   const handleMenuChange = (menu) => navigate({ activeMenu: menu, topupGame: null, mailpassGame: null });
 
-  const KNOWN_MENUS = ['HOME', 'ข่าวสาร', 'บริการ Mail/Pass', 'ADMIN'];
+  const goLogin = () => navigate({ activeMenu: 'LOGIN', topupGame: null, mailpassGame: null });
+  const handleAuthAdmin = () => {
+    setIsAdminAuthed(true);
+    navigate({ activeMenu: 'ADMIN', topupGame: null, mailpassGame: null });
+  };
+
+  const KNOWN_MENUS = ['HOME', 'ข่าวสาร', 'บริการ Mail/Pass', 'ADMIN', 'LOGIN'];
 
   return (
     <ErrorBoundary>
     <div className="relative w-full min-h-screen font-sans text-black select-none"
          style={{ background: '#ffffff', display: 'flex', flexDirection: 'column' }}>
 
-      {activeMenu !== 'ADMIN' && (
+      {activeMenu !== 'ADMIN' && activeMenu !== 'LOGIN' && (
         <Navbar activeMenu={activeMenu} setActiveMenu={handleMenuChange} />
       )}
 
@@ -199,7 +208,22 @@ export default function App() {
             {activeMenu === 'บริการ Mail/Pass' && (
               <MailPassHub onSelectGame={goMailPass} onBack={() => handleMenuChange('HOME')} />
             )}
-            {activeMenu === 'ADMIN' && <AdminPage onHome={() => handleMenuChange('HOME')} />}
+            {activeMenu === 'LOGIN' && (
+              <LoginPage
+                onAuthAdmin={handleAuthAdmin}
+                onRegister={() => { /* TODO [API] navigate to register page */ }}
+                onHome={() => handleMenuChange('HOME')}
+              />
+            )}
+            {activeMenu === 'ADMIN' && (
+              isAdminAuthed
+                ? <AdminPage onHome={() => { setIsAdminAuthed(false); handleMenuChange('HOME'); }} />
+                : <LoginPage
+                    onAuthAdmin={handleAuthAdmin}
+                    onRegister={() => { /* TODO [API] */ }}
+                    onHome={() => handleMenuChange('HOME')}
+                  />
+            )}
             {!KNOWN_MENUS.includes(activeMenu) && (
               <div className="w-full h-full flex items-center justify-center bg-[#f0f4f8] text-[#334155]">
                 <p className="text-xl italic font-bold" style={{ display: 'flex', alignItems: 'center', gap: 8 }}><FiTarget /> หน้า [{activeMenu}] กำลังอยู่ในช่วงพัฒนา...</p>

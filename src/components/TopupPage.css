@@ -16,7 +16,7 @@
 }
 .tp-hero-overlay {
   position: absolute; inset: 0;
-  background: linear-gradient(to bottom, rgba(255,255,255,0) 20%, #ffffff 100%);
+  background: linear-gradient(to bottom, rgba(255,255,255,0) 80%, #ffffff 100%);
 }
 
 /* ── Package section ── */
@@ -87,7 +87,9 @@
 }
 .tp-step-item {
   display: flex; align-items: center; gap: 12px; padding: 16px 0;
+  font-family: 'PSL Empire Pro', sans-serif;
   font-size: 26px; font-weight: 700; color: #94a3b8;
+  letter-spacing: 0.06em;
 }
 .tp-step-item.active { color: #475569; }
 .tp-step-item.done   { color: #00d1ff; }

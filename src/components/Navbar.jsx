@@ -1,7 +1,7 @@
 ﻿import { useState, useEffect, useRef, useCallback } from 'react';
 import { FiMenu, FiX } from 'react-icons/fi';
 
-export default function Navbar({ activeMenu, setActiveMenu }) {
+export default function Navbar({ activeMenu, setActiveMenu, onLogin }) {
   const menuItems = ['HOME', 'ข่าวสาร', 'ติดต่อเรา'];
   const [isOpen, setIsOpen] = useState(false);
   const [isClosing, setIsClosing] = useState(false);
@@ -193,7 +193,7 @@ export default function Navbar({ activeMenu, setActiveMenu }) {
         /* ── CTA Button ── */
         .nav-cta {
           background: #00d1ff;
-          color: #0a1929;
+          color: #ffffff;
           border: none;
           padding: 9px 26px;
           font-size: 16px;
@@ -422,8 +422,13 @@ export default function Navbar({ activeMenu, setActiveMenu }) {
             })}
           </div>
 
-          {/* Hamburger — right column */}
+          {/* Login CTA + Hamburger — right column */}
           <div className="nav-right">
+            {onLogin && (
+              <button className="nav-cta" onClick={onLogin}>
+                เข้าสู่ระบบ
+              </button>
+            )}
             <button
               className="nav-hamburger"
               aria-label={isOpen ? 'ปิดเมนู' : 'เปิดเมนู'}
@@ -474,6 +479,15 @@ export default function Navbar({ activeMenu, setActiveMenu }) {
                 </Tag>
               );
             })}
+            {onLogin && (
+              <button
+                className="nav-drawer-item"
+                onClick={() => { closeDrawer(); onLogin(); }}
+                style={{ color: '#00d1ff', fontWeight: 700 }}
+              >
+                เข้าสู่ระบบ
+              </button>
+            )}
           </div>
         </div>
       </div>

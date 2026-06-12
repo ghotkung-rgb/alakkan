@@ -167,7 +167,7 @@ export default function MailPassPage({ game, onBack, step, onStep, onHome }) {
         <img src={bannerSrc} alt={game.name}
           style={{ display: 'block', width: '100%', aspectRatio: PROMO_ASPECT, objectFit: 'cover', objectPosition: 'center top' }}
           onError={e => { e.target.style.display = 'none'; }} />
-        <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, height: '50%', background: 'linear-gradient(to bottom, transparent, #ffffff)', pointerEvents: 'none' }} />
+        <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, height: '20%', background: 'linear-gradient(to bottom, transparent, #ffffff)', pointerEvents: 'none' }} />
       </div>
     );
   };
