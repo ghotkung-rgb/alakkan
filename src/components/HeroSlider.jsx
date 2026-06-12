@@ -15,28 +15,8 @@ const bg1Opacity = 0.85;                         // ความโปร่ง�
 const SLIDES = [
   // { type: 'brand', mascot: HERO_MASCOT_IMG, thumb: HERO_MASCOT_IMG },
    { type: 'video', src: '/images/Silde%20show/0001.mp4', loop: false },
-  {
-    type: 'layer',
-    bg: '/images/Silde%20show/LAYER/FF/HOME%20WEB%20SLIDESHOW_1Freefire-1bg.png',
-    layers: [
-      { src: '/images/Silde%20show/LAYER/FF/text.png', cls: 'hs-layer-text' },
-      { src: '/images/Silde%20show/LAYER/FF/text2.png', cls: 'hs-layer-text2' },
-      { src: '/images/Silde%20show/LAYER/FF/HOME%20WEB%20SLIDESHOW_1Freefire-3character.png', cls: 'hs-layer-char1' },
-      { src: '/images/Silde%20show/LAYER/FF/HOME%20WEB%20SLIDESHOW_1Freefire-4character.png', cls: 'hs-layer-char2' },
-    ],
-    thumb: '/images/GAMES BG/FREEFIRE_bg.png',
-  },
-  {
-    type: 'layer',
-    bg: '/images/Silde%20show/LAYER/ROV/HOME%20WEB%20SLIDESHOW_2ROV-1bg.png',
-    layers: [
-      { src: '/images/Silde%20show/LAYER/ROV/HOME%20WEB%20SLIDESHOW_2ROV-2shape.png',   cls: 'hs-rov-shape' },
-      { src: '/images/Silde%20show/LAYER/ROV/HOME%20WEB%20SLIDESHOW_2ROV-2laville.png', cls: 'hs-rov-char' },
-      { src: '/images/Silde%20show/LAYER/ROV/HOME%20WEB%20SLIDESHOW_2ROV-2tagname.png', cls: 'hs-rov-tagname' },
-      { src: '/images/Silde%20show/LAYER/ROV/HOME%20WEB%20SLIDESHOW_2ROV-2text.png',    cls: 'hs-rov-text' },
-    ],
-    thumb: '/images/Silde%20show/LAYER/ROV/HOME%20WEB%20SLIDESHOW_2ROV.png',
-  },
+  // { type: 'layer', bg: '/images/Silde%20show/LAYER/FF/HOME%20WEB%20SLIDESHOW_1Freefire-1bg.png', layers: [ { src: '/images/Silde%20show/LAYER/FF/text.png', cls: 'hs-layer-text' }, { src: '/images/Silde%20show/LAYER/FF/text2.png', cls: 'hs-layer-text2' }, { src: '/images/Silde%20show/LAYER/FF/HOME%20WEB%20SLIDESHOW_1Freefire-3character.png', cls: 'hs-layer-char1' }, { src: '/images/Silde%20show/LAYER/FF/HOME%20WEB%20SLIDESHOW_1Freefire-4character.png', cls: 'hs-layer-char2' } ], thumb: '/images/GAMES BG/FREEFIRE_bg.png' },
+  // { type: 'layer', bg: '/images/Silde%20show/LAYER/ROV/HOME%20WEB%20SLIDESHOW_2ROV-1bg.png', layers: [ { src: '/images/Silde%20show/LAYER/ROV/HOME%20WEB%20SLIDESHOW_2ROV-2shape.png', cls: 'hs-rov-shape' }, { src: '/images/Silde%20show/LAYER/ROV/HOME%20WEB%20SLIDESHOW_2ROV-2laville.png', cls: 'hs-rov-char' }, { src: '/images/Silde%20show/LAYER/ROV/HOME%20WEB%20SLIDESHOW_2ROV-2tagname.png', cls: 'hs-rov-tagname' }, { src: '/images/Silde%20show/LAYER/ROV/HOME%20WEB%20SLIDESHOW_2ROV-2text.png', cls: 'hs-rov-text' } ], thumb: '/images/Silde%20show/LAYER/ROV/HOME%20WEB%20SLIDESHOW_2ROV.png' },
   {
     type: 'layer',
     bg: '/images/Silde%20show/LAYER/PUBG/HOME%20WEB%20SLIDESHOW_3PUBGM-1bg.png',
