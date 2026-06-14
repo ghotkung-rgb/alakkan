@@ -1,21 +1,12 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { FiVolume2, FiVolumeX, FiChevronLeft, FiChevronRight } from 'react-icons/fi';
 
-const HERO_MASCOT_IMG = "/images/ALASKAN_WEB_ASSET/BACKGROUND/home/alaskan_mascot1.png";
-const HERO_GR_IMG = "/images/GR1.png";
-const HERO_BG1_IMG = "/images/ALASKAN_WEB_ASSET/BACKGROUND/home/BLACKGROUD2.png";
-
-// ── Slide-0 background position ──────────────────────────────
-const bg1Right   = '15%';                        // เยื้องขวา
-const bg1Bottom  = '-5%';                        // ระยะจากล่าง
-const bg1Height  = 'clamp(200px, 55vw, 780px)'; // ควบคุมด้วย height (รูป 3:1)
-const bg1Opacity = 0.85;                         // ความโปร่งแสง
 
 // แก้รูปสไลค์บนสุด
 const SLIDES = [
-  // { type: 'brand', mascot: HERO_MASCOT_IMG, thumb: HERO_MASCOT_IMG },
    { type: 'video', src: '/images/Silde%20show/0001.mp4', loop: false },
-  { type: 'video', src: '/images/Silde%20show/LAYER/EFOOTBALL/EFOOTBALL.mp4', loop: true },
+  // { type: 'brand', mascot: HERO_MASCOT_IMG, thumb: HERO_MASCOT_IMG },
+  // { type: 'video', src: '/images/Silde%20show/LAYER/EFOOTBALL/EFOOTBALL.mp4', loop: true },
   // { type: 'layer', bg: '/images/Silde%20show/LAYER/FF/HOME%20WEB%20SLIDESHOW_1Freefire-1bg.png', layers: [ { src: '/images/Silde%20show/LAYER/FF/text.png', cls: 'hs-layer-text' }, { src: '/images/Silde%20show/LAYER/FF/text2.png', cls: 'hs-layer-text2' }, { src: '/images/Silde%20show/LAYER/FF/HOME%20WEB%20SLIDESHOW_1Freefire-3character.png', cls: 'hs-layer-char1' }, { src: '/images/Silde%20show/LAYER/FF/HOME%20WEB%20SLIDESHOW_1Freefire-4character.png', cls: 'hs-layer-char2' } ], thumb: '/images/GAMES BG/FREEFIRE_bg.png' },
   // { type: 'layer', bg: '/images/Silde%20show/LAYER/ROV/HOME%20WEB%20SLIDESHOW_2ROV-1bg.png', layers: [ { src: '/images/Silde%20show/LAYER/ROV/HOME%20WEB%20SLIDESHOW_2ROV-2shape.png', cls: 'hs-rov-shape' }, { src: '/images/Silde%20show/LAYER/ROV/HOME%20WEB%20SLIDESHOW_2ROV-2laville.png', cls: 'hs-rov-char' }, { src: '/images/Silde%20show/LAYER/ROV/HOME%20WEB%20SLIDESHOW_2ROV-2tagname.png', cls: 'hs-rov-tagname' }, { src: '/images/Silde%20show/LAYER/ROV/HOME%20WEB%20SLIDESHOW_2ROV-2text.png', cls: 'hs-rov-text' } ], thumb: '/images/Silde%20show/LAYER/ROV/HOME%20WEB%20SLIDESHOW_2ROV.png' },
   {
@@ -46,84 +37,10 @@ const SLIDES = [
     ],
     thumb: '/images/GAMES%20ICON/FCMOBILE_iconapp.png',
   },
-  // { type: 'promo', bg: '/images/BG_UID/FF.png', bgPos: 'center center', thumb: '/images/GAMES ICON/FREEFIRE_iconapp.png' },
+  
+  { type: 'video', src: '/images/Silde%20show/LAYER/EFOOTBALL/EFOOTBALL_Video.mp4', loop: true },
 ];
 
-function BrandSlide({ slide }) {
-  const grH = 'clamp(300px, 48vw, 680px)';
-  const grMoveX = '0vw';
-  const grMoveY = '15vh';
-  const mascotMoveX = '0vw';
-  const mascotMoveY = '0vh';
-
-  return (
-    <div className="hero-inner" style={{ height: '100%', paddingTop: 0 }}>
-      {!slide.blend && (
-        <img
-          src={HERO_BG1_IMG}
-          alt=""
-          style={{
-            position: 'absolute',
-            right: bg1Right,
-            bottom: bg1Bottom,
-            height: bg1Height,
-            width: 'auto',
-            opacity: bg1Opacity,
-            pointerEvents: 'none',
-            zIndex: 0,
-            animation: `slideFromRight 1.0s 0.8s ease both`,
-          }}
-          onError={e => { e.target.style.display = 'none'; }}
-        />
-      )}
-      <img
-        src={slide.blend ? '/images/effect/TOPRED.png' : '/images/effect/TOPBLUE.png'}
-        alt=""
-        style={{
-          position: 'absolute',
-          top: 0,
-          right: 0,
-          width: '28%',
-          pointerEvents: 'none',
-          zIndex: 1,
-          animation: 'slideFromTopRight 1.0s 0.1s ease both',
-        }}
-        onError={e => { e.target.style.display = 'none'; }}
-      />
-      <img
-        src={slide.blend ? '/images/effect/DOWNRED.png' : '/images/effect/DOWNBLUE.png'}
-        alt=""
-        style={{
-          position: 'absolute',
-          bottom: '11vh',
-          left: 0,
-          width: '28%',
-          pointerEvents: 'none',
-          zIndex: 1,
-          animation: 'slideFromBottomLeft 1.0s 0.3s ease both',
-        }}
-        onError={e => { e.target.style.display = 'none'; }}
-      />
-      <div className="hero-text-wrap">
-        <span className="hero-text-alaskan">ALASKAN</span>
-        <span className="hero-text-sub">
-          <span>TOPUP</span>
-          <span className="hero-text-gap" />
-          <span>GAME ONLINE</span>
-        </span>
-      </div>
-      <img
-        className="hero-mascot"
-        src={slide.mascot}
-        alt="mascot"
-        style={slide.blend
-          ? { mixBlendMode: 'multiply', height: grH, marginTop: grMoveY, marginLeft: grMoveX }
-          : { marginTop: mascotMoveY, marginLeft: mascotMoveX }}
-        onError={e => { e.target.style.display = 'none'; }}
-      />
-    </div>
-  );
-}
 
 export default function HeroSlider() {
   const [cur, setCur] = useState(0);
@@ -241,10 +158,7 @@ export default function HeroSlider() {
         </div>
       ))}
 
-      {slide.type === 'brand' && <div className="hs-overlay" style={{ background: 'none' }} />}
-
       <div key={animKey} className={`hs-content hs-anim-${dir}`}>
-        {slide.type === 'brand' && <BrandSlide slide={slide} />}
       </div>
 
       {slide.type === 'layer' && (
