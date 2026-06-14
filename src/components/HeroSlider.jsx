@@ -38,7 +38,7 @@ const SLIDES = [
     thumb: '/images/GAMES%20ICON/FCMOBILE_iconapp.png',
   },
   
-  { type: 'video', src: '/images/Silde%20show/LAYER/EFOOTBALL/EFOOTBALL_Video.mp4', loop: true },
+  { type: 'video', src: '/images/Silde%20show/LAYER/EFOOTBALL/EFOOTBALL_Video.mp4', loop: false },
 ];
 
 
@@ -56,7 +56,7 @@ export default function HeroSlider() {
       setCur(c => (c + 1) % SLIDES.length);
       setDir('down');
       setAnimKey(k => k + 1);
-    }, 12000);
+    }, 15000);
   }, []);
 
   useEffect(() => {
@@ -64,7 +64,7 @@ export default function HeroSlider() {
       setCur(c => (c + 1) % SLIDES.length);
       setDir('down');
       setAnimKey(k => k + 1);
-    }, 12000);
+    }, 15000);
     return () => clearInterval(timerRef.current);
   }, []);
 
