@@ -38,6 +38,7 @@ const SLIDES = [
     thumb: '/images/GAMES%20ICON/FCMOBILE_iconapp.png',
   },
   
+  { type: 'video', src: '/images/Silde%20show/LAYER/HOK/%E0%B8%A5%E0%B8%B4%E0%B8%87%20HOK%202.mp4', loop: false },
   { type: 'video', src: '/images/Silde%20show/LAYER/EFOOTBALL/EFOOTBALL_Video.mp4', loop: false },
 ];
 
