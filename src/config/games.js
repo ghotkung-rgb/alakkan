@@ -241,7 +241,7 @@ export const GAMES = {
     icon: '/images/GAMES ICON/FREEFIRE_iconapp.png',
     bg: '/images/GAMES BG/FREEFIRE_bg.png',
     promoBg: '/images/BG_UID/FF.png',
-    promoAspect: '33 / 14',
+    promoAspect: '21 / 7',
     promoFade: true,
     howtoImage: '/images/HOW%20TO/ff.png',
     category: 'เกม Battle Royale',
